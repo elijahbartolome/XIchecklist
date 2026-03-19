@@ -4,6 +4,7 @@
 
 //lua unload xichecklist
 
+to update titles you must speak to all Titles NPCs
 
 **Tracking**:
 - Campaign Ops
@@ -13,6 +14,7 @@
 - EXP related (Job points / Master levels)
 - Warps (Home Points / Survival Guides / Waypoints)
 - Monstrosity (Monster levels / Race & Job Instincts / Monster variants)
+- Titles
 
 
 
@@ -27,7 +29,7 @@ the menu will only show missing items like quests,key items, spells, home points
 - this thing is free to use/share/edit/anything i dont care what you do with it
 
 **Todo Plan**: (but most likely will be too lazy to do it)
-- titles
+- titles exclusion list
 - merits
 - outpost warps
 - fish stuff
@@ -43,8 +45,9 @@ the menu will only show missing items like quests,key items, spells, home points
 
 **Changes**:
 
-0.1.0 - release
+- 0.1.0 - release
+- 0.1.1 - added Monstrosity levels and race/job instincts
+- 0.1.2 - add Monstrosity variants
+- 0.1.2 - added titles (thanks to kaytecat)
 
-0.1.1 - added Monstrosity levels and race/job instincts
 
-0.1.1 - add Monstrosity variants
