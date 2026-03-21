@@ -1,6 +1,6 @@
 _addon.name     = 'xichecklist'
 _addon.author   = 'Anokata'
-_addon.version  = '0.3.0'
+_addon.version  = '0.3.1'
 _addon.commands = {'xichecklist', 'xic'}
 
 
@@ -18,6 +18,7 @@ trackermenusettings = {}
 trackermenusettings.pos = {}
 trackermenusettings.pos.x = 120
 trackermenusettings.pos.y = 120
+trackermenusettings.visibility = true
 
 trackermenusettings = config.load(trackermenusettings)
 
@@ -468,7 +469,7 @@ function check_playerspells(spelltype)
 	totalplayerspells = 0
 	learnedspells = 0
 	for id, value in pairs(res.spells) do
-		if (value.type == spelltype) then
+		if ((value.type == spelltype) and (not value.unlearnable)) then
 			if (playerspells[id] == true) then
 				-- spell learned
 				learnedspells = learnedspells + 1

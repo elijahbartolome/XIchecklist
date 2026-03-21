@@ -1,6 +1,7 @@
 local titles_util = {}
 local npcmaps = require('../maps/titles_npcs')
 local titlescontnt = require('../maps/titles_bycontent')
+local titlesexclusions = require('../maps/titles_exclusions')
 
 local totaltitles, obtainedtitles = 0, 0
 
@@ -45,7 +46,11 @@ function titles_util.log_titles()
 			complete = complete+1
 			--table.insert(titles_list, '\\cs(0,255,0) ' .. res.titles[key].en ..'\\cr') -- add obtained title
 		else
-			table.insert(titles_list, '\\cs(255,255,0) ' .. res.titles[key].en ..'\\cr') -- add missing title
+			if (not titlesexclusions:contains(key)) then  
+				table.insert(titles_list, '\\cs(255,255,0) ' .. res.titles[key].en ..'\\cr') -- add missing title
+			else
+				total = total - 1
+			end
 		end
 	end
 	playertracker['Titles_completed'] = complete
@@ -55,13 +60,14 @@ end
 
 function titles_util.list_titles_bycontent()
 	bycontent_list = {}
-	local total, complete = 0,0
 	for content, titles in pairs(titlescontnt) do
 		local contenttotal, contentcomplete = 0,0
 		for key, titleid in pairs(titles) do
 			contenttotal = contenttotal+1
+			if (titlesexclusions:contains(key)) then contenttotal = contenttotal-1 end
 			if (playertitles[tostring(titleid)] == true) then
 				contentcomplete = contentcomplete+1
+				if (titlesexclusions:contains(key)) then contenttotal = contenttotal+1 end
 			end
 		end
 		local red = 0

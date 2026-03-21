@@ -1,5 +1,5 @@
 return {
-	-- data provided from Bahamut.Daleterrence (@Dale windower discord)
+	-- data provided from Darkdoom@discord & Dale@discord
     [1] = {id=1,name="First Step Forward",description="Speak to one of the following Records of Eminence guides: Rolandienne in Southern San d'Oria (G-10), Isakoth in Bastok Markets (E-11), Fhelm Jobeizat in Windurst Woods (J-10), Eternal Flame in Western Adoulin (H-11).",objcount=1,sparks=100,exp=300,cp=0,accolades=0,plaudits=0},
     [2] = {id=2,name="Vanquish One Enemy",description="Defeat one monster outside of a city. Make sure to equip the proper weapons and armor, have some food, and have Signet cast upon you before you venture out.",objcount=1,sparks=100,exp=500,cp=0,accolades=0,plaudits=0},
     [3] = {id=3,name="Undertake a FoV Training Regime",description="Examine a Field Manual and undertake a Fields of Valor training regime. Field Manuals can be found near the entrances to Outposts.",objcount=1,sparks=100,exp=500,cp=0,accolades=0,plaudits=0},
