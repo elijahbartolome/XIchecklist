@@ -1,8 +1,10 @@
 **Usage**:
 
-//lua load xichecklist , then zone to get the UI menu updated
+_//lua load xichecklist_ , then **zone** to get the UI menu updated
 
-//lua unload xichecklist
+_//xic hide|show_ to hide or show the UI
+
+_//xic test_ to print some hidden/unknown RoE
 
 to update titles you must speak to all Titles NPCs
 
@@ -10,7 +12,7 @@ to update titles you must speak to all Titles NPCs
 
 - Monstrosity (Monster levels / Race & Job Instincts / Monster variants)
 - Titles
-- RoE
+- Records of Eminence (RoE) 
 - Warps (Home Points / Survival Guides / Waypoints)
 - Campaign Ops
 - Quests (San d'Oria / Bastok / Windurst / Jeuno / Aht Urhgan / Crystal War / Outlands / Other / Abyssea / Adoulin / Coalition)
