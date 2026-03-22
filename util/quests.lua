@@ -7,51 +7,46 @@ campaings_completed_log = {
 	['Completed Campaign Missions'] = '',
 	['Completed Campaign Missions (2)'] = '',
 }
-campaigns_completed = nil
 
 _G.quest_logs = {
-    [0x0070] = {type='current', area='otherquests'},
-    [0x00B0] = {type='completed', area='otherquests'},
-    [0x00E0] = {type='current', area='abysseaquests'},
-    [0x00E8] = {type='completed', area='abysseaquests'},
-    [0x00F0] = {type='current', area='adoulinquests'},
-    [0x00F8] = {type='completed', area='adoulinquests'},
-    [0x0100] = {type='current', area='coalitionquests'},
-    [0x0108] = {type='completed', area='coalitionquests'},
-	[0x0090] = {type='completed', area='sandoriaquests'},
-	[0x0050] = {type='current', area='sandoriaquests'},
-	[0x0098] = {type='completed', area='bastokquests'},
-	[0x0058] = {type='current', area='bastokquests'},
-	[0x00A0] = {type='completed', area='windurstquests'},
-	[0x0060] = {type='current', area='windurstquests'},
-	[0x00A8] = {type='completed', area='jeunoquests'},
-	[0x0068] = {type='current', area='jeunoquests'},
-	[0x00C0] = {type='completed', area='ahturhganquests'},
-	[0x0080] = {type='current', area='ahturhganquests'},
-	[0x00C8] = {type='completed', area='crystalwarquests'},
-	[0x0088] = {type='current', area='crystalwarquests'},
-	[0x00B8] = {type='completed', area='outlandsquests'},
-	[0x0078] = {type='current', area='outlandsquests'},
+    [0x0070] = {type='current', area='other'},
+    [0x00B0] = {type='completed', area='other'},
+    [0x00E0] = {type='current', area='abyssea'},
+    [0x00E8] = {type='completed', area='abyssea'},
+    [0x00F0] = {type='current', area='adoulin'},
+    [0x00F8] = {type='completed', area='adoulin'},
+    [0x0100] = {type='current', area='coalition'},
+    [0x0108] = {type='completed', area='coalition'},
+	[0x0090] = {type='completed', area='sandoria'},
+	[0x0050] = {type='current', area='sandoria'},
+	[0x0098] = {type='completed', area='bastok'},
+	[0x0058] = {type='current', area='bastok'},
+	[0x00A0] = {type='completed', area='windurst'},
+	[0x0060] = {type='current', area='windurst'},
+	[0x00A8] = {type='completed', area='jeuno'},
+	[0x0068] = {type='current', area='jeuno'},
+	[0x00C0] = {type='completed', area='ahturhgan'},
+	[0x0080] = {type='current', area='ahturhgan'},
+	[0x00C8] = {type='completed', area='crystalwar'},
+	[0x0088] = {type='current', area='crystalwar'},
+	[0x00B8] = {type='completed', area='outlands'},
+	[0x0078] = {type='current', area='outlands'},
 }
 
 local maps = {
-    abysseaquests = require('../maps/quests_abyssea'),
-    adoulinquests = require('../maps/quests_adoulin'),
-    coalitionquests = require('../maps/quests_coalitions'),
-    otherquests = require('../maps/quests_other'),
-	sandoriaquests = require('../maps/quests_sandoria'),
-	bastokquests = require('../maps/quests_bastok'),
-	windurstquests = require('../maps/quests_windurst'),
-	jeunoquests = require('../maps/quests_jeuno'),
-	ahturhganquests = require('../maps/quests_ahturhgan'),
-	crystalwarquests = require('../maps/quests_crystalwar'),
-	outlandsquests = require('../maps/quests_outlands'),
+    abyssea = require('../maps/quests_abyssea'),
+    adoulin = require('../maps/quests_adoulin'),
+    coalition = require('../maps/quests_coalitions'),
+    other = require('../maps/quests_other'),
+	sandoria = require('../maps/quests_sandoria'),
+	bastok = require('../maps/quests_bastok'),
+	windurst = require('../maps/quests_windurst'),
+	jeuno = require('../maps/quests_jeuno'),
+	ahturhgan = require('../maps/quests_ahturhgan'),
+	crystalwar = require('../maps/quests_crystalwar'),
+	outlands = require('../maps/quests_outlands'),
 	campaign = require('../maps/campaign'),
 }
-
-function quest_util.to_set(data)
-    return {data:unpack('q64':rep(#data/4))}
-end
 
 function quest_util.addon_error(str)
     --windower.add_to_chat(167, 'You must change areas or complete %s quests before using this command.':format(str))
@@ -62,14 +57,12 @@ function quest_util.log_quests(quest_type)
         quest_util.addon_error(quest_type)
         return true
     end
-    local completed = quest_util.to_set(quests.completed[quest_type])
-    local current = quest_util.to_set(quests.current[quest_type])
     local complete,total = 0, 0
 	local quest_list = {}
-	for key, questname in pairs(maps[quest_type]) do -- test print all
+	for key, questname in pairs(maps[quest_type]) do
 		if maps[quest_type][key] then
 			total = total + 1
-            if completed[key+1] then
+            if util.has_bit(quests.completed[quest_type], key) then
                 complete = complete + 1
 				--table.insert(quest_list, '\\cs(0,255,0)' .. maps[quest_type][key] ..'\\cr') -- add completed quest name
             else
@@ -101,6 +94,9 @@ function quest_util.log_campaign(data)
 	playertracker['campaign_total'] = total
 	return quest_list
 end
+
+
+
 
 
 return quest_util

@@ -1,6 +1,6 @@
 _addon.name     = 'xichecklist'
 _addon.author   = 'Anokata'
-_addon.version  = '0.3.1'
+_addon.version  = '0.3.3'
 _addon.commands = {'xichecklist', 'xic'}
 
 
@@ -23,29 +23,29 @@ trackermenusettings.visibility = true
 trackermenusettings = config.load(trackermenusettings)
 
 playertracker = {
-	['bastokquests_completed'] = 0,
-	['bastokquests_total'] = 0,
-	['sandoriaquests_completed'] = 0,
-	['sandoriaquests_total'] = 0,
-	['windurstquests_completed'] = 0,
-	['windurstquests_total'] = 0,
-	['jeunoquests_completed'] = 0,
-	['jeunoquests_total'] = 0,
-	['ahturhganquests_completed'] = 0,
-	['ahturhganquests_total'] = 0,
-	['crystalwarquests_completed'] = 0,
-	['crystalwarquests_total'] = 0,
-	['outlandsquests_completed'] = 0,
-	['outlandsquests_total'] = 0,
-	['otherquests_completed'] = 0,
-	['otherquests_total'] = 0,
-	['abysseaquests_completed'] = 0,
-	['abysseaquests_total'] = 0,
-	['adoulinquests_completed'] = 0,
-	['adoulinquests_total'] = 0,
+	['bastok_completed'] = 0,
+	['bastok_total'] = 0,
+	['sandoria_completed'] = 0,
+	['sandoria_total'] = 0,
+	['windurst_completed'] = 0,
+	['windurst_total'] = 0,
+	['jeuno_completed'] = 0,
+	['jeuno_total'] = 0,
+	['ahturhgan_completed'] = 0,
+	['ahturhgan_total'] = 0,
+	['crystalwar_completed'] = 0,
+	['crystalwar_total'] = 0,
+	['outlands_completed'] = 0,
+	['outlands_total'] = 0,
+	['other_completed'] = 0,
+	['other_total'] = 0,
+	['abyssea_completed'] = 0,
+	['abyssea_total'] = 0,
+	['adoulin_completed'] = 0,
+	['adoulin_total'] = 0,
 	
-	['coalitionquests_completed'] = 0,
-	['coalitionquests_total'] = 0,
+	['coalition_completed'] = 0,
+	['coalition_total'] = 0,
 	
 	['campaign_completed'] = 0,
 	['campaign_total'] = 0,
@@ -112,6 +112,7 @@ playertitles = config.load('data/'.. windower.ffxi.get_player().name .. '_titles
 
 playerroe = {}
 playerroe = config.load('data/'.. windower.ffxi.get_player().name .. '_roe.xml', playerroe)
+
 
 
 -------------------------------------------------
@@ -235,17 +236,17 @@ function update_maintab()
 	append_maintab('Campaign Ops %d/%d', playertracker['campaign_completed'], playertracker['campaign_total'])
 	
 	table.insert(tabs[1].items, '- Quests')
-	append_maintab('Bastok Quests %d/%d', playertracker['bastokquests_completed'], playertracker['bastokquests_total'])
-	append_maintab('San d\'Oria Quests %d/%d', playertracker['sandoriaquests_completed'], playertracker['sandoriaquests_total'])
-	append_maintab('Windurst Quests %d/%d', playertracker['windurstquests_completed'], playertracker['windurstquests_total'])
-	append_maintab('Jeuno Quests %d/%d', playertracker['jeunoquests_completed'], playertracker['jeunoquests_total'])
-	append_maintab('Aht Urhgan Quests %d/%d', playertracker['ahturhganquests_completed'], playertracker['ahturhganquests_total'])
-	append_maintab('Crystal War Quests %d/%d', playertracker['crystalwarquests_completed'], playertracker['crystalwarquests_total'])
-	append_maintab('Outlands Quests %d/%d', playertracker['outlandsquests_completed'], playertracker['outlandsquests_total'])
-	append_maintab('Other Quests %d/%d', playertracker['otherquests_completed'], playertracker['otherquests_total'])
-	append_maintab('Abyssea Quests %d/%d', playertracker['abysseaquests_completed'], playertracker['abysseaquests_total'])
-	append_maintab('Adoulin Quests %d/%d', playertracker['adoulinquests_completed'], playertracker['adoulinquests_total'])
-	append_maintab('Coalition Assignments %d/%d', playertracker['coalitionquests_completed'], playertracker['coalitionquests_total'])
+	append_maintab('Bastok Quests %d/%d', playertracker['bastok_completed'], playertracker['bastok_total'])
+	append_maintab('San d\'Oria Quests %d/%d', playertracker['sandoria_completed'], playertracker['sandoria_total'])
+	append_maintab('Windurst Quests %d/%d', playertracker['windurst_completed'], playertracker['windurst_total'])
+	append_maintab('Jeuno Quests %d/%d', playertracker['jeuno_completed'], playertracker['jeuno_total'])
+	append_maintab('Aht Urhgan Quests %d/%d', playertracker['ahturhgan_completed'], playertracker['ahturhgan_total'])
+	append_maintab('Crystal War Quests %d/%d', playertracker['crystalwar_completed'], playertracker['crystalwar_total'])
+	append_maintab('Outlands Quests %d/%d', playertracker['outlands_completed'], playertracker['outlands_total'])
+	append_maintab('Other Quests %d/%d', playertracker['other_completed'], playertracker['other_total'])
+	append_maintab('Abyssea Quests %d/%d', playertracker['abyssea_completed'], playertracker['abyssea_total'])
+	append_maintab('Adoulin Quests %d/%d', playertracker['adoulin_completed'], playertracker['adoulin_total'])
+	append_maintab('Coalition Assignments %d/%d', playertracker['coalition_completed'], playertracker['coalition_total'])
 
 	table.insert(tabs[1].items, '- Key Items')
 	append_maintab('Permanent Key Items %d/%d', playertracker['Permanent Key Items_completed'], playertracker['Permanent Key Items_total'])
@@ -306,8 +307,7 @@ windower.register_event('incoming chunk', function(id, data, modified, injected,
 		elseif (p.Type == 56) then
 			campaings_completed_log['Completed Campaign Missions (2)'] = p['Quest Flags']
 		end
-		campaigns_completed = campaings_completed_log['Completed Campaign Missions'] .. campaings_completed_log['Completed Campaign Missions (2)']
-		quests['completed']['campaign'] = campaigns_completed
+		quests['completed']['campaign'] = campaings_completed_log['Completed Campaign Missions'] .. campaings_completed_log['Completed Campaign Missions (2)']
 		
 		xichecklist_init()
     end
@@ -381,22 +381,22 @@ function xichecklist_init()
 	tabs[10].items = {} -- reset main menu content
 	
 	-- log quests
-	tabs[2].items = quest_util.log_quests('sandoriaquests')
-	append_items(tabs[2].items, quest_util.log_quests('bastokquests'))
-	append_items(tabs[2].items, quest_util.log_quests('windurstquests'))
-	append_items(tabs[2].items, quest_util.log_quests('jeunoquests'))
-	append_items(tabs[2].items, quest_util.log_quests('ahturhganquests'))
-	append_items(tabs[2].items, quest_util.log_quests('crystalwarquests'))
-	append_items(tabs[2].items, quest_util.log_quests('outlandsquests'))
-	append_items(tabs[2].items, quest_util.log_quests('otherquests'))
-	append_items(tabs[2].items, quest_util.log_quests('abysseaquests'))
-	append_items(tabs[2].items, quest_util.log_quests('adoulinquests'))
+	tabs[2].items = quest_util.log_quests('sandoria')
+	append_items(tabs[2].items, quest_util.log_quests('bastok'))
+	append_items(tabs[2].items, quest_util.log_quests('windurst'))
+	append_items(tabs[2].items, quest_util.log_quests('jeuno'))
+	append_items(tabs[2].items, quest_util.log_quests('ahturhgan'))
+	append_items(tabs[2].items, quest_util.log_quests('crystalwar'))
+	append_items(tabs[2].items, quest_util.log_quests('outlands'))
+	append_items(tabs[2].items, quest_util.log_quests('other'))
+	append_items(tabs[2].items, quest_util.log_quests('abyssea'))
+	append_items(tabs[2].items, quest_util.log_quests('adoulin'))
 	
 	-- log campaign ops
 	tabs[3].items = quest_util.log_campaign(campaigns_completed)
 	
 	-- log coalitions
-	tabs[4].items = quest_util.log_quests('coalitionquests')
+	tabs[4].items = quest_util.log_quests('coalition')
 	
 	-- log keyitems
 	tabs[5].items = check_keyitems('Permanent Key Items')
