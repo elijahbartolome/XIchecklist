@@ -4,7 +4,7 @@ return {
 	[2] = "+Greetings to the Guardian",
 	[3] = "+A Question of Taste",
 	[4] = "Everyone's Grudging",
-	[5] = "FR Quest 5",
+	--[5] = "FR Quest 5",
 	[6] = "You Call That a Knife?",
 	[7] = "Missionary Man",
 	[8] = "Gullible's Travels",

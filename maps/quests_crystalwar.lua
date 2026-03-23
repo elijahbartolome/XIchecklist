@@ -30,7 +30,7 @@ return {
 	[28] = 'A Manifest Problem',
 	[29] = 'Beans Ahoy',
 	[30] = 'Beast From The East',
-	[31] = 'The Swarm',
+	--[31] = 'The Swarm',
 	[32] = 'On Sabbatical',
 	[33] = 'Downward Helix',
 	[34] = 'Seeing Blood Red',

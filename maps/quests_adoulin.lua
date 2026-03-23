@@ -26,6 +26,19 @@ return {
 	[36] = "For Whom the Bell Tolls",
 	[37] = "The Bloodline of Zacariah",
 	[38] = "The Communion",
+	
+	-- mog garden (taken from 'Other' DAT File id from 1039 to 1049
+	[39] = "Full Fields",
+	[40] = "Green Groves",
+	[41] = "Mining Missive",
+	[42] = "Pond Probing",
+	[43] = "Coastal Chaos",
+	[44] = "Seed Sowing",
+	[45] = "Flotsam Finding",
+	[47] = "Courtesy Crustacean",
+	[48] = "Trinket for the Tyrant",
+	[49] = "Hypnotic Hospitality",
+	
 	[46] = "Flavors of Our Lives",
 	[50] = "Western Waypoints, Ho!",
 	[51] = "Wes...Eastern Waypoints, Ho!",

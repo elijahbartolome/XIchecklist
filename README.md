@@ -61,3 +61,4 @@ the menu will only show missing items like quests,key items, spells, home points
 - 0.3.0 - added RoE Tracking (thanks to Daleterrence / Darkdoom for resources)
 - 0.3.1 - added title exclusions & removed unlearnable spells
 - 0.4.0 - A lot fixes
+- 0.4.1 - removed non-implemented monstrosity
