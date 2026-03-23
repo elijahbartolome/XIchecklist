@@ -1,8 +1,7 @@
 _addon.name     = 'xichecklist'
 _addon.author   = 'Anokata'
-_addon.version  = '0.4.0'
+_addon.version  = '0.4.1'
 _addon.commands = {'xichecklist', 'xic'}
-
 
 require('sets')
 packets = require('packets')
@@ -271,7 +270,7 @@ function update_maintab()
 	append_maintab('Survival Guides %d/%d', playertracker['Survivalguides_completed'], playertracker['Survivalguides_total'])
 	append_maintab('Waypoints %d/%d (untested)', playertracker['Waypoints_completed'], playertracker['Waypoints_total'])
 	
-	table.insert(tabs[1].items, '- Monstrosity (WIP)')
+	table.insert(tabs[1].items, '- Monstrosity')
 	append_maintab('Monster Levels %d/%d', playertracker['MonsterLevels_completed'], playertracker['MonsterLevels_total'])
 	append_maintab('Race/Job Instincts %d/%d', playertracker['Racejobinstinct_completed'], playertracker['Racejobinstinct_total'])
 	append_maintab('Monster Variants %d/%d', playertracker['MonsterVariants_completed'], playertracker['MonsterVariants_total'])
@@ -313,7 +312,7 @@ windower.register_event('incoming chunk', function(id, data, modified, injected,
 		end
 		-- do monstrosity
 		if (parseddata.Order == 3) then
-			mons_util.monster_levels = mons_util.char_field_to_table(parseddata['Monster Level Char field'])
+			mons_util.monster_levels = util.char_field_to_table(parseddata['Monster Level Char field'])
 			--monster_instincts = bytes_to_table(parseddata['Instinct Bitfield 1'])
 			xichecklist_updatetabs('monstrosity')
 		end

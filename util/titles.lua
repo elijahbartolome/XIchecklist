@@ -6,9 +6,6 @@ local titlesexclusions = require('../maps/titles_exclusions')
 local totaltitles, obtainedtitles = 0, 0
 
 function titles_util.handle_npc_menu(npc, flags)
-	local new = 0
-	local lost = 0
-	
 	for cat, ids in ipairs(npcmaps[npc].menu) do
 		local category = flags:unpack('I', 1 + (cat - 1) * 4)
 		for flag, id in ipairs(ids) do

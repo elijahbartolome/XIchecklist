@@ -1,11 +1,6 @@
 local quest_util = {}
-
 quests = {completed={},current={}}
 quests.mutual_exclusive = require('../maps/quests_mutual_exclusive')
-campaings_completed_log = {
-	['Completed Campaign Missions'] = '',
-	['Completed Campaign Missions (2)'] = '',
-}
 
 _G.quest_logs = {
     [0x0070] = {type='current', area='other'},
@@ -30,11 +25,8 @@ _G.quest_logs = {
 	[0x0088] = {type='current', area='crystalwar'},
 	[0x00B8] = {type='completed', area='outlands'},
 	[0x0078] = {type='current', area='outlands'},
-	
 	[0x0030] = {type='completed', area='campaign1'},
 	[0x0038] = {type='completed', area='campaign2'},
-	
-	
 }
 
 local maps = {
@@ -86,9 +78,6 @@ function quest_util.log_quests(quest_type)
 							mutualcompleted = true
 						end
 					end
-					--[[if not mutualcompleted then
-						table.insert(quest_list, '\\cs(255,255,0) ['.. quest_type .. '][mutual] ' .. maps[quest_type][key] ..'\\cr') -- add non completed quest name
-					end]]
 				elseif (not mutualcompleted) then
 					table.insert(quest_list, '\\cs(255,255,0) ['.. quest_type .. '] ' .. maps[quest_type][key] ..'\\cr') -- add non completed quest name
 				end

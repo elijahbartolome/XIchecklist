@@ -16,7 +16,7 @@ return {
 	[11]='Marid',
 	[12]='Cerberus',
 	[13]='Gnole',
-	[14]='Yztarg',
+	--[14]='Yztarg', --not implemented
 	[15]='Funguar',
 	[16]='Treant Sapling',
 	[17]='Morbol',
@@ -26,9 +26,9 @@ return {
 	[21]='Goobbue',
 	[22]='Rafflesia',
 	[23]='Panopt',
-	[24]='Belladonna',
-	[25]='Leafkin',
-	[26]='Snapweed',
+	--[24]='Belladonna', --not implemented
+	--[25]='Leafkin', --not implemented
+	--[26]='Snapweed', --not implemented
 	[27]='Bee',
 	[28]='Beetle',
 	[29]='Crawler',
@@ -41,10 +41,10 @@ return {
 	[36]='Wamouracampa (Wamoura larva)',
 	[37]='Ladybug',
 	[38]='Gnat',
-	[39]='Mantis',
-	[40]='Kulox (Gnat)',
-	[41]='Twitherym',
-	[42]='Chapuli',
+	--[39]='Mantis', --not implemented
+	--[40]='Kulox (Gnat)', --not implemented
+	--[41]='Twitherym', --not implemented
+	--[42]='Chapuli', --not implemented
 	[43]='Lizard', -- confirmed
 	[44]='Raptor',
 	[45]='Adamantoise',
@@ -52,16 +52,16 @@ return {
 	[47]='Eft',
 	[48]='Wivre',
 	[49]='Peiste',
-	[50]='Matamata',
-	[51]='Worm',
+	--[50]='Matamata', --not implemented
+	--[51]='Worm', --not implemented
 	[52]='Slime',
 	[53]='Hecteyes',
 	[54]='Flan',
-	[55]='Botulus (Flan)',
+	--[55]='Botulus (Flan)', --not implemented
 	[56]='Slug',
 	[57]='Sandworm',
 	[58]='Leech',
-	[59]='Acuex',
+	--[59]='Acuex', --not implemented
 	[60]='Crab',
 	[61]='Pugil',
 	[62]='Sea Monk',
@@ -69,8 +69,8 @@ return {
 	[64]='Orobon',
 	[65]='Ruszor',
 	[66]='Toad',
-	[67]='Pteraketos',
-	[68]='Craklaw',
+	--[67]='Pteraketos', --not implemented
+	--[68]='Craklaw', --not implemented
 	[69]='Bird',
 	[70]='Cockatrice',
 	[71]='Roc',
@@ -79,6 +79,6 @@ return {
 	[74]='Apkallu',
 	[75]='Colibri',
 	[76]='Amphiptere',
-	[77]='Harpeia',
-	[78]='Tulfaire',
+	--[77]='Harpeia', --not implemented
+	--[78]='Tulfaire', --not implemented
 }

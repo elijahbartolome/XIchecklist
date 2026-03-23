@@ -1,6 +1,6 @@
 return S{
 	
-		-- Non-player KIs
+	-- Non-player KIs
 	347, -- Dynamis Debugger
 	811, -- Replay Debugger
 	619, -- All-You-Can-Ride Pass

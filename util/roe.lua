@@ -5,7 +5,6 @@ local roeextramap = require('../maps/roe_objectives_extra')
 function roe_util.handle_roe_data(data)
 	for id, roe in pairs(roemap) do
 		if (util.has_bit(roe_data, id)) then
-			--windower.add_to_chat(100, '' .. roemap[id].name)
 			roe_util.add_roe(id)
 		end
 	end
