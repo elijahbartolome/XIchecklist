@@ -1,6 +1,6 @@
 _addon.name     = 'xichecklist'
 _addon.author   = 'Anokata'
-_addon.version  = '0.5.0'
+_addon.version  = '0.5.1'
 _addon.commands = {'xichecklist', 'xic'}
 
 require('sets')
@@ -455,15 +455,15 @@ function check_playerspells(spelltype)
 	local spells_exclusions = require('maps/spells_exclusions')
 	totalplayerspells = 0
 	learnedspells = 0
-	for id, value in pairs(res.spells) do
-		if ((value.type == spelltype) and (not value.unlearnable) and (not spells_exclusions[id]) --[[and (#value.levels > 0)]] ) then
+	for id, spell in pairs(res.spells) do
+		if ((spell.type == spelltype) and (not spell.unlearnable) and (not spells_exclusions[id])) then
 			if (playerspells[id] == true) then
 				-- spell learned
 				learnedspells = learnedspells + 1
 				totalplayerspells = totalplayerspells + 1
 			else
 				-- spell unlearned
-				table.insert (spells_list, '\\cs(255,255,0)' .. value.en ..'\\cr') -- add unlearned spell
+				table.insert (spells_list, '\\cs(255,255,0)' .. spell.en ..'\\cr') -- add unlearned spell
 				totalplayerspells = totalplayerspells + 1
 			end
 		end
