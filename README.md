@@ -33,7 +33,7 @@ the menu will only show missing items like quests,key items, spells, home points
 
 ![screenshot4](https://i.imgur.com/wUWDWqE.png)
 
-![screenshot5](https://i.imgur.com/vi4uiU8.png)
+![screenshot5](https://i.imgur.com/c9ZEjBP.png)
 
 - this thing is free to use/share/edit/anything i dont care what you do with it
 
@@ -62,3 +62,4 @@ the menu will only show missing items like quests,key items, spells, home points
 - 0.3.1 - added title exclusions & removed unlearnable spells
 - 0.4.0 - A lot fixes
 - 0.4.1 - removed non-implemented monstrosity
+- 0.5.0 - added title obtain method, for quick reference in missing titles
