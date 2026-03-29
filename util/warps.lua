@@ -1,63 +1,73 @@
 local warps_util = {}
-local hpmaps = require('../maps/warps_homepoints')
-local sgmaps = require('../maps/warps_survivalguides')
-local wpmaps = require('../maps/warps_waypoints')
+local opmaps = require('../maps/maps_outposts')
 local totalhomepoint, obtainedhomepoints = 0, 0
 local totalsurvivalguides, obtainedsurvivalguides = 0, 0
 local totalwaypoints, obtainedwaypoints = 0, 0
 
-function warps_util.checkhomepoints(data)
-	local subdata = data:sub(0x08+1, 0x17+1) -- home points address in packet [0x063]
-	local totalhomepoint, obtainedhomepoints = 0, 0
-	homepoints_list = {}
-	-- check for unobtained home points
-	for hpindex, hpname in pairs(hpmaps) do
-		totalhomepoint = totalhomepoint+1
-		if (not util.has_bit(subdata, hpindex)) then
-			table.insert(homepoints_list, '\\cs(255,255,0)' .. hpname ..'\\cr') -- add non completed home point
+local warps = {
+	homepoints = {data = {0x08+1, 0x17+1}, map = require('../maps/warps_homepoints')},
+	survivalguides = {data = {0x18+1, 0x27+1}, map = require('../maps/warps_survivalguides')},
+	waypoints = {data = {0x28+1 , 0x2E+1}, map = require('../maps/warps_waypoints')},
+}
+
+opwarp_npcs = {
+	['Conrad'] = {entityid=17735859, zoneid=234, menuid=584},
+	['Jeanvirgaud'] = {entityid=17723597, zoneid=231, menuid=0},
+	['Rottata'] = {entityid=17760439, zoneid=240, menuid=0},
+}
+
+function warps_util.checkwarps(warptype, data)
+	local subdata = data:sub(unpack(warps[warptype].data))
+	local total, obtained = 0, 0
+	warps_list = {}
+	-- check for unobtained warp
+	for index, name in pairs(warps[warptype].map) do
+		total = total+1
+		if (not util.has_bit(subdata, index)) then
+			table.insert(warps_list, '\\cs(255,255,0)['.. warptype ..'] ' .. name ..'\\cr') -- add non obtained warp
 		else
-			obtainedhomepoints = obtainedhomepoints+1
+			obtained = obtained+1
 		end
 	end
-	playertracker['Homepoints_completed'] = obtainedhomepoints
-	playertracker['Homepoints_total'] = totalhomepoint		
-	return homepoints_list
+	playertracker[warptype..'_completed'] = obtained
+	playertracker[warptype..'_total'] = total		
+	return warps_list
 end
 
-function warps_util.checksurvivalguides(data)
-	local subdata = data:sub(0x18+1, 0x27+1) -- survival guides address in packet [0x063]
-	local totalsurvivalguides, obtainedsurvivalguides = 0, 0
-	survivalguides_list = {}
-	-- check for unobtained home survival guide
-	for svindex=0, #sgmaps do
-		totalsurvivalguides = totalsurvivalguides+1
-		if (not util.has_bit(subdata, svindex)) then
-			table.insert(survivalguides_list, '\\cs(255,255,0)[SurvivalGuide]' .. sgmaps[svindex] ..'\\cr') -- add non completed survival guide
-		else
-			obtainedsurvivalguides = obtainedsurvivalguides+1
+function warps_util.handle_op_warps(data)
+	parseddata = packets.parse('incoming', data)
+	menu = parseddata['Menu Parameters']
+	subdata = menu:sub(0x1C+1, 0x1E+1)
+	for key, name in pairs(opmaps) do
+		if (not util.has_bit(subdata, key+5)) then -- used+5 because mapping starts from 6th byte
+			warps_util.add_outpost(key)
 		end
 	end
-	playertracker['Survivalguides_completed'] = obtainedsurvivalguides
-	playertracker['Survivalguides_total'] = totalsurvivalguides		
-	return survivalguides_list
 end
 
-function warps_util.checkwaypoints(data)
-	local subdata = data:sub(0x28+1 , 0x2E+1) -- waypoint address in packet [0x063]
-	local totalwaypoint, obtainedwaypoints = 0, 0
-	waypoints_list = {}
-	-- check for unobtained way points
-	for wpindex, wpname in pairs(wpmaps) do
-		totalwaypoint = totalwaypoint+1
-		if (not util.has_bit(subdata, wpindex)) then
-			table.insert(waypoints_list, '\\cs(255,255,0)[Waypoints] [index '.. wpindex .. ']' .. wpname ..'\\cr') -- add non completed way point
+function warps_util.add_outpost(id)
+	if (not (playertracker.outposts_unlocks[tostring(id)] == true)) then
+		playertracker.outposts_unlocks[tostring(id)] = true
+		playertracker:save()
+		util.addon_log('Outpost added: ' .. opmaps[id])
+	end
+end
+
+function warps_util.log_outposts()
+	outposts_list = {}
+	local total, complete = 0,0
+	for key, name in pairs(opmaps) do
+		total = total+1
+		if (playertracker.outposts_unlocks[tostring(key)] == true) then
+			complete = complete+1
+			--table.insert(outposts_list, '\\cs(0,255,0)[outpost] ' .. name ..'\\cr') -- add obtained outpost
 		else
-			obtainedwaypoints = obtainedwaypoints+1
+			table.insert(outposts_list, '\\cs(255,255,0)[outpost] ' .. name ..'\\cr') -- add missing outpost
 		end
 	end
-	playertracker['Waypoints_completed'] = obtainedwaypoints
-	playertracker['Waypoints_total'] = totalwaypoint		
-	return waypoints_list
+	playertracker['outposts_completed'] = complete
+	playertracker['outposts_total'] = total
+	return outposts_list
 end
 
 return warps_util

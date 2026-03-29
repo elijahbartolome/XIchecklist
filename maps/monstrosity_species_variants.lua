@@ -4,8 +4,8 @@ return {
 	-- parseddata['Variants Bitfield']
 	
 	
-	--[254]='A jiggly creature from a world beyond.',
-	--[255]='An ore-loving creature from a world beyond.',
+	--[254]='Slime',
+	--[255]='Spriggan',
 
 	[256]='Onyx Rabbit',
 	[257]='Alabaster Rabbit',
@@ -162,8 +162,9 @@ return {
 	[362]='Alabaster Harpeia',
 
 
-	[508]='A jiggly creature from a world beyond.',
-	[509]='A jiggly creature from a world beyond.',
-	[510]='An ore-loving creature from a world beyond.',
-	[511]='An ore-loving creature from a world beyond.',
+	[508]='She-Slime (Slime)',
+	[509]='Metal Slime (Slime)',
+	
+	[510]='Spriggan.C (Spriggan)',
+	[511]='Spriggan.G (Spriggan)',
 }

@@ -3,9 +3,9 @@ return {
 	-- adress 0x063 Order 3
 	-- parseddata['Monster Level Char field']
 	--[0]='',
-	[1]='Rabbit', -- confirmed
+	[1]='Rabbit',
 	[2]='Behemoth',
-	[3]='Tiger', -- confirmed
+	[3]='Tiger',
 	[4]='Sheep',
 	[5]='Ram (Sheep)',
 	[6]='Dhalmel',
@@ -20,7 +20,7 @@ return {
 	[15]='Funguar',
 	[16]='Treant Sapling',
 	[17]='Morbol',
-	[18]='Mandragora', -- confirmed
+	[18]='Mandragora',
 	[19]='Sabotender',
 	[20]='Flytrap',
 	[21]='Goobbue',
@@ -45,7 +45,7 @@ return {
 	--[40]='Kulox (Gnat)', --not implemented
 	--[41]='Twitherym', --not implemented
 	--[42]='Chapuli', --not implemented
-	[43]='Lizard', -- confirmed
+	[43]='Lizard',
 	[44]='Raptor',
 	[45]='Adamantoise',
 	[46]='Bugard',
@@ -74,7 +74,7 @@ return {
 	[69]='Bird',
 	[70]='Cockatrice',
 	[71]='Roc',
-	[72]='Bat', -- confirmed
+	[72]='Bat',
 	[73]='Hippogryph',
 	[74]='Apkallu',
 	[75]='Colibri',

@@ -1,6 +1,6 @@
 _addon.name     = 'xichecklist'
 _addon.author   = 'Anokata'
-_addon.version  = '0.5.2'
+_addon.version  = '0.6.0'
 _addon.commands = {'xichecklist', 'xic'}
 
 require('sets')
@@ -47,14 +47,14 @@ playertracker = {
 	['campaign_completed'] = 0,
 	['campaign_total'] = 0,
 	
-	['Permanent Key Items_completed'] = 0,
-	['Permanent Key Items_total'] = 0,
-	['Magical Maps_completed'] = 0,
-	['Magical Maps_total'] = 0,
+	['Permanent_Key_Items_completed'] = 0,
+	['Permanent_Key_Items_total'] = 0,
+	['Magical_Maps_completed'] = 0,
+	['Magical_Maps_total'] = 0,
 	['Mounts_completed'] = 0,
 	['Mounts_total'] = 0,
-	['Claim Slips_completed'] = 0,
-	['Claim Slips_total'] = 0,
+	['Claim_Slips_completed'] = 0,
+	['Claim_Slips_total'] = 0,
 	
 	['WhiteMagic_completed'] = 0,
 	['WhiteMagic_total'] = 0,
@@ -74,17 +74,15 @@ playertracker = {
 	['Trust_total'] = 0,
 	
 	['Jobpoints_completed'] = 0,
-	['Jobpoints_total'] = 46200,
 	['Masterlevels_completed'] = 0,
-	['Masterlevels_total'] = 1100,
 	['Masterlevels_highest'] = 0,
 	
-	['Homepoints_completed'] = 0,
-	['Homepoints_total'] = 0,
-	['Survivalguides_completed'] = 0,
-	['Survivalguides_total'] = 0,
-	['Waypoints_completed'] = 0,
-	['Waypoints_total'] = 0,
+	['homepoints_completed'] = 0,
+	['homepoints_total'] = 0,
+	['survivalguides_completed'] = 0,
+	['survivalguides_total'] = 0,
+	['waypoints_completed'] = 0,
+	['waypoints_total'] = 0,
 	
 	['Racejobinstinct_completed'] = 0,
 	['Racejobinstinct_total'] = 0,
@@ -92,6 +90,8 @@ playertracker = {
 	['MonsterLevels_total'] = 0,
 	['MonsterVariants_completed'] = 0,
 	['MonsterVariants_total'] = 0,
+	['MonsterInsincts_completed'] = 0,
+	['MonsterInsincts_total'] = 0,
 	
 	['Titles_completed'] = 0,
 	['Titles_total'] = 0,
@@ -99,9 +99,15 @@ playertracker = {
 	['RoE_completed'] = 0,
 	['RoE_total'] = 0,
 	
+	
+	['outposts_completed'] = 0,
+	['outposts_total'] = 0,
+	
+	
+	outposts_unlocks = {},
 }
 
---playertracker = config.load('data/'.. windower.ffxi.get_player().name .. '.xml', playertracker)
+playertracker = config.load('data/'.. windower.ffxi.get_player().name .. '.xml', playertracker)
 
 playertitles = {}
 playertitles = config.load('data/'.. windower.ffxi.get_player().name .. '_titles.xml', playertitles)
@@ -191,6 +197,7 @@ warps_util = require('util/warps')
 mons_util = require('util/monstrosity')
 titles_util = require('util/titles')
 roe_util = require('util/roe')
+menus_util = require('util/menus')
 
 local cmds = {
     help = S{'help','h'},
@@ -212,20 +219,20 @@ function append_maintab(text, ...)
 	local args = {...}
 	local menulinecolor = '(255,255,0)'
 	if (args[1]==args[2]) then menulinecolor = '(0,255,0)' end
-	table.insert(tabs[1].items, '\\cs' .. menulinecolor .. '--' .. text:format(...) .. '\\cr')
+	table.insert(tabs[1].items, '\\cs' .. menulinecolor .. '-' .. text:format(...) .. '\\cr')
 end
 
 function update_maintab()
 	
 	tabs[1].items = {}
 	
-	table.insert(tabs[1].items, '- RoE')
+	table.insert(tabs[1].items, '======= RoE =======')
 	append_maintab('RoE %d/%d', playertracker['RoE_completed'], playertracker['RoE_total'])
 	
-	table.insert(tabs[1].items, '- Missions')
+	table.insert(tabs[1].items, '======= Missions =======')
 	append_maintab('Campaign Ops %d/%d', playertracker['campaign_completed'], playertracker['campaign_total'])
 	
-	table.insert(tabs[1].items, '- Quests')
+	table.insert(tabs[1].items, '======= Quests =======')
 	append_maintab('Bastok Quests %d/%d', playertracker['bastok_completed'], playertracker['bastok_total'])
 	append_maintab('San d\'Oria Quests %d/%d', playertracker['sandoria_completed'], playertracker['sandoria_total'])
 	append_maintab('Windurst Quests %d/%d', playertracker['windurst_completed'], playertracker['windurst_total'])
@@ -238,13 +245,13 @@ function update_maintab()
 	append_maintab('Adoulin Quests %d/%d', playertracker['adoulin_completed'], playertracker['adoulin_total'])
 	append_maintab('Coalition Assignments %d/%d', playertracker['coalition_completed'], playertracker['coalition_total'])
 
-	table.insert(tabs[1].items, '- Key Items')
-	append_maintab('Permanent Key Items %d/%d', playertracker['Permanent Key Items_completed'], playertracker['Permanent Key Items_total'])
-	append_maintab('Magical Maps %d/%d', playertracker['Magical Maps_completed'], playertracker['Magical Maps_total'])
+	table.insert(tabs[1].items, '======= Key Items =======')
+	append_maintab('Permanent Key Items %d/%d', playertracker['Permanent_Key_Items_completed'], playertracker['Permanent_Key_Items_total'])
+	append_maintab('Magical Maps %d/%d', playertracker['Magical_Maps_completed'], playertracker['Magical_Maps_total'])
 	append_maintab('Mounts %d/%d', playertracker['Mounts_completed'], playertracker['Mounts_total'])
-	append_maintab('Claim Slips %d/%d', playertracker['Claim Slips_completed'], playertracker['Claim Slips_total'])
+	append_maintab('Claim Slips %d/%d', playertracker['Claim_Slips_completed'], playertracker['Claim_Slips_total'])
 
-	table.insert(tabs[1].items, '- Magic')
+	table.insert(tabs[1].items, '======= Magic =======')
 	append_maintab('White Magic %d/%d', playertracker['WhiteMagic_completed'], playertracker['WhiteMagic_total'])
 	append_maintab('Black Magic %d/%d', playertracker['BlackMagic_completed'], playertracker['BlackMagic_total'])
 	append_maintab('Summoner Pacts %d/%d', playertracker['SummonerPact_completed'], playertracker['SummonerPact_total'])
@@ -254,22 +261,23 @@ function update_maintab()
 	append_maintab('Geomancy %d/%d', playertracker['Geomancy_completed'], playertracker['Geomancy_total'])
 	append_maintab('Trusts %d/%d', playertracker['Trust_completed'], playertracker['Trust_total'])
 
-	table.insert(tabs[1].items, '- EXP')
-	append_maintab('Job Points %d/%d', playertracker['Jobpoints_completed'], playertracker['Jobpoints_total'])
-	append_maintab('Master Levels %d/%d (Highest: %d)', playertracker['Masterlevels_completed'], playertracker['Masterlevels_total'], playertracker['Masterlevels_highest'])
+	table.insert(tabs[1].items, '======= EXP =======')
+	append_maintab('Job Points %d/%d', playertracker['Jobpoints_completed'], 46200)
+	append_maintab('Master Levels %d/%d (Highest: %d)', playertracker['Masterlevels_completed'], 1100, playertracker['Masterlevels_highest'])
 	
-	table.insert(tabs[1].items, '- Warps')
-	append_maintab('Home Points %d/%d', playertracker['Homepoints_completed'], playertracker['Homepoints_total'])
-	append_maintab('Survival Guides %d/%d', playertracker['Survivalguides_completed'], playertracker['Survivalguides_total'])
-	append_maintab('Waypoints %d/%d (untested)', playertracker['Waypoints_completed'], playertracker['Waypoints_total'])
+	table.insert(tabs[1].items, '======= Warps =======')
+	append_maintab('Home Points %d/%d', playertracker['homepoints_completed'], playertracker['homepoints_total'])
+	append_maintab('Survival Guides %d/%d', playertracker['survivalguides_completed'], playertracker['survivalguides_total'])
+	append_maintab('Waypoints %d/%d', playertracker['waypoints_completed'], playertracker['waypoints_total'])
+	append_maintab('Outposts %d/%d', playertracker['outposts_completed'], playertracker['outposts_total'])
 	
-	table.insert(tabs[1].items, '- Monstrosity')
+	table.insert(tabs[1].items, '======= Monstrosity =======')
 	append_maintab('Monster Levels %d/%d', playertracker['MonsterLevels_completed'], playertracker['MonsterLevels_total'])
 	append_maintab('Race/Job Instincts %d/%d', playertracker['Racejobinstinct_completed'], playertracker['Racejobinstinct_total'])
 	append_maintab('Monster Variants %d/%d', playertracker['MonsterVariants_completed'], playertracker['MonsterVariants_total'])
+	append_maintab('Monster Instincts %d/%d', playertracker['MonsterInsincts_completed'], playertracker['MonsterInsincts_total'])
 	
-	table.insert(tabs[1].items, '----------------------')
-	table.insert(tabs[1].items, '- Titles')
+	table.insert(tabs[1].items, '======= Titles =======')
 	append_maintab('Titles %d/%d', playertracker['Titles_completed'], playertracker['Titles_total'])
 	append_items(tabs[1].items, titles_util.list_titles_bycontent())
 	
@@ -298,14 +306,15 @@ windower.register_event('incoming chunk', function(id, data, modified, injected,
 		-- do warps
 		if (parseddata.Order == 6) then 
 			tabs[7].items = {}
-			append_items(tabs[7].items, warps_util.checkhomepoints(data))
-			append_items(tabs[7].items, warps_util.checksurvivalguides(data))
-			append_items(tabs[7].items, warps_util.checkwaypoints(data))
+			append_items(tabs[7].items, warps_util.checkwarps('homepoints', data))
+			append_items(tabs[7].items, warps_util.checkwarps('survivalguides', data))
+			append_items(tabs[7].items, warps_util.checkwarps('waypoints', data))
+			append_items(tabs[7].items, warps_util.log_outposts())
 		end
 		-- do monstrosity
 		if (parseddata.Order == 3) then
 			mons_util.monster_levels = util.char_field_to_table(parseddata['Monster Level Char field'])
-			--monster_instincts = bytes_to_table(parseddata['Instinct Bitfield 1'])
+			mons_util.monster_instincts = util.twobits_to_table(parseddata['Instinct Bitfield 1'])
 			xichecklist_updatetabs('monstrosity')
 		end
 		if (parseddata.Order == 4) then
@@ -323,6 +332,11 @@ windower.register_event('incoming chunk', function(id, data, modified, injected,
 		-- check player info (updated when openning menu)
 		local parseddata = packets.parse('incoming', data)
 		titles_util.add_title(parseddata['Title'])
+	end
+	
+	if id == 0x034 then
+		-- handle npc menu (currently only OP warps)
+		menus_util.handle_npc_menu(data)
 	end
 	
 	-- do RoE
@@ -370,10 +384,8 @@ function xichecklist_updatetabs(tab)
 		append_items(tabs[2].items, quest_util.log_quests('other'))
 		append_items(tabs[2].items, quest_util.log_quests('abyssea'))
 		append_items(tabs[2].items, quest_util.log_quests('adoulin'))
-		
 		-- log campaign ops
 		tabs[3].items = quest_util.log_campaign()
-		
 		-- log coalitions
 		tabs[4].items = quest_util.log_quests('coalition')
 	end
@@ -400,12 +412,14 @@ function xichecklist_updatetabs(tab)
 	-- log Monstrosity levels & Race/Job Instincts
 	if (tab == 'monstrosity') then
 		tabs[8].items = {}
-		table.insert(tabs[8].items, '- Species Levels')
+		table.insert(tabs[8].items, '==== Species Levels ====')
 		append_items(tabs[8].items, mons_util.log_monsterlevels())
-		table.insert(tabs[8].items, '- Monster Variants')
+		table.insert(tabs[8].items, '==== Monster Variants ====')
 		append_items(tabs[8].items, mons_util.log_variants())
-		table.insert(tabs[8].items, '- Race / Job Instincts')
+		table.insert(tabs[8].items, '==== Race / Job Instincts ====')
 		append_items(tabs[8].items, mons_util.log_racejobinstincts())
+		table.insert(tabs[8].items, '==== Monster Instincts ====')
+		append_items(tabs[8].items, mons_util.log_monsterinstincts())
 	end
 	
 	-- log Titles
@@ -443,8 +457,8 @@ function check_keyitems(keyitemtype)
 			end
 		end
 	end
-	playertracker[keyitemtype..'_completed'] = obtainedkeyitems
-	playertracker[keyitemtype..'_total'] = totalkeyitems
+	playertracker[util.cleanspaces(keyitemtype)..'_completed'] = obtainedkeyitems
+	playertracker[util.cleanspaces(keyitemtype)..'_total'] = totalkeyitems
 	return keyitem_list
 end
 
@@ -485,9 +499,6 @@ function check_jobpoints()
 		end
 	end
 	playertracker['Jobpoints_completed'] = total_jp_spent
-	local menulinecolor = '(255,255,0)'
-	if (total_jp_spent==46200) then menulinecolor = '(0,255,0)' end
-	table.insert(tabs[1].items, '\\cs' .. menulinecolor .. '-- Job Points '.. total_jp_spent .. '/46200\\cr')
 	-- master levels
 	if (type(playerinfo.master_levels) == 'table') then 
 		for job, value in pairs(playerinfo.master_levels) do

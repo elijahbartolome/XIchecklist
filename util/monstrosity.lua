@@ -2,9 +2,11 @@ local mons_util = {}
 local map_species = require('../maps/monstrosity_species')
 local map_species_variants = require('../maps/monstrosity_species_variants')
 local map_racejobinstincts = require('../maps/monstrosity_racejobinstincts')
-local monster_levels = {}
-local racejobinstincts = {}
+local map_monsterinstincts = require('../maps/monstrosity_instincts')
+local monster_levels = nil
+local racejobinstincts = nil
 local variants_bitfield = nil
+local monster_instincts = nil
 
 local totalspecies, obtainedspecies = 0, 0
 local totalracejobinstincts, obtainedracejobinstincts = 0, 0
@@ -28,6 +30,7 @@ function mons_util.log_racejobinstincts()
 end
 
 function mons_util.log_monsterlevels()
+	if mons_util.monster_levels==nil then return end
 	local species_list = {}
 	local total, complete = 0, 0
 	for id, monster in pairs(map_species) do
@@ -56,6 +59,35 @@ function mons_util.log_variants()
 	playertracker['MonsterVariants_completed'] = obtained
 	playertracker['MonsterVariants_total'] = total	
 	return variants_list
+end
+
+function mons_util.log_monsterinstincts()
+	if mons_util.monster_instincts==nil then return end
+	local monsterinstincts_list = {}
+	--local instincts_unlocks = util.twobits_to_table(mons_util.monster_instincts)
+	local total, obtained = 0, 0
+	for table_id, unlocked_level in pairs(mons_util.monster_instincts) do
+		total = total+3
+		local instinct_index_base = 3 * (table_id - 1)
+		for instinct_index=1, 3 do
+			if (unlocked_level >= instinct_index) then
+				if (map_monsterinstincts[instinct_index_base+instinct_index]) then
+					obtained = obtained+1
+					total = total+1
+					--table.insert(monsterinstincts_list, '\\cs(0,255,0)' .. map_monsterinstincts[instinct_index_base+instinct_index] .. '\\cr') -- add obtained monster instinct
+				end
+			else
+				if (map_monsterinstincts[instinct_index_base+instinct_index]) then
+					total = total+1
+					table.insert(monsterinstincts_list, '\\cs(255,255,0)' .. map_monsterinstincts[instinct_index_base+instinct_index] .. '\\cr') -- add non obtained monster instinct
+				end
+			end
+
+		end
+	end
+	playertracker['MonsterInsincts_completed'] = obtained
+	playertracker['MonsterInsincts_total'] = total	
+	return monsterinstincts_list
 end
 
 return mons_util
