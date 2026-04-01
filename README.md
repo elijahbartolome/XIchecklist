@@ -12,6 +12,8 @@ to update Outpost Warps you must speak to any [Nation Teleporter](https://www.bg
 
 to update MMM Maze Count you must speak to [Chatnachoq](https://www.bg-wiki.com/ffxi/Chatnachoq)
 
+to update Proto-Waypoint you must speak to any [Proto-Waypoints](https://www.bg-wiki.com/ffxi/Waypoint#Proto-Waypoints)
+
 ## **Tracking**:
 
 - Monstrosity (Monster levels / Race & Job Instincts / Monster variants)
@@ -19,7 +21,7 @@ to update MMM Maze Count you must speak to [Chatnachoq](https://www.bg-wiki.com/
 - Moblin Maze Mongers (Vouchers / Runes / Maze Count)
 - Outpost Warps
 - Records of Eminence (RoE) 
-- Warps (Home Points / Survival Guides / Waypoints)
+- Warps (Home Points / Survival Guides / Waypoints / Proto-Waypoints)
 - Campaign Ops
 - Quests (San d'Oria / Bastok / Windurst / Jeuno / Aht Urhgan / Crystal War / Outlands / Other / Abyssea / Adoulin / Coalition)
 - Key items (Permenant / Maps / Mounts / Claim Slips)
@@ -70,3 +72,4 @@ the menu will only show missing items like quests,key items, spells, home points
 - 0.5.2 - fixed unlearnable spells & waypoint mapping
 - 0.6.0 - added Outpost warps / Monster Instincts + fixes/cleanup
 - 0.7.0 - added Moblin Maze Mongers (Vouchers / Runes / Maze count) & Active Effects (Dynamis/Sortie Job KIs)
+- 0.8.0 - added Proto-Waypoints
