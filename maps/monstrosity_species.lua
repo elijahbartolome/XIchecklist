@@ -81,4 +81,7 @@ return {
 	[76]='Amphiptere',
 	--[77]='Harpeia', --not implemented
 	--[78]='Tulfaire', --not implemented
+	
+	--[254]='Slime',
+	--[255]='Spriggan',
 }

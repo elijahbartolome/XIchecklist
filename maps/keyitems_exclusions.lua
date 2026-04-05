@@ -25,6 +25,8 @@ return S{
 	1868, -- map of Lebros Cavern
 	1869, -- map of Ilrusi Atoll
 	1870, -- map of Periqia
+	1871, -- map of Nyzul Isle
+	1873, --map of the Colosseum
 	
 	1875, -- map of Zhayolm Remnants
 	1876, -- map of Arrapago Remnants

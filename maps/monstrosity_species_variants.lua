@@ -3,10 +3,6 @@ return {
 	-- adress 0x063 Order 4
 	-- parseddata['Variants Bitfield']
 	
-	
-	--[254]='Slime',
-	--[255]='Spriggan',
-
 	[256]='Onyx Rabbit',
 	[257]='Alabaster Rabbit',
 	[258]='Lapinion (Rabbit)',
@@ -17,9 +13,8 @@ return {
 	[262]='Smilodon (Tiger)',
 
 	[263]='Karakul (Sheep)',
-	[264]='Lucerewe (Sheep)',
-
-	[265]='Ovim (Sheep)',
+	--[264]='Lucerewe (Sheep)',
+	--[265]='Ovim (Sheep)',
 
 	[266]='Lynx (Coeurl)',
 	[267]='Collared Lynx (Coeurl)',
@@ -28,15 +23,15 @@ return {
 
 	[269]='Orthrus (Cerberus)',
 
-	[270]='Bipedal Gnole',
+	--[270]='Bipedal Gnole',
 
 	[271]='Coppercap (Funguar)',
 
 	[272]='Treant',
-	[273]='Flowering Treant',
-	[274]='Scarlet-tinged Treant',
-	[275]='Barren Treant',
-	[276]='Necklaced Treant',
+	--[273]='Flowering Treant',
+	--[274]='Scarlet-tinged Treant',
+	--[275]='Barren Treant',
+	--[276]='Necklaced Treant',
 
 	[277]='Pygmy Morbol',
 	[278]='Scarce Morbol',
@@ -48,7 +43,7 @@ return {
 	[283]='Pygmy Mandragora',
 	[284]='Adenium (Mandragora)',
 	[285]='Pachypodium (Mandragora)',
-	[286]='Enlightened Mandragora',
+	--[286]='Enlightened Mandragora',
 	[287]='New Year Mandragora',
 
 	[288]='Sabotender Florido',
@@ -80,7 +75,7 @@ return {
 
 	[305]='Azure Chigoe',
 
-	[306]='Coiled Wamouracampa (Wamoura larva)',
+	--[306]='Coiled Wamouracampa (Wamoura larva)',
 	[307]='Wamoura',
 	[308]='Coral Wamoura',
 
@@ -88,8 +83,8 @@ return {
 
 	[310]='Midge (Gnat)',
 
-	[311]='Vermilion Mantis',
-	[312]='Russet Mantis',
+	--[311]='Vermilion Mantis',
+	--[312]='Russet Mantis',
 
 	[315]='Ashen Lizard',
 
@@ -108,9 +103,9 @@ return {
 
 	[324]='Sibilus (Peiste)',
 
-	[326]='Vermilion Worm',
-	[327]='Onyx Worm',
-	[328]='Entozoon (Worm)',
+	--[326]='Vermilion Worm',
+	--[327]='Onyx Worm',
+	--[328]='Entozoon (Worm)',
 
 	[329]='Clot (Slime)',
 	[330]='Gold Slime',
@@ -158,13 +153,12 @@ return {
 
 	[360]='Sanguiptere (Amphiptere)',
 
-	[361]='Vermilion Harpeia',
-	[362]='Alabaster Harpeia',
+	--[361]='Vermilion Harpeia',
+	--[362]='Alabaster Harpeia',
 
 
 	[508]='She-Slime (Slime)',
 	[509]='Metal Slime (Slime)',
-	
 	[510]='Spriggan.C (Spriggan)',
 	[511]='Spriggan.G (Spriggan)',
 }

@@ -1,7 +1,8 @@
 local util = {}
+local bit = require('bit')
 
 function util.addon_log(str)
-    windower.add_to_chat(161, str)
+    windower.add_to_chat(161, '[Checklist] ' .. str)
 end
 
 function util.has_bit(data, position)
@@ -15,8 +16,6 @@ function util.char_field_to_table(str)
     end
     return t
 end
-
-local bit = require('bit')
 
 function util.twobits_to_table(data)
 -- Extract 2-bit values into a table
@@ -35,6 +34,17 @@ end
 
 function util.cleanspaces(str)
     return str:gsub(" ", "_")
+end
+
+function util.list_item(category, text, completed)
+	if (completed ~= true) then local completed = false end
+	if (text == nil) then return end
+	local item = {
+		category = category,
+		text = text,
+		completed = completed,
+	}
+	return item
 end
 
 return util

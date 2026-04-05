@@ -44,10 +44,6 @@ local maps = {
 	campaign = require('../maps/campaign'),
 }
 
---[[function quest_util.to_set(data)
-    return {data:unpack('q64':rep(#data/4))}
-end]]
-
 function quest_util.addon_error(str)
     --windower.add_to_chat(167, 'You must change areas or complete %s quests before using this command.':format(str))
 end
@@ -57,19 +53,18 @@ function quest_util.log_quests(quest_type)
         quest_util.addon_error(quest_type)
         return true
     end
-	--local completed = quest_util.to_set(quests.completed[quest_type])
-	--local current = quest_util.to_set(quests.current[quest_type])
     local complete,total = 0, 0
-	local quest_list = {}
-	for key, questname in pairs(maps[quest_type]) do
-	local mutualcompleted = nil
+	local output_list = {}
+	for key, name in pairs(maps[quest_type]) do
+		local mutualcompleted = false
+		local completion = false
 		if maps[quest_type][key] then
 			total = total + 1
 			--if completed(key+1) then
             if util.has_bit(quests.completed[quest_type], key) then
                 complete = complete + 1
-				--table.insert(quest_list, '\\cs(0,255,0)' .. maps[quest_type][key] ..'\\cr') -- add completed quest name
-            else
+				completion = true
+			else
 				if (quests.mutual_exclusive[quest_type] and quests.mutual_exclusive[quest_type][key]) then -- check if mutual quests involved
 					--total = total - quests.mutual_exclusive[quest_type]:length() + 1 -- avoid multiple counts
 					for alternative in pairs(quests.mutual_exclusive[quest_type]) do
@@ -78,15 +73,16 @@ function quest_util.log_quests(quest_type)
 							mutualcompleted = true
 						end
 					end
-				elseif (not mutualcompleted) then
-					table.insert(quest_list, '\\cs(255,255,0) ['.. quest_type .. '] ' .. maps[quest_type][key] ..'\\cr') -- add non completed quest name
 				end
             end
+			if (not mutualcompleted) then
+				table.insert(output_list, util.list_item(quest_type, maps[quest_type][key], completion))
+			end
         end
 	end
 	playertracker[quest_type..'_completed'] = complete
 	playertracker[quest_type..'_total'] = total
-	return quest_list
+	return output_list
 end
 
 function quest_util.log_campaign(data)
@@ -100,22 +96,21 @@ function quest_util.log_campaign(data)
     end
 	data = quests.completed['campaign1'] .. quests.completed['campaign2']
 	local complete,total = 0, 0
-	local quest_list = {}
-	for id,campaignname in pairs(maps.campaign) do
-		local bitindex = ((math.floor(id/8)+1)*8) - ((id%8) +1)
+	local output_list = {}
+	for id,name in pairs(maps.campaign) do
+		local completion = false
 		if maps.campaign[id] then
 			total = total + 1
 			if util.has_bit(data, id) then
 				complete = complete + 1
-				--table.insert(quest_list, '\\cs(0,255,0) ' .. campaignname ..'\\cr') -- add completed campaign name
-			else
-				table.insert(quest_list, '\\cs(255,255,0) ' .. campaignname ..'\\cr') -- add non completed campaign name
+				completion = true
 			end
+			table.insert(output_list, util.list_item(nil, name, completion))
 		end
 	end
 	playertracker['campaign_completed'] = complete
 	playertracker['campaign_total'] = total
-	return quest_list
+	return output_list
 end
 
 return quest_util

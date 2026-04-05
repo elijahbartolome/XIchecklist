@@ -19,25 +19,26 @@ function roe_util.add_roe(id)
 end
 
 function roe_util.log_roe()
-	roe_list = {}
+	output_list = {}
 	local total, complete = 0,0
 	local hiddentotal, hiddencomplete = 0,0
 	for key, roe in pairs(roemap) do
 		total = total+1
+		local completion = false
 		if (roeextramap[key]) then hiddentotal = hiddentotal+1 end
 		if (playerroe[tostring(key)] == true) then
 			complete = complete+1
+			completion = true
 			if (roeextramap[key]) then hiddencomplete = hiddencomplete+1 end
-			--table.insert(roe_list, '\\cs(0,255,0) ' .. roemap[key].name ..'\\cr') -- add completed RoE
-		else
-			if (not roeextramap:contains(key)) then
-				table.insert(roe_list, '\\cs(255,255,0) ' .. roemap[key].name ..'\\cr') -- add missing RoE
-			end
 		end
+		if (not roeextramap:contains(key)) then
+			table.insert(output_list, util.list_item(nil, roemap[key].name, completion))
+		end
+		
 	end
 	playertracker['RoE_completed'] = complete - hiddencomplete
 	playertracker['RoE_total'] = total - hiddentotal
-	return roe_list
+	return output_list
 end
 
 return roe_util

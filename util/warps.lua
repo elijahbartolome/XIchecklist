@@ -14,19 +14,20 @@ function warps_util.checkwarps(warptype)
 	if warps_util.warps_data == nil then return end
 	local subdata = warps_util.warps_data:sub(unpack(warps[warptype].data))
 	local total, obtained = 0, 0
-	warps_list = {}
-	-- check for unobtained warp
+	output_list = {}
+	-- check for obtained warp
 	for index, name in pairs(warps[warptype].map) do
 		total = total+1
-		if (not util.has_bit(subdata, index)) then
-			table.insert(warps_list, '\\cs(255,255,0)['.. warptype ..'] ' .. name ..'\\cr') -- add non obtained warp
-		else
+		local completion = false
+		if (util.has_bit(subdata, index)) then
 			obtained = obtained+1
+			completion = true
 		end
+		table.insert(output_list, util.list_item(warptype, name, completion))
 	end
 	playertracker[warptype..'_completed'] = obtained
 	playertracker[warptype..'_total'] = total		
-	return warps_list
+	return output_list
 end
 
 return warps_util
