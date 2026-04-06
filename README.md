@@ -74,4 +74,5 @@ the menu will only show missing items like quests,key items, spells, home points
 - 0.6.0 - added Outpost warps / Monster Instincts + fixes/cleanup
 - 0.7.0 - added Moblin Maze Mongers (Vouchers / Runes / Maze count) & Active Effects (Dynamis/Sortie Job KIs)
 - 0.8.0 - added Proto-Waypoints
-- 0.9.0 -- added Fishes Caught / Meeble Burrows / Merits , moved Coalitions under Quests
+- 0.9.0 - added Fishes Caught / Meeble Burrows / Merits , moved Coalitions under Quests
+- 0.9.2 - added Total Points / Mastery Rank / command to copy to clipboard
