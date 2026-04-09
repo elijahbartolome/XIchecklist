@@ -11,7 +11,7 @@ will be saved in config so only need to do it once (or when need to update)
 
 | Data | Description |
 |---|---|
-| Titles | speak to all [Titles NPCs](https://www.bg-wiki.com/ffxi/Category:Title_NPC) |
+| Titles | speak to all [Titles NPCs](https://www.bg-wiki.com/ffxi/Category:Title_NPC)<br>Current title updated by opening status menu. |
 | Outpost Warps | speak to any [Nation Teleporter](https://www.bg-wiki.com/ffxi/Outpost#Nation_Teleporters) |
 | MMM Maze Count | speak to [Chatnachoq](https://www.bg-wiki.com/ffxi/Chatnachoq) |
 | Proto-Waypoint | speak to any [Proto-Waypoints](https://www.bg-wiki.com/ffxi/Waypoint#Proto-Waypoints) |
