@@ -19,6 +19,8 @@ to update Fishes Caught you must speak to Fish Tracker NPC [Katsunaga](https://w
 
 to update Meeble Burrows you must speak to any [Burrow Researcher](https://www.bg-wiki.com/ffxi/Burrow_Researcher) or [Burrow Investigator](https://www.bg-wiki.com/ffxi/Burrow_Investigator) (Menu: Review expedition specifics -> Zone)
 
+<!-- to update Atmacite levels speak to any [Atmacite Refiner](https://www.bg-wiki.com/ffxi/Atmacite_Refiner) (Menu: Enrich Atmacite) -->
+
 ## **Tracking**:
 
 - Monstrosity (Monster levels / Race & Job Instincts / Monster variants)
@@ -76,3 +78,5 @@ the menu will only show missing items like quests,key items, spells, home points
 - 0.8.0 - added Proto-Waypoints
 - 0.9.0 - added Fishes Caught / Meeble Burrows / Merits , moved Coalitions under Quests
 - 0.9.2 - added Total Points / Mastery Rank / command to copy to clipboard
+- 0.9.3 - added fishing / crafting skills.
+<!-- - 0.9.4 - added Atmacite & Atmacite levels.-->
