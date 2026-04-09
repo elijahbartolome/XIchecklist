@@ -1,27 +1,26 @@
 ## **Usage**:
+| Command | Description |
+|---|---|
+| `//lua load xichecklist` | load then <ins>**zone**</ins> to get the UI menu updated |
+| `//xic hide` | to hide the UI |
+| `//xic show` | to show the UI |
+| `//xic copy` | to copy current tab to clipboard |
 
-`//lua load xichecklist` , then <ins>**zone**</ins> to get the UI menu updated.
+The following are updated by talking to NPCs (some require opening certain menus)
 
-`//xic hide|show` to hide or show the UI.
+will be saved in config so only need to do it once (or when need to update)
 
-`//xic copy` to copy current tab to clipboard.
+| Data | Description |
+|---|---|
+| Titles | speak to all [Titles NPCs](https://www.bg-wiki.com/ffxi/Category:Title_NPC) |
+| Outpost Warps | speak to any [Nation Teleporter](https://www.bg-wiki.com/ffxi/Outpost#Nation_Teleporters) |
+| MMM Maze Count | speak to [Chatnachoq](https://www.bg-wiki.com/ffxi/Chatnachoq) |
+| Proto-Waypoint | speak to any [Proto-Waypoints](https://www.bg-wiki.com/ffxi/Waypoint#Proto-Waypoints) |
+| Fishes Caught | Fish Tracker NPC [Katsunaga](https://www.bg-wiki.com/ffxi/Katsunaga) `(Menu: Types of fish caught)` |
+| Meeble Burrows | speak to any [Burrow Researcher](https://www.bg-wiki.com/ffxi/Burrow_Researcher) or [Burrow Investigator](https://www.bg-wiki.com/ffxi/Burrow_Investigator) `(Menu: Review expedition specifics -> Zone)` |
+| Atmacite levels | speak to any [Atmacite Refiner](https://www.bg-wiki.com/ffxi/Atmacite_Refiner) `(Menu: Enrich Atmacite)` |
+| Wing Skill | speak to chocobo kids [Arvilauge/Gonija/Kiria-Romaria](https://www.bg-wiki.com/ffxi/Category:Chocobo_Digging#Basics) |
 
-
-to update Titles you must speak to all [Titles NPCs](https://www.bg-wiki.com/ffxi/Category:Title_NPC)
-
-to update Outpost Warps you must speak to any [Nation Teleporter](https://www.bg-wiki.com/ffxi/Outpost#Nation_Teleporters)
-
-to update MMM Maze Count you must speak to [Chatnachoq](https://www.bg-wiki.com/ffxi/Chatnachoq)
-
-to update Proto-Waypoint you must speak to any [Proto-Waypoints](https://www.bg-wiki.com/ffxi/Waypoint#Proto-Waypoints)
-
-to update Fishes Caught you must speak to Fish Tracker NPC [Katsunaga](https://www.bg-wiki.com/ffxi/Katsunaga) `(Menu: Types of fish caught)`
-
-to update Meeble Burrows you must speak to any [Burrow Researcher](https://www.bg-wiki.com/ffxi/Burrow_Researcher) or [Burrow Investigator](https://www.bg-wiki.com/ffxi/Burrow_Investigator) `(Menu: Review expedition specifics -> Zone)`
-
-to update Atmacite levels speak to any [Atmacite Refiner](https://www.bg-wiki.com/ffxi/Atmacite_Refiner) `(Menu: Enrich Atmacite)`
-
-to update Wing Skill speak to chocobo kids [Arvilauge/Gonija/Kiria-Romaria](https://www.bg-wiki.com/ffxi/Category:Chocobo_Digging#Basics)
 
 ## **Tracking**:
 
