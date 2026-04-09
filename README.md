@@ -21,6 +21,7 @@ will be saved in config so only need to do it once (or when need to update)
 | Wing Skill | speak to chocobo kids [Arvilauge/Gonija/Kiria-Romaria](https://www.bg-wiki.com/ffxi/Category:Chocobo_Digging#Basics) |
 
 <br>
+
 By default anything completed is hidden from the UI, to show completed objectives (in green) edit the `settings.xml` and change the `showcompleted` to `true`
 
 ## **Tracking**:
