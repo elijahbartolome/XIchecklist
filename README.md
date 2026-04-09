@@ -16,9 +16,9 @@ will be saved in config so only need to do it once (or when need to update)
 | Outpost Warps | speak to any [Nation Teleporter](https://www.bg-wiki.com/ffxi/Outpost#Nation_Teleporters) |
 | MMM Maze Count | speak to [Chatnachoq](https://www.bg-wiki.com/ffxi/Chatnachoq) |
 | Proto-Waypoint | speak to any [Proto-Waypoints](https://www.bg-wiki.com/ffxi/Waypoint#Proto-Waypoints) |
-| Fishes Caught | Fish Tracker NPC [Katsunaga](https://www.bg-wiki.com/ffxi/Katsunaga) `(Menu: Types of fish caught)` |
-| Meeble Burrows | speak to any [Burrow Researcher](https://www.bg-wiki.com/ffxi/Burrow_Researcher) or [Burrow Investigator](https://www.bg-wiki.com/ffxi/Burrow_Investigator) `(Menu: Review expedition specifics -> Zone)` |
-| Atmacite levels | speak to any [Atmacite Refiner](https://www.bg-wiki.com/ffxi/Atmacite_Refiner) `(Menu: Enrich Atmacite)` |
+| Fishes Caught | Fish Tracker NPC [Katsunaga](https://www.bg-wiki.com/ffxi/Katsunaga) <br>`(Menu: Types of fish caught)` |
+| Meeble Burrows | speak to any [Burrow Researcher](https://www.bg-wiki.com/ffxi/Burrow_Researcher) or [Burrow Investigator](https://www.bg-wiki.com/ffxi/Burrow_Investigator) <br>`(Menu: Review expedition specifics -> Zone)` |
+| Atmacite levels | speak to any [Atmacite Refiner](https://www.bg-wiki.com/ffxi/Atmacite_Refiner) <br>`(Menu: Enrich Atmacite)` |
 | Wing Skill | speak to chocobo kids [Arvilauge/Gonija/Kiria-Romaria](https://www.bg-wiki.com/ffxi/Category:Chocobo_Digging#Basics) |
 
 
