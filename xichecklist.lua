@@ -1,6 +1,6 @@
 _addon.name     = 'xichecklist'
 _addon.author   = 'Anokata'
-_addon.version  = '0.9.8'
+_addon.version  = '0.9.9'
 _addon.commands = {'xichecklist', 'xic'}
 
 require('sets')
@@ -9,10 +9,7 @@ local texts = require('texts')
 local config = require('config')
 res = require('resources')
 
--------------------------------------------------
 -- Defaults
--------------------------------------------------
-
 trackermenusettings = {}
 trackermenusettings.pos = {}
 trackermenusettings.pos.x = 50
@@ -145,7 +142,6 @@ defaultplayertracker = {
 
 playertitles = {}
 playerroe = {}
-
 
 -- UI CONSTANTS
 local FONT_SIZE    = 12
@@ -288,7 +284,15 @@ function append_maintab(text, ...)
 	local args = {...}
 	local menulinecolor = '(255,255,0)'
 	if (args[1]==args[2]) then menulinecolor = '(0,255,0)' end
-	table.insert(tabs[1].items, '\\cs' .. menulinecolor .. '-' .. text:format(...) .. '\\cr')
+	table.insert(tabs[1].items, '\\cs'..menulinecolor..'-'..text:format(...)..'\\cr')
+end
+
+function append_header(tab, text, ...)
+	local args = {...}
+	local menulinecolor = '(255,255,0)'
+	if (args[1]==args[2]) then menulinecolor = '(0,255,0)' end
+	text = '==== '..text..' ===='
+	table.insert(tabs[tab].items, '\\cs'..menulinecolor..text:format(...)..'\\cr')
 end
 
 function update_maintab()
@@ -296,7 +300,7 @@ function update_maintab()
 	tabs[1].items = {}
 	
 	append_maintab('Mastery Rank: %d', playertracker['mastery_rank'])
-	append_maintab('Total Points %d/%d', util.totalpoints())
+	append_maintab('Checklist Progress %d/%d', util.totalpoints())
 	table.insert(tabs[1].items, '======= RoE =======')
 	append_maintab('RoE %d/%d', playertracker['RoE_completed'], playertracker['RoE_total'])
 	
@@ -477,6 +481,8 @@ windower.register_event('incoming chunk', function(id, data, modified, injected,
 	end
 	
 	update_maintab()
+	xichecklist_updatetabs()
+	draw()
 end)
 
 windower.register_event('outgoing chunk', function(id, data, modified, injected, blocked)
@@ -508,54 +514,85 @@ function xichecklist_updatetabs(tab)
 		tabs[2].items = {}
 		tabs[3].items = {}
 		-- log quests
+		append_header(2, 'San d\'Oria Quests (%d/%d)', playertracker['sandoria_completed'], playertracker['sandoria_total'])
 		append_items(tabs[2].items, tab_logs.quests['sandoria'])
+		append_header(2, 'Bastok Quests (%d/%d)', playertracker['bastok_completed'], playertracker['bastok_total'])
 		append_items(tabs[2].items, tab_logs.quests['bastok'])
+		append_header(2, 'Windurst Quests (%d/%d)', playertracker['windurst_completed'], playertracker['windurst_total'])
 		append_items(tabs[2].items, tab_logs.quests['windurst'])
+		append_header(2, 'Jeuno Quests (%d/%d)', playertracker['jeuno_completed'], playertracker['jeuno_total'])
 		append_items(tabs[2].items, tab_logs.quests['jeuno'])
+		append_header(2, 'Aht Urhgan Quests (%d/%d)', playertracker['ahturhgan_completed'], playertracker['ahturhgan_total'])
 		append_items(tabs[2].items, tab_logs.quests['ahturhgan'])
+		append_header(2, 'Crystal War Quests (%d/%d)', playertracker['crystalwar_completed'], playertracker['crystalwar_total'])
 		append_items(tabs[2].items, tab_logs.quests['crystalwar'])
+		append_header(2, 'Outlands Quests (%d/%d)', playertracker['outlands_completed'], playertracker['outlands_total'])
 		append_items(tabs[2].items, tab_logs.quests['outlands'])
+		append_header(2, 'Other Quests (%d/%d)', playertracker['other_completed'], playertracker['other_total'])
 		append_items(tabs[2].items, tab_logs.quests['other'])
+		append_header(2, 'Abyssea Quests (%d/%d)', playertracker['abyssea_completed'], playertracker['abyssea_total'])
 		append_items(tabs[2].items, tab_logs.quests['abyssea'])
+		append_header(2, 'Adoulin Quests (%d/%d)', playertracker['adoulin_completed'], playertracker['adoulin_total'])
 		append_items(tabs[2].items, tab_logs.quests['adoulin'])
+		append_header(2, 'Coalition Assignments (%d/%d)', playertracker['coalition_completed'], playertracker['coalition_total'])
 		append_items(tabs[2].items, tab_logs.quests['coalition'])
 		-- log campaign ops
+		append_header(3, 'Campaign Ops (%d/%d)', playertracker['campaign_completed'], playertracker['campaign_total'])
 		append_items(tabs[3].items, tab_logs.quests['campaign2'])
 	end
 	
 	-- log fishes caught
+	append_header(4, 'Type of Fishes Caught (%d/%d)', playertracker['fishes_completed'], playertracker['fishes_total'])
 	append_items(tabs[4].items, tab_logs.fishes)
 	
 	-- log keyitems
 	--tabs[5].items = {}
+	append_header(5, 'Permanent Key Items (%d/%d)', playertracker['Permanent_Key_Items_completed'], playertracker['Permanent_Key_Items_total'])
 	append_items(tabs[5].items, check_keyitems('Permanent Key Items'))
+	append_header(5, 'Magical Maps (%d/%d)', playertracker['Magical_Maps_completed'], playertracker['Magical_Maps_total'])
 	append_items(tabs[5].items, check_keyitems('Magical Maps'))
+	append_header(5, 'Mounts (%d/%d)', playertracker['Mounts_completed'], playertracker['Mounts_total'])
 	append_items(tabs[5].items, check_keyitems('Mounts'))
+	append_header(5, 'Claim Slips (%d/%d)', playertracker['Claim_Slips_completed'], playertracker['Claim_Slips_total'])
 	append_items(tabs[5].items, check_keyitems('Claim Slips'))
+	append_header(5, 'Active Effects (%d/%d)', playertracker['Active_Effects_completed'], playertracker['Active_Effects_total'])
 	append_items(tabs[5].items, check_keyitems('Active Effects'))
+	append_header(5, 'Voidwatch Key Items (%d/%d)', playertracker['Voidwatch_completed'], playertracker['Voidwatch_total'])
 	append_items(tabs[5].items, check_keyitems('Voidwatch'))
+	append_header(5, 'Atmacite Levels (%d/%d)', playertracker['atmacitelevels_completed'], playertracker['atmacitelevels_total'])
 	append_items(tabs[5].items, tab_logs.atmacite_levels)
 	
 	-- log spells and trusts
 	--tabs[6].items = {}
+	append_header(6, 'White Magic (%d/%d)', playertracker['WhiteMagic_completed'], playertracker['WhiteMagic_total'])
 	append_items(tabs[6].items, check_playerspells('WhiteMagic'))
+	append_header(6, 'Black Magic (%d/%d)', playertracker['BlackMagic_completed'], playertracker['BlackMagic_total'])
 	append_items(tabs[6].items, check_playerspells('BlackMagic'))
+	append_header(6, 'Summoner Pacts (%d/%d)', playertracker['SummonerPact_completed'], playertracker['SummonerPact_total'])
 	append_items(tabs[6].items, check_playerspells('SummonerPact'))
+	append_header(6, 'Ninjutsu (%d/%d)', playertracker['Ninjutsu_completed'], playertracker['Ninjutsu_total'])
 	append_items(tabs[6].items, check_playerspells('Ninjutsu'))
+	append_header(6, 'Bard Songs (%d/%d)', playertracker['BardSong_completed'], playertracker['BardSong_total'])
 	append_items(tabs[6].items, check_playerspells('BardSong'))
+	append_header(6, 'Blue Magic (%d/%d)', playertracker['BlueMagic_completed'], playertracker['BlueMagic_total'])
 	append_items(tabs[6].items, check_playerspells('BlueMagic'))
+	append_header(6, 'Geomancy (%d/%d)', playertracker['Geomancy_completed'], playertracker['Geomancy_total'])
 	append_items(tabs[6].items, check_playerspells('Geomancy'))
+	append_header(6, 'Trust Magic (%d/%d)', playertracker['Trust_completed'], playertracker['Trust_total'])
 	append_items(tabs[6].items, check_playerspells('Trust'))
 	
 	-- log warps
-	if (tab == 'warps') then
-		tabs[7].items = {}
-		append_items(tabs[7].items, tab_logs.homepoints)
-		append_items(tabs[7].items, tab_logs.survivalguides)
-		append_items(tabs[7].items, tab_logs.waypoints)
-		append_items(tabs[7].items, tab_logs.outposts)
-		append_items(tabs[7].items, tab_logs.protowaypoints)
-	end
+	tabs[7].items = {}
+	append_header(7, 'Home Points (%d/%d)', playertracker['homepoints_completed'], playertracker['homepoints_total'])
+	append_items(tabs[7].items, tab_logs.homepoints)
+	append_header(7, 'Survival Guides (%d/%d)', playertracker['survivalguides_completed'], playertracker['survivalguides_total'])
+	append_items(tabs[7].items, tab_logs.survivalguides)
+	append_header(7, 'Adoulin Waypoints (%d/%d)', playertracker['waypoints_completed'], playertracker['waypoints_total'])
+	append_items(tabs[7].items, tab_logs.waypoints)
+	append_header(7, 'Outpost Warps (%d/%d)', playertracker['outposts_completed'], playertracker['outposts_total'])
+	append_items(tabs[7].items, tab_logs.outposts)
+	append_header(7, 'Proto-Waypoints (%d/%d)', playertracker['protowaypoints_completed'], playertracker['protowaypoints_total'])
+	append_items(tabs[7].items, tab_logs.protowaypoints)
 	
 	-- Log Job Points Spent
 	check_exp()
@@ -563,34 +600,36 @@ function xichecklist_updatetabs(tab)
 	-- log Monstrosity levels & Race/Job Instincts
 	if (tab == 'monstrosity') then
 		tabs[8].items = {}
-		table.insert(tabs[8].items, '==== Species Levels ====')
+		append_header(8, 'Species Levels (%d/%d)', playertracker['MonsterLevels_completed'], playertracker['MonsterLevels_total'])
 		append_items(tabs[8].items, tab_logs.monsterlevels)
-		table.insert(tabs[8].items, '==== Monster Variants ====')
+		append_header(8, 'Monster Variants (%d/%d)', playertracker['MonsterVariants_completed'], playertracker['MonsterVariants_total'])
 		append_items(tabs[8].items, tab_logs.monstervariants)
-		table.insert(tabs[8].items, '==== Race / Job Instincts ====')
+		append_header(8, 'Race / Job Instincts (%d/%d)', playertracker['Racejobinstinct_completed'], playertracker['Racejobinstinct_total'])
 		append_items(tabs[8].items, tab_logs.racejobinstincts)
-		table.insert(tabs[8].items, '==== Monster Instincts ====')
+		append_header(8, 'Monster Instincts (%d/%d)', playertracker['MonsterInsincts_completed'], playertracker['MonsterInsincts_total'])
 		append_items(tabs[8].items, tab_logs.monster_instincts)
 	end
 	
 	-- log Titles
+	append_header(9, 'Titles (%d/%d)', playertracker['Titles_completed'], playertracker['Titles_total'])
 	append_items(tabs[9].items, tab_logs.titles)
 	
 	-- log RoE
 	if (tab == 'roe') then
-		tabs[10].items = {} 
+		tabs[10].items = {}
+		append_header(10, 'RoE (%d/%d)', playertracker['RoE_completed'], playertracker['RoE_total'])
 		append_items(tabs[10].items, roe_util.log_roe())
 	end
 	
 	if (tab == 'battlecontent') then
 		tabs[11].items = {}
 		-- log MMM
-		table.insert(tabs[11].items, '==== MMM Vouchers Unlocks ====')
+		append_header(11, 'MMM Vouchers Unlocks (%d/%d)', playertracker['mmmvouchers_completed'], playertracker['mmmvouchers_total'])
 		append_items(tabs[11].items, tab_logs.mmmvouchers)
-		table.insert(tabs[11].items, '==== MMM Runes Unlocks ====')
+		append_header(11, 'MMM Runes Unlocks (%d/%d)', playertracker['mmmrunes_completed'], playertracker['mmmrunes_total'])
 		append_items(tabs[11].items, tab_logs.mmmrunes)
 		-- log Meeble Burrows
-		table.insert(tabs[11].items, '==== Meeble Burrows ====')
+		append_header(11, 'Meeble Burrows (%d/%d)', playertracker['meebleburrows_completed'], playertracker['meebleburrows_total'])
 		append_items(tabs[11].items, tab_logs.meeble_burrows)
 	end
 end
@@ -700,7 +739,7 @@ local function clamp_scroll(count)
 	scroll = math.max(0, math.min(scroll, count - VISIBLE_ROWS))
 end
 
-local function draw()
+function draw()
 	local text = ''
 	-- Tabs
 	for i, tab in ipairs(tabs) do
@@ -711,7 +750,8 @@ local function draw()
 	local items = tabs[active_tab].items
 	local count = #items
 	if count == 0 then
-		items = {'\\cs(128,128,128)No data\\cr'}
+		-- add active_tab helper text here
+		items = {'\\cs(128,128,128)Change zones to update Quests / Campaigns / Warps / Monstrosity \\cr', '\\cs(128,128,128)Check the README or "//xic help" to register NPC-related data \\cr'}
 		count = 1
 	end
 	clamp_scroll(count)
@@ -808,10 +848,23 @@ windower.register_event('addon command', function(...)
 	if arg[1] == 'eval' then
 		assert(loadstring(table.concat(arg, ' ',2)))()
 	elseif cmds.help:contains(arg[1]) then
-		windower.add_to_chat(161,"==== xiChecklist / xic ====")
+		require('chat')
+		windower.add_to_chat(161,"==== xichecklist / xic ====")
 		windower.add_to_chat(161,"//xic [show|hide] to show / hide UI")
 		windower.add_to_chat(161,"//xic copy to copy current tab to clipboard")
 		windower.add_to_chat(161,"==== ==== ==== ====")
+		windower.add_to_chat(161,"Require zoning to update Quests / Warps / Monstrosity / MMM")
+		windower.add_to_chat(161,"==== ==== ==== ====")
+		windower.add_to_chat(161,"Require talking to NPCs to register the following (Check README)")
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Titles', 261).."-> 16 Title Changer NPCs")
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Fish caught', 261).."-> Katsunaga in Mhaura (Menu: Types of fish caught)")
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Meeble Burrows', 261).."-> any Burrow Researcher or Burrow Investigator")
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Outpost Warps', 261).."-> any Nation Teleporter")
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('MMM Maze Count', 261).."-> Chatnachoq (LowerJeuno)")
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Proto-Waypoint', 261).."-> any Proto-Waypoints")
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Atmacite Levels', 261).."-> any Atmacite Refiner (Enrich Atmacite)")
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Wing Skill', 261).."-> Nation Chocobo Stable kids")
+		
 	elseif cmds.show:contains(arg[1]) then
 		trackermenusettings.visibility = true
 		trackermenusettings:save()

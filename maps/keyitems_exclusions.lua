@@ -19,6 +19,10 @@ return S{
 	2031, -- Spiffy Synth. (7)
 	2047, -- Spiffy Synth. (7)
 	
+	-- old events no longer playable
+	3136, -- sheet of Shadow Lord tunes
+	3181, -- tentacle touching ticket
+	
 	-- Magical Maps
 	1866, -- map of Leujaoam Sanctum
 	1867, -- map of the Training Grounds
@@ -232,6 +236,8 @@ return S{
 	1558, -- maddening petrifact
 	
 	1805, -- void cluster
+	
+	2048, -- Voidwatch alarum
 	
 	2060, -- hyacinth stratum abyssite
 	2062, -- amber stratum abyssite

@@ -103,7 +103,7 @@ function menus_util.handle_chatnachoq(data)
 	local mazes = menu:unpack('I', 13)
 	playertracker['mmm_mazecount'] = mazes
 	playertracker:save()
-	--util.addon_log('Maze count: ' .. mazes)
+	util.addon_log('Maze count: ' .. mazes)
 end
 
 function menus_util.handle_protowaypoint(data)
