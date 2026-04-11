@@ -2,9 +2,11 @@
 | Command | Description |
 |---|---|
 | `//lua load xichecklist` | load then <ins>**zone**</ins> to get the UI menu updated |
-| `//xic hide` | to hide the UI |
-| `//xic show` | to show the UI |
-| `//xic copy` | to copy current tab to clipboard |
+| `//xic help` | print help in chatlog |
+| `//xic hide` | hide the UI |
+| `//xic show` | show the UI |
+| `//xic copy` | copy current tab to clipboard |
+| `//xic log <category>` | print <category> in chat log.<br>Example: `//xic log summary`<br>Available categories `main` `summary` `titles` `monstrosity` `mmm` `meeble` `warps` `fish` `quests` (`sandoia` `bastok` `windurst` `jeuno` `ahturhgan` `crystalwar` `outlands` `other` `abyssea` `adoulin` `coalition` `campaign`)   |
 
 The following are updated by talking to NPCs (some require opening certain menus)  
 will be saved in config so only need to do it once (or when need to update)
@@ -86,3 +88,4 @@ the menu will only show missing items like quests,key items, spells, home points
 - 0.9.3 - added fishing / crafting skills.
 - 0.9.4 - added Atmacite, Atmacite levels & Wing Skill.
 - 0.10.0 - Added "Talk to NPC" addon help in tabs that require npc interaction to register
+- 0.11.0 - Added `//xic log` command, now registers which NPC talked to for updating the checklist.
