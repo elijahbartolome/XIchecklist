@@ -1,6 +1,6 @@
 _addon.name     = 'xichecklist'
 _addon.author   = 'Anokata'
-_addon.version  = '0.11.0'
+_addon.version  = '0.11.1'
 _addon.commands = {'xichecklist', 'xic'}
 
 require('sets')
@@ -21,7 +21,7 @@ trackermenusettings = config.load(trackermenusettings)
 
 defaultplayertracker = {
 	['mastery_rank'] = 0,
-	
+	-- Quests
 	['bastok_completed'] = 0,
 	['bastok_total'] = 0,
 	['sandoria_completed'] = 0,
@@ -46,7 +46,7 @@ defaultplayertracker = {
 	['coalition_total'] = 0,
 	['campaign_completed'] = 0,
 	['campaign_total'] = 0,
-	
+	-- Key items
 	['Permanent_Key_Items_completed'] = 0,
 	['Permanent_Key_Items_total'] = 0,
 	['Magical_Maps_completed'] = 0,
@@ -59,7 +59,7 @@ defaultplayertracker = {
 	['Active_Effects_total'] = 0,
 	['Voidwatch_completed'] = 0,
 	['Voidwatch_total'] = 0,
-	
+	-- Magic
 	['WhiteMagic_completed'] = 0,
 	['WhiteMagic_total'] = 0,
 	['BlackMagic_completed'] = 0,
@@ -76,7 +76,7 @@ defaultplayertracker = {
 	['Geomancy_total'] = 0,
 	['Trust_completed'] = 0,
 	['Trust_total'] = 0,
-	
+	-- Exp
 	['Meritpoints_completed'] = 0,
 	['Meritpoints_total'] = 919,
 	['Jobpoints_completed'] = 0,
@@ -84,14 +84,14 @@ defaultplayertracker = {
 	['Masterlevels_completed'] = 0,
 	['Masterlevels_total'] = 1100,
 	['Masterlevels_highest'] = 0,
-	
+	-- Warps
 	['homepoints_completed'] = 0,
 	['homepoints_total'] = 0,
 	['survivalguides_completed'] = 0,
 	['survivalguides_total'] = 0,
 	['waypoints_completed'] = 0,
 	['waypoints_total'] = 0,
-	
+	-- Monstrosity
 	['Racejobinstinct_completed'] = 0,
 	['Racejobinstinct_total'] = 0,
 	['MonsterLevels_completed'] = 0,
@@ -100,23 +100,28 @@ defaultplayertracker = {
 	['MonsterVariants_total'] = 0,
 	['MonsterInsincts_completed'] = 0,
 	['MonsterInsincts_total'] = 0,
+	-- RoE
+	['RoE_completed'] = 0,
+	['RoE_total'] = 0,
+	-- MMM
+	['mmmvouchers_completed'] = 0,
+	['mmmvouchers_total'] = 0,
+	['mmmrunes_completed'] = 0,
+	['mmmrunes_total'] = 0,
+	
+	-- NPC Menus
+	['mmm_mazecount'] = 0,
+	
+	['wingskill_completed'] = 0,
+	['wingskill_total'] = 100,
 	
 	['Titles_completed'] = 0,
 	['Titles_total'] = 0,
-	
-	['RoE_completed'] = 0,
-	['RoE_total'] = 0,
 	
 	['outposts_completed'] = 0,
 	['outposts_total'] = 0,
 	['protowaypoints_completed'] = 0,
 	['protowaypoints_total'] = 0,
-	
-	['mmmvouchers_completed'] = 0,
-	['mmmvouchers_total'] = 0,
-	['mmmrunes_completed'] = 0,
-	['mmmrunes_total'] = 0,
-	['mmm_mazecount'] = 0,
 	
 	['fishes_completed'] = 0,
 	['fishes_total'] = 164,
@@ -125,8 +130,7 @@ defaultplayertracker = {
 	['meebleburrows_total'] = 0,
 	['craftingskills_completed'] = 0,
 	['craftingskills_total'] = 790,
-	['wingskill_completed'] = 0,
-	['wingskill_total'] = 100,
+	
 	['atmacitelevels_completed'] = 0,
 	['atmacitelevels_total'] = 600,
 	
@@ -363,6 +367,7 @@ function update_maintab()
 	append_maintab('Claim Slips %d/%d', playertracker['Claim_Slips_completed'], playertracker['Claim_Slips_total'])
 	append_maintab('Active Effects %d/%d', playertracker['Active_Effects_completed'], playertracker['Active_Effects_total'])
 	append_maintab('Atmacite Levels %d/%d', playertracker['atmacitelevels_completed'], playertracker['atmacitelevels_total'])
+	append_addonhelp(1, 'You must talk to any \\cs(255,255,255)Atmacite Refiner\\cr \\cs(50,150,255)(Menu: Enrich Atmas)\\cr', playertracker.talk_to_npc['atmacite_refiner'])
 	
 	table.insert(tabs[1].items, '======= Magic =======')
 	append_maintab('White Magic %d/%d', playertracker['WhiteMagic_completed'], playertracker['WhiteMagic_total'])
@@ -377,6 +382,7 @@ function update_maintab()
 	table.insert(tabs[1].items, '======= Leveling =======')
 	append_maintab('Craft Skills %d/%d', playertracker['craftingskills_completed'], 790)
 	append_maintab('Wing Skill %d/%d', playertracker['wingskill_completed'], 100)
+	append_addonhelp(1, 'You must talk to any \\cs(255,255,255)Chocobo stats NPC\\cr @ \\cs(50,150,255)Nations Chocobo Stables\\cr', playertracker.talk_to_npc['chocobokid'])
 	append_maintab('Merit Points %d/%d', playertracker['Meritpoints_completed'], 919)
 	append_maintab('Job Points %d/%d', playertracker['Jobpoints_completed'], 46200)
 	append_maintab('Master Levels %d/%d (Highest: %d)', playertracker['Masterlevels_completed'], 1100, playertracker['Masterlevels_highest'])
@@ -386,10 +392,13 @@ function update_maintab()
 	append_maintab('Survival Guides %d/%d', playertracker['survivalguides_completed'], playertracker['survivalguides_total'])
 	append_maintab('Waypoints %d/%d', playertracker['waypoints_completed'], playertracker['waypoints_total'])
 	append_maintab('Outposts %d/%d', playertracker['outposts_completed'], playertracker['outposts_total'])
+	append_addonhelp(1, 'You must talk to any \\cs(255,255,255)Outpost Teleporter NPC\\cr @ \\cs(50,150,255)three nations\\cr.', playertracker.talk_to_npc['outpostnpc'])
 	append_maintab('Proto-Waypoints %d/%d', playertracker['protowaypoints_completed'], playertracker['protowaypoints_total'])
+	append_addonhelp(1, 'You must talk to any \\cs(255,255,255)Proto-Waypoint\\cr.', playertracker.talk_to_npc['protowaypoint'])
 	
 	table.insert(tabs[1].items, '======= Fishing =======')
 	append_maintab('Fishes Caught %d/%d', playertracker['fishes_completed'], 164)
+	append_addonhelp(1, 'You must talk to \\cs(255,255,255)Katsunaga\\cr @ \\cs(50,150,255)Mhuaura (H-9)\\cr \\cs(255,255,255)(Menu: Types of fishes caught)\\cr', playertracker.talk_to_npc['katsunaga'])
 	
 	table.insert(tabs[1].items, '======= Monstrosity =======')
 	append_maintab('Monster Levels %d/%d', playertracker['MonsterLevels_completed'], playertracker['MonsterLevels_total'])
@@ -401,7 +410,12 @@ function update_maintab()
 	append_maintab('MMM Vouchers Unlocked %d/%d', playertracker['mmmvouchers_completed'], playertracker['mmmvouchers_total'])
 	append_maintab('MMM Runes Unlocked %d/%d', playertracker['mmmrunes_completed'], playertracker['mmmrunes_total'])
 	append_maintab('MMM Maze count %d', playertracker['mmm_mazecount'])
+	append_addonhelp(1, 'You must talk to any \\cs(255,255,255)Chatnachoq\\cr @ \\cs(50,150,255)Lower Jeuno (H-9) \\cr', playertracker.talk_to_npc['chatnachoq'])
 	append_maintab('Meeble Burrows Goal #3 %d/%d', playertracker['meebleburrows_completed'], playertracker['meebleburrows_total'])
+	append_addonhelp(1, 'You must talk to \\cs(255,255,255)Burrow Investigator\\cr @ \\cs(50,150,255)Upper Jeuno (I-8)\\cr', playertracker.talk_to_npc['meeble_sauromugue'])
+	append_addonhelp(1, 'Menu: Review expedition specifics -> \\cs(255,255,255)Sauromugue Champaign\\cr', playertracker.talk_to_npc['meeble_sauromugue'])
+	append_addonhelp(1, 'You must talk to \\cs(255,255,255)Burrow Investigator\\cr @ \\cs(50,150,255)Upper Jeuno (I-8)\\cr', playertracker.talk_to_npc['meeble_batallia'])
+	append_addonhelp(1, 'Menu: Review expedition specifics -> \\cs(255,255,255)Batallia Downs\\cr', playertracker.talk_to_npc['meeble_batallia'])
 	
 	table.insert(tabs[1].items, '======= Titles =======')
 	append_maintab('Titles %d/%d', playertracker['Titles_completed'], playertracker['Titles_total'])
@@ -527,7 +541,7 @@ windower.register_event('outgoing chunk', function(id, data, modified, injected,
 	
 	-- listen to menu options
 	if (id==0x05B) then
-		menus_util.handle_menu_options(data)
+		menus_util.handle_menu_options(data) -- READ outgoing menu selection to determine which submenu
 	end
 end)
 
@@ -542,15 +556,15 @@ end
 
 function xichecklist_updatetabs(tab)
 	if not player then return false end
-	--tabs[1].items = {} -- reset main menu content
-	tabs[4].items = {}
-	tabs[5].items = {} -- reset main menu content
-	tabs[6].items = {} -- reset main menu content
-	tabs[9].items = {} -- reset main menu content
+	tabs[4].items = {} -- reset tab content
+	tabs[5].items = {} -- reset tab content
+	tabs[6].items = {} -- reset tab content
+	tabs[7].items = {} -- reset tab content
+	tabs[9].items = {} -- reset tab content
 	
 	if (tab == 'quests') then
-		tabs[2].items = {}
-		tabs[3].items = {}
+		tabs[2].items = {} -- reset tab content
+		tabs[3].items = {} -- reset tab content
 		-- log quests
 		append_header(2, 'San d\'Oria Quests (%d/%d)', playertracker['sandoria_completed'], playertracker['sandoria_total'])
 		append_items(tabs[2].items, tab_logs.quests['sandoria'])
@@ -585,7 +599,6 @@ function xichecklist_updatetabs(tab)
 	append_items(tabs[4].items, tab_logs.fishes)
 	
 	-- log keyitems
-	--tabs[5].items = {}
 	append_header(5, 'Permanent Key Items (%d/%d)', playertracker['Permanent_Key_Items_completed'], playertracker['Permanent_Key_Items_total'])
 	append_items(tabs[5].items, check_keyitems('Permanent Key Items'))
 	append_header(5, 'Magical Maps (%d/%d)', playertracker['Magical_Maps_completed'], playertracker['Magical_Maps_total'])
@@ -603,7 +616,6 @@ function xichecklist_updatetabs(tab)
 	append_items(tabs[5].items, tab_logs.atmacite_levels)
 	
 	-- log spells and trusts
-	--tabs[6].items = {}
 	append_header(6, 'White Magic (%d/%d)', playertracker['WhiteMagic_completed'], playertracker['WhiteMagic_total'])
 	append_items(tabs[6].items, check_playerspells('WhiteMagic'))
 	append_header(6, 'Black Magic (%d/%d)', playertracker['BlackMagic_completed'], playertracker['BlackMagic_total'])
@@ -622,7 +634,6 @@ function xichecklist_updatetabs(tab)
 	append_items(tabs[6].items, check_playerspells('Trust'))
 	
 	-- log warps
-	tabs[7].items = {}
 	append_header(7, 'Home Points (%d/%d)', playertracker['homepoints_completed'], playertracker['homepoints_total'])
 	append_items(tabs[7].items, tab_logs.homepoints)
 	append_header(7, 'Survival Guides (%d/%d)', playertracker['survivalguides_completed'], playertracker['survivalguides_total'])
@@ -849,9 +860,7 @@ windower.register_event('mouse', function(type, x, y, delta, blocked)
 		trackermenusettings.pos.y = py
 		trackermenusettings:save()
 	end
-    -------------------------------------------------
-    -- TAB CLICK
-    -------------------------------------------------
+    -- Tab Click
 	if type == 1 then
 		local tab_x = px + PADDING
 		local tab_y = py + PADDING
@@ -868,10 +877,9 @@ windower.register_event('mouse', function(type, x, y, delta, blocked)
 			tab_x = tab_x + width
 		end
 	end
-    -------------------------------------------------
-    --[[ LIST CLICK
-    -------------------------------------------------
-    if type == 1 then
+    -- LIST CLICK
+    --[[
+	if type == 1 then
         local list_y = py + PADDING + LINE_HEIGHT * 2
 
         for i = 1, VISIBLE_ROWS do
@@ -888,9 +896,7 @@ windower.register_event('mouse', function(type, x, y, delta, blocked)
             end
         end
     end]]
-	--------------------
 	--- mouse scroll up down
-	--------------------
 	if delta and delta ~= 0 then
 		--if inside(x, y, px, py, hit_w or win_width, hit_h or (hit_line_height * (VISIBLE_ROWS + 4))) then
 			if delta > 0 then
@@ -911,22 +917,22 @@ windower.register_event('addon command', function(...)
 		assert(loadstring(table.concat(arg, ' ',2)))()
 	elseif cmds.help:contains(arg[1]) then
 		require('chat')
-		windower.add_to_chat(161,"==== xichecklist / xic ====")
-		windower.add_to_chat(161,"//xic [show|hide] to show / hide UI")
-		windower.add_to_chat(161,"//xic copy to copy current tab to clipboard")
-		windower.add_to_chat(161,"//xic log <category> to log in chat")
-		windower.add_to_chat(161,"==== ==== ==== ====")
-		windower.add_to_chat(161,"Require zoning to update Quests / Warps / Monstrosity / MMM")
-		windower.add_to_chat(161,"==== ==== ==== ====")
-		windower.add_to_chat(161,"Require talking to NPCs to register the following (Check README)")
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Titles', 261).."-> 16 Title Changer NPCs")
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Fish caught', 261).."-> Katsunaga in Mhaura (Menu: Types of fish caught)")
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Meeble Burrows', 261).."-> any Burrow Researcher or Burrow Investigator")
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Outpost Warps', 261).."-> any Nation Teleporter")
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('MMM Maze Count', 261).."-> Chatnachoq (LowerJeuno)")
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Proto-Waypoint', 261).."-> any Proto-Waypoints")
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Atmacite Levels', 261).."-> any Atmacite Refiner (Enrich Atmacite)")
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Wing Skill', 261).."-> Nation Chocobo Stable kids")
+		windower.add_to_chat(161,'==== xichecklist / xic ====')
+		windower.add_to_chat(161,'//xic [show|hide] to show / hide UI')
+		windower.add_to_chat(161,'//xic copy to copy current tab to clipboard')
+		windower.add_to_chat(161,'//xic log <category> to log in chat')
+		windower.add_to_chat(161,'==== ==== ==== ====')
+		windower.add_to_chat(161,'Require zoning to update Quests / Warps / Monstrosity / MMM')
+		windower.add_to_chat(161,'==== ==== ==== ====')
+		windower.add_to_chat(161,'Require talking to NPCs to register the following (Check README)')
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Titles', 261)..'-> 16 Title Changer NPCs')
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Fish caught', 261)..'-> Katsunaga in Mhaura (Menu: Types of fish caught)')
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Meeble Burrows', 261)..'-> any Burrow Researcher or Burrow Investigator')
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Outpost Warps', 261)..'-> any Nation Teleporter')
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('MMM Maze Count', 261)..'-> Chatnachoq (LowerJeuno)')
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Proto-Waypoint', 261)..'-> any Proto-Waypoints')
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Atmacite Levels', 261)..'-> any Atmacite Refiner (Enrich Atmacite)')
+		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Wing Skill', 261)..'-> Nation Chocobo Stable kids')
 		
 	elseif cmds.show:contains(arg[1]) then
 		trackermenusettings.visibility = true
@@ -938,41 +944,41 @@ windower.register_event('addon command', function(...)
 		ui:hide()
 	elseif cmds.copy:contains(arg[1]) then
 		windower.copy_to_clipboard(util.table_to_clipboard(tabs[active_tab].items))
-		windower.add_to_chat(100, "Copy to clipboard")
+		windower.add_to_chat(100, 'Copy to clipboard')
 	elseif cmds.log:contains(arg[1]) then
 		if arg[2]:lower() == 'titles' then
 			util.log_tablog(tab_logs.titles)
-			windower.add_to_chat(160, "=== Titles (%d/%d) ===":format(playertracker['Titles_completed'], playertracker['Titles_total']))
+			windower.add_to_chat(160, '=== Titles (%d/%d) ===':format(playertracker['Titles_completed'], playertracker['Titles_total']))
 		elseif arg[2]:lower() == 'monstrosity' then
-			windower.add_to_chat(160, "=== Species Levels (%d/%d) ===":format(playertracker['MonsterLevels_completed'], playertracker['MonsterLevels_total']))
+			windower.add_to_chat(160, '=== Species Levels (%d/%d) ===':format(playertracker['MonsterLevels_completed'], playertracker['MonsterLevels_total']))
 			util.log_tablog(tab_logs.monsterlevels)
-			windower.add_to_chat(160, "=== Monster Variants (%d/%d) ===":format(playertracker['MonsterVariants_completed'], playertracker['MonsterVariants_total']))
+			windower.add_to_chat(160, '=== Monster Variants (%d/%d) ===':format(playertracker['MonsterVariants_completed'], playertracker['MonsterVariants_total']))
 			util.log_tablog(tab_logs.monstervariants)
-			windower.add_to_chat(160, "=== Race / Job Instincts (%d/%d) ===":format(playertracker['Racejobinstinct_completed'], playertracker['Racejobinstinct_total']))
+			windower.add_to_chat(160, '=== Race / Job Instincts (%d/%d) ===':format(playertracker['Racejobinstinct_completed'], playertracker['Racejobinstinct_total']))
 			util.log_tablog(tab_logs.racejobinstincts)
-			windower.add_to_chat(160, "=== Monster Instincts (%d/%d) ===":format(playertracker['MonsterInsincts_completed'], playertracker['MonsterInsincts_total']))
+			windower.add_to_chat(160, '=== Monster Instincts (%d/%d) ===':format(playertracker['MonsterInsincts_completed'], playertracker['MonsterInsincts_total']))
 			util.log_tablog(tab_logs.monster_instincts)
 		elseif arg[2]:lower() == 'mmm' then
-			windower.add_to_chat(160, "=== MMM Vouchers Unlocks (%d/%d) ===":format(playertracker['mmmvouchers_completed'], playertracker['mmmvouchers_total']))
+			windower.add_to_chat(160, '=== MMM Vouchers Unlocks (%d/%d) ===':format(playertracker['mmmvouchers_completed'], playertracker['mmmvouchers_total']))
 			util.log_tablog(tab_logs.mmmvouchers)
-			windower.add_to_chat(160, "=== MMM Runes Unlocks (%d/%d) ===":format(playertracker['mmmrunes_completed'], playertracker['mmmrunes_total']))
+			windower.add_to_chat(160, '=== MMM Runes Unlocks (%d/%d) ===':format(playertracker['mmmrunes_completed'], playertracker['mmmrunes_total']))
 			util.log_tablog(tab_logs.mmmrunes)
 		elseif arg[2]:lower() == 'meeble' then
-			windower.add_to_chat(160, "=== Meeble Burrows (%d/%d) ===":format(playertracker['meebleburrows_completed'], playertracker['meebleburrows_total']))
+			windower.add_to_chat(160, '=== Meeble Burrows (%d/%d) ===':format(playertracker['meebleburrows_completed'], playertracker['meebleburrows_total']))
 			util.log_tablog(tab_logs.meeble_burrows)
 		elseif arg[2]:lower() == 'warps' then
-			windower.add_to_chat(160, "=== Home Points (%d/%d) ===":format(playertracker['homepoints_completed'], playertracker['homepoints_total']))
+			windower.add_to_chat(160, '=== Home Points (%d/%d) ===':format(playertracker['homepoints_completed'], playertracker['homepoints_total']))
 			util.log_tablog(tab_logs.homepoints)
-			windower.add_to_chat(160, "=== Survival Guides (%d/%d) ===":format(playertracker['survivalguides_completed'], playertracker['survivalguides_total']))
+			windower.add_to_chat(160, '=== Survival Guides (%d/%d) ===':format(playertracker['survivalguides_completed'], playertracker['survivalguides_total']))
 			util.log_tablog(tab_logs.survivalguides)
-			windower.add_to_chat(160, "=== Adoulin Waypoints (%d/%d) ===":format(playertracker['waypoints_completed'], playertracker['waypoints_total']))
+			windower.add_to_chat(160, '=== Adoulin Waypoints (%d/%d) ===':format(playertracker['waypoints_completed'], playertracker['waypoints_total']))
 			util.log_tablog(tab_logs.waypoints)
-			windower.add_to_chat(160, "=== Outpost Warps (%d/%d) ===":format(playertracker['outposts_completed'], playertracker['outposts_total']))
+			windower.add_to_chat(160, '=== Outpost Warps (%d/%d) ===':format(playertracker['outposts_completed'], playertracker['outposts_total']))
 			util.log_tablog(tab_logs.outposts)
-			windower.add_to_chat(160, "=== Proto-Waypoints (%d/%d) ===":format(playertracker['protowaypoints_completed'], playertracker['protowaypoints_total']))
+			windower.add_to_chat(160, '=== Proto-Waypoints (%d/%d) ===':format(playertracker['protowaypoints_completed'], playertracker['protowaypoints_total']))
 			util.log_tablog(tab_logs.protowaypoints)
 		elseif arg[2]:lower() == 'fish' then
-			windower.add_to_chat(160, "=== Type of Fish (%d/%d) ===":format(playertracker['fishes_completed'], playertracker['fishes_total']))
+			windower.add_to_chat(160, '=== Type of Fish (%d/%d) ===':format(playertracker['fishes_completed'], playertracker['fishes_total']))
 			util.log_tablog(tab_logs.fishes)
 		elseif arg[2]:lower() == 'quests' then
 			windower.add_to_chat(160, '=== San d\'Oria Quests (%d/%d) ===':format(playertracker['sandoria_completed'], playertracker['sandoria_total']))
@@ -1037,8 +1043,8 @@ windower.register_event('addon command', function(...)
 			util.log_tablog(tab_logs.quests['campaign2'])
 		elseif (arg[2]:lower() == 'main') or (arg[2]:lower() == 'summary') then
 			for key, text in pairs(tabs[1].items) do
-				text = text:gsub("\\cs%(%d+,%d+,%d+%)", "")
-				text = text:gsub("\\cr", "")
+				text = text:gsub('\\cs%(%d+,%d+,%d+%)', '')
+				text = text:gsub('\\cr', '')
 				windower.add_to_chat(160, text)
 			end
 		end
