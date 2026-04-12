@@ -38,7 +38,7 @@ return {
 	[33]='Antlion',
 	[34]='Diremite',
 	[35]='Chigoe',
-	[36]='Wamouracampa (Wamoura larva)',
+	[36]='Wamouracampa',
 	[37]='Ladybug',
 	[38]='Gnat',
 	--[39]='Mantis', --not implemented

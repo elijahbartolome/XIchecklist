@@ -9,6 +9,7 @@ return {
 		636, -- Champion of Abyssea
 		637, -- Conqueror of Abyssea
 		638, -- Savior of Abyssea
+		
 		640, -- Hadhayosh Halterer
 		641, -- Briareus Feller
 		642, -- Karkinos Clawcrusher
@@ -19,51 +20,55 @@ return {
 		647, -- Fistule Drainer
 		648, -- Kukulkan Defanger
 		649, -- Turul Grounder
-		694, -- Alfard Detoxifier
+		650, -- Bloodeye Banisher
+		651, -- Satiator Depriver
+		652, -- Iratham Capturer
+		653, -- Lacovie Capsizer
+		654, -- Chloris Uprooter
+		655, -- Myrmecoleon Tamer
+		656, -- Glavoid Stampeder
+		657, -- Usurper Deposer
+		
+		659, -- Kutharei Unhorser
+		660, -- Sippoy Capturer
+		661, -- Titlacauan Dismemberer
+		662, -- Smok Defogger
 		663, -- Amhuluk Inundater
-		687, -- Apademak Annihilator
-		695, -- Azdaja Abolisher
+		664, -- Pulverizer Dismantler
+		665, -- Durinn Deceiver
+		666, -- Karkadann Exoculator
+		667, -- Ulhuadshi Desiccator
+		668, -- Itzpapalotl Declawer
+		669, -- Sobek Mummifier
 		670, -- Cirein-croin Harpooner
 		671, -- Bukhis Tetherer
-		654, -- Chloris Uprooter
-		684, -- Cuijatender Desiccator
-		681, -- Dragua Slayer
-		698, -- Killakriq Excoriator
-		697, -- Fuath Purifier
-		656, -- Glavoid Stampeder
-		651, -- Satiator Depriver
-		683, -- Hedjedjet Destinger
-		682, -- Bennu Deplumer
-		685, -- Brulo Extinguisher
-		691, -- Indrik Immolator
-		652, -- Iratham Capturer
+		672, -- Sedna Tuskbreaker
 		673, -- Cleaver Dismantler
 		674, -- Executioner Dismantler
-		664, -- Pulverizer Dismantler
 		675, -- Severer Dismantler
-		688, -- Isgebind Defroster
-		668, -- Itzpapalotl Declawer
-		666, -- Karkadann Exoculator
-		678, -- Ketea Beacher
-		659, -- Kutharei Unhorser
-		653, -- Lacovie Capsizer
 		676, -- Lusca Debunker
-		655, -- Myrmecoleon Tamer
-		692, -- Ogopogo Overturner
-		680, -- Orthrus Decapitator
-		686, -- Pantokrator Disprover
-		693, -- Raja Regicide
-		679, -- Rani Decrowner
-		689, -- Resheph Eradicator
-		672, -- Sedna Tuskbreaker
-		660, -- Sippoy Capturer
-		662, -- Smok Defogger
-		669, -- Sobek Mummifier
-		661, -- Titlacauan Dismemberer
 		677, -- Tristitia Deliverer
-		667, -- Ulhuadshi Desiccator
-		657, -- Usurper Deposer
-		665, -- Durinn Deceiver
+		678, -- Ketea Beacher
+		679, -- Rani Decrowner
+		680, -- Orthrus Decapitator
+		681, -- Dragua Slayer
+		682, -- Bennu Deplumer
+		683, -- Hedjedjet Destinger
+		684, -- Cuijatender Desiccator
+		685, -- Brulo Extinguisher
+		686, -- Pantokrator Disprover
+		687, -- Apademak Annihilator
+		688, -- Isgebind Defroster
+		689, -- Resheph Eradicator
+		690, -- Empousa Expurgator
+		691, -- Indrik Immolator
+		692, -- Ogopogo Overturner
+		693, -- Raja Regicide
+		694, -- Alfard Detoxifier
+		695, -- Azdaja Abolisher
+		696, -- Amphitrite Shucker
+		697, -- Fuath Purifier
+		698, -- Killakriq Excoriator
 		699, -- Maere Bestirrer
 		700, -- Wyrm God Defier
 	},
@@ -135,20 +140,22 @@ return {
 		946, -- Ruby Repulser
 	},
 	['BCNM'] = {
-		1031, -- Mimic Masher
-		778, -- Brother-in-arms
-		777, -- Gigasplosion Expert
-		774, -- Rip-roaring Limbrender
-		776, -- Yagudo Coopkeeper
-		773, -- Moppet Massacrer
-		775, -- Shell Shocker
-		781, -- Tonberry Toppler
-		782, -- Bloodline Corrupter
-		779, -- Antica Hunter
-		772, -- Mandragardener
+		469, -- Wyrm Astonisher
 		770, -- Rabbit Tussler
 		771, -- Helminth Mincer
-		469, -- Wyrm Astonisher
+		772, -- Mandragardener
+		773, -- Moppet Massacrer
+		774, -- Rip-roaring Limbrender
+		775, -- Shell Shocker
+		776, -- Yagudo Coopkeeper
+		777, -- Gigasplosion Expert
+		778, -- Brother-in-arms
+		779, -- Antica Hunter
+		
+		781, -- Tonberry Toppler
+		782, -- Bloodline Corrupter
+		
+		1031, -- Mimic Masher
 	},
 	['Master Trials'] = {
 		1010, -- Preventer of the Second Coming
@@ -160,36 +167,36 @@ return {
 		1076, -- Master of All
 	},
 	['Walk of Echoes'] = {
-		575, -- Torchbearer of the 8th Walk
-		817, -- Illuminator of the 8th Walk
-		713, -- Torchbearer of the 11th Walk
-		820, -- Illuminator of the 11th Walk
-		723, -- Torchbearer of the 15th Walk
-		824, -- Illuminator of the 15th Walk
-		572, -- Torchbearer of the 5th Walk
-		814, -- Illuminator of the 5th Walk
 		568, -- Torchbearer of the 1st Walk
-		810, -- Illuminator of the 1st Walk
-		722, -- Torchbearer of the 14th Walk
-		823, -- Illuminator of the 14th Walk
-		571, -- Torchbearer of the 4th Walk
-		813, -- Illuminator of the 4th Walk
-		711, -- Torchbearer of the 9th Walk
-		818, -- Illuminator of the 9th Walk
 		569, -- Torchbearer of the 2nd Walk
-		811, -- Illuminator of the 2nd Walk
-		574, -- Torchbearer of the 7th Walk
-		816, -- Illuminator of the 7th Walk
-		573, -- Torchbearer of the 6th Walk
-		815, -- Illuminator of the 6th Walk
-		712, -- Torchbearer of the 10th Walk
-		819, -- Illuminator of the 10th Walk
 		570, -- Torchbearer of the 3rd Walk
-		812, -- Illuminator of the 3rd Walk
-		721, -- Torchbearer of the 13th Walk
-		822, -- Illuminator of the 13th Walk
+		571, -- Torchbearer of the 4th Walk
+		572, -- Torchbearer of the 5th Walk
+		573, -- Torchbearer of the 6th Walk
+		574, -- Torchbearer of the 7th Walk
+		575, -- Torchbearer of the 8th Walk
+		711, -- Torchbearer of the 9th Walk
+		712, -- Torchbearer of the 10th Walk
+		713, -- Torchbearer of the 11th Walk
 		720, -- Torchbearer of the 12th Walk
+		721, -- Torchbearer of the 13th Walk
+		722, -- Torchbearer of the 14th Walk
+		723, -- Torchbearer of the 15th Walk
+		810, -- Illuminator of the 1st Walk
+		811, -- Illuminator of the 2nd Walk
+		812, -- Illuminator of the 3rd Walk
+		813, -- Illuminator of the 4th Walk
+		814, -- Illuminator of the 5th Walk
+		815, -- Illuminator of the 6th Walk
+		816, -- Illuminator of the 7th Walk
+		817, -- Illuminator of the 8th Walk
+		818, -- Illuminator of the 9th Walk
+		819, -- Illuminator of the 10th Walk
+		820, -- Illuminator of the 11th Walk
 		821, -- Illuminator of the 12th Walk
+		822, -- Illuminator of the 13th Walk
+		823, -- Illuminator of the 14th Walk
+		824, -- Illuminator of the 15th Walk
 	},
 	['Legion'] = {
 		725, -- Subjugator of the Lofty
@@ -225,11 +232,11 @@ return {
 		552, -- Ender of Idolatry
 	},
 	['Chocobo Racing'] = {
+		505, -- Chocorookie
 		521, -- Crystal Stakes Cupholder
 		522, -- Winning Owner
 		523, -- Victorious Owner
 		524, -- Triumphant Owner
-		505, -- Chocorookie
 		597, -- Chocochampion
 	},
 	['Conquest Points'] = {
@@ -265,95 +272,95 @@ return {
 		245, -- Praefectus Castrorum
 	},
 	['Dynamis'] = {
+		297, -- Dynamis-San d'Oria Interloper
+		298, -- Dynamis-Bastok Interloper
+		299, -- Dynamis-Windurst Interloper
+		300, -- Dynamis-Jeuno Interloper
+		301, -- Dynamis-Beaucedine Interloper
+		302, -- Dynamis-Xarcabard Interloper
+		430, -- Dynamis-Valkurm Interloper
 		431, -- Dynamis-Buburimu Interloper
 		432, -- Dynamis-Qufim Interloper
 		433, -- Dynamis-Tavnazia Interloper
-		430, -- Dynamis-Valkurm Interloper
-		302, -- Dynamis-Xarcabard Interloper
-		297, -- Dynamis-San d'Oria Interloper
-		298, -- Dynamis-Bastok Interloper
-		301, -- Dynamis-Beaucedine Interloper
-		299, -- Dynamis-Windurst Interloper
-		300, -- Dynamis-Jeuno Interloper
 		434, -- Confronter of Nightmares
-		1032, -- Judge, Jury, and Executioner
-		704, -- Devourer of Shadows
-		470, -- Nightmare Awakener
-		714, -- Nightmare Illuminator
-		1021, -- Dynamis-San d'Oria [D] Dominator
-		1024, -- Dynamis-Bastok [D] Dominator
-		1030, -- Dynamis-Jeuno [D] Dominator
-		1027, -- Dynamis-Windurst [D] Dominator
 		457, -- Lifter of Shadows
+		470, -- Nightmare Awakener
+		704, -- Devourer of Shadows
+		714, -- Nightmare Illuminator
+		1019, -- Dynamis-San d'Oria [D] Trespasser
+		1020, -- Dynamis-San d'Oria [D] Infiltrator
+		1021, -- Dynamis-San d'Oria [D] Dominator
+		1022, -- Dynamis-Bastok [D] Trespasser
+		1023, -- Dynamis-Bastok [D] Infiltrator
+		1024, -- Dynamis-Bastok [D] Dominator
 		1025, -- Dynamis-Windurst [D] Trespasser
 		1026, -- Dynamis-Windurst [D] Infiltrator
-		1020, -- Dynamis-San d'Oria [D] Infiltrator
+		1027, -- Dynamis-Windurst [D] Dominator
 		1028, -- Dynamis-Jeuno [D] Trespasser
-		1023, -- Dynamis-Bastok [D] Infiltrator
-		1022, -- Dynamis-Bastok [D] Trespasser
 		1029, -- Dynamis-Jeuno [D] Infiltrator
-		1019, -- Dynamis-San d'Oria [D] Trespasser
+		1030, -- Dynamis-Jeuno [D] Dominator
+		1032, -- Judge, Jury, and Executioner
 	},
 	['Fishing'] = {
+		331, -- Fastriver Fisher
+		332, -- Coastline Caster
+		333, -- Accomplished Angler
 		425, -- Gold Hook
 		426, -- Mythril Hook
 		427, -- Silver Hook
 		428, -- Copper Hook
-		332, -- Coastline Caster
 		583, -- Fishmonger Owner
-		333, -- Accomplished Angler
-		331, -- Fastriver Fisher
 	},
 	['Item: Aeonic Weapons'] = {
 		1009, -- Herald of a New Age
 	},
 	['Alchemy'] = {
+		322, -- Formula Fiddler
 		323, -- Potion Potentate
+		324, -- Accomplished Alchemist
 		580, -- Apothecary Owner
 		1126, -- Legendary Alchemist
-		322, -- Formula Fiddler
-		324, -- Accomplished Alchemist
 	},
 	['Leathercraft'] = {
-		1124, -- Legendary Tanner
 		330, -- Accomplished Tanner
 		329, -- Leather Lauder
 		328, -- Hide Handler
 		582, -- Shoeshop Owner
+		1124, -- Legendary Tanner
 	},
 	['Smithing'] = {
-		577, -- Armory Owner
 		314, -- Forge Fanatic
 		315, -- Accomplished Blacksmith
 		313, -- Anvil Advocate
+		577, -- Armory Owner
 		1121, -- Legendary Blacksmith
 	},
 	['Bonecraft'] = {
-		326, -- Shell Scrimshander
-		581, -- Curiosity Shop Owner
-		327, -- Accomplished Boneworker
-		1125, -- Legendary Boneworker
 		325, -- Bone Beautifier
+		326, -- Shell Scrimshander
+		327, -- Accomplished Boneworker
+		581, -- Curiosity Shop Owner
+		1125, -- Legendary Boneworker
 	},
 	['Woodworking'] = {
-		311, -- Lumber Lather
 		310, -- Wood Worshiper
-		576, -- Furniture Store Owner
+		311, -- Lumber Lather
 		312, -- Accomplished Carpenter
+		576, -- Furniture Store Owner
 		1120, -- Legendary Woodworker
 	},
 	['Cooking'] = {
-		1127, -- Legendary Culinarian
 		334, -- Gourmand Gratifier
 		336, -- Accomplished Chef
 		335, -- Banquet Bestower
 		584, -- Restaurant Owner
+		1127, -- Legendary Culinarian
 	},
 	['Goldsmithing'] = {
-		318, -- Accomplished Goldsmith
-		317, -- Silver Smelter
-		578, -- Jewelry Store Owner
 		316, -- Trinket Turner
+		317, -- Silver Smelter
+		318, -- Accomplished Goldsmith
+		578, -- Jewelry Store Owner
 		1122, -- Legendary Goldsmith
 	},
 	['Clothcraft'] = {
@@ -431,12 +438,10 @@ return {
 	['NM'] = {
 		465, -- Virtuous Saint
 		26, -- Tortoise Torturer
-		696, -- Amphitrite Shucker
 		30, -- Dragon Asher
 		452, -- Aspidochelone Sinker
 		15, -- Bogeydowner
 		9, -- Behemoth's Bane
-		650, -- Bloodeye Banisher
 		25, -- The Hornsplitter
 		462, -- Boroka Beleaguerer
 		557, -- Buarainech Exorcist
@@ -448,16 +453,13 @@ return {
 		5, -- Dark Dragon Slayer
 		547, -- Ixion Hornbreaker
 		554, -- Elatha Exorcist
-		690, -- Empousa Expurgator
 		555, -- Ethniu Exorcist
 		451, -- Fafnir Slayer
 		19, -- Goliath Killer
-		753, -- Grannus Garroter
 		473, -- Shining Scale Rifler
 		474, -- Troll Subjugator
 		472, -- Hydra Headhunter
 		14, -- Jellybane
-		752, -- Izyx Vexer
 		460, -- World Serpent Slayer
 		476, -- Khimaira Carver
 		28, -- Behemoth Dethroner
@@ -483,7 +485,6 @@ return {
 		16, -- Beakbender
 		17, -- Skullcrusher
 		20, -- Mary's Guide
-		754, -- Svaha Striker
 		466, -- Bye-bye, Taisai
 		556, -- Tethra Exorcist
 		458, -- Tiamat Trouncer
@@ -634,12 +635,15 @@ return {
 		623, -- Smiter of the Shadow
 	},
 	['Meeble Burrows'] = {
-		745, -- Dreyruk Predominator
 		742, -- Goldwing Squasher
-		755, -- Melisseus Domesticator
-		746, -- Samursk Vitiator
 		743, -- Silagilith Detonator
 		744, -- Surtr Smotherer
+		745, -- Dreyruk Predominator
+		746, -- Samursk Vitiator
+		752, -- Izyx Vexer
+		753, -- Grannus Garroter
+		754, -- Svaha Striker
+		755, -- Melisseus Domesticator
 		747, -- Umagrhk Manemangler
 	},
 	['Nyzul Isle'] = {

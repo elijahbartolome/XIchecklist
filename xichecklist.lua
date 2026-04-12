@@ -1,6 +1,6 @@
 _addon.name     = 'xichecklist'
 _addon.author   = 'Anokata'
-_addon.version  = '0.11.1'
+_addon.version  = '0.11.2'
 _addon.commands = {'xichecklist', 'xic'}
 
 require('sets')
@@ -898,7 +898,7 @@ windower.register_event('mouse', function(type, x, y, delta, blocked)
     end]]
 	--- mouse scroll up down
 	if delta and delta ~= 0 then
-		--if inside(x, y, px, py, hit_w or win_width, hit_h or (hit_line_height * (VISIBLE_ROWS + 4))) then
+		--if inside(x, y, px, py, win_width, (VISIBLE_ROWS + 4)) then
 			if delta > 0 then
 				selected = math.max(1, selected - 1)
 				clamp_scroll(count)
