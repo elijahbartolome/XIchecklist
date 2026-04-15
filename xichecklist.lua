@@ -3,10 +3,8 @@ addon.author   = 'Anokata'
 addon.version  = '0.11.3'
 addon.commands = {'xichecklist', 'xic'}
 
-require('sets')
 local texts = require('texts')
 local settings = require('settings')
-res = require('resources')
 require('chat')
 
 -- Defaults
@@ -279,14 +277,6 @@ roe_util = require('util/roe')
 mmm_util = require('util/mmm')
 menus_util = require('util/menus')
 
-local cmds = {
-	help = S{'help','h'},
-	hide = S{'hide'},
-	show = S{'show'},
-	copy = S{'copy'},
-	log = S{'log'},
-}
-
 local function append_items(dst, src)
     if type(dst) ~= 'table' or type(src) ~= 'table' then
         return
@@ -470,13 +460,16 @@ ashita.events.register('packet_in', 'incoming chunk', function(e)
 	if e.id == 0x062 then
 		local craftBase = 4 + (31*4) + (48*2) + 1;
 		local skills = T{};
-		for i = 0,15 do
+		for i = 0,9 do
 			local offset = craftBase + i*2
 			local skillBase = struct.unpack('H', e.data, offset)
 			skills:append({Index=i, Value=bit.band(skillBase, 0x7FFF), Capped=(bit.band(skillBase, 0x8000) == 0x8000) })
 		end
-		playertracker['craftingskills_completed'] = p['Fishing Level']+p['Woodworking Level']+p['Smithing Level']+p['Goldsmithing Level']+p['Clothcraft Level']
-		+p['Leathercraft Level']+p['Bonecraft Level']+p['Alchemy Level']+p['Cooking Level']+p['Synergy Level']
+		for k, v in pairs(skills) do
+			playertracker['craftingskills_completed'] = playertracker['craftingskills_completed'] + v[Value]
+		end
+		--playertracker['craftingskills_completed'] = p['Fishing Level']+p['Woodworking Level']+p['Smithing Level']+p['Goldsmithing Level']+p['Clothcraft Level']
+		--+p['Leathercraft Level']+p['Bonecraft Level']+p['Alchemy Level']+p['Cooking Level']+p['Synergy Level']
 	end
 	
 	if e.id == 0x063 then
@@ -491,16 +484,32 @@ ashita.events.register('packet_in', 'incoming chunk', function(e)
 		end
 		-- do monstrosity
 		if (order == 3) then
-			mons_util.monster_levelspacket[1] = parseddata['Monster Level Char field']
-			mons_util.monster_instincts = util.twobits_to_table(parseddata['Instinct Bitfield 1'])
+			local MonsterLevelCharField = {}
+			for i = 0,1023 do
+				MonsterLevelCharField[i] = (ashita.bits.unpack_be(e.data_raw, 0x5c, i, 1) == 1);
+			end
+			local InstinctBitfield = {}
+			for i = 0,511 do
+				InstinctBitfield[i] = (ashita.bits.unpack_be(e.data_raw, 0x1c, i, 1) == 1);
+			end
+			mons_util.monster_levelspacket[1] = MonsterLevelCharField
+			mons_util.monster_instincts = util.twobits_to_table(InstinctBitfield)
 			tab_logs.monsterlevels = mons_util.log_monsterlevels()
 			tab_logs.monster_instincts = mons_util.log_monsterinstincts()
 			xichecklist_updatetabs('monstrosity')
 		end
 		if (order == 4) then
-			mons_util.monster_levelspacket[2] = e.data:sub(0x08+1, 0x87+1)
-			mons_util.racejobinstincts = parseddata['Instinct Bitfield 3']
-			mons_util.variants_bitfield = parseddata['Variants Bitfield']
+			local InstinctBitfield3 = {}
+			for i = 0,95 do
+				InstinctBitfield3[i] = (ashita.bits.unpack_be(e.data_raw, 0x88, i, 1) == 1);
+			end
+			local VariantsBitfield = {}
+			for i = 0,255 do
+				VariantsBitfield[i] = (ashita.bits.unpack_be(e.data_raw, 0x94, i, 1) == 1);
+			end
+			mons_util.monster_levelspacket[2] = e.data_raw:sub(0x08+1, 0x87+1)
+			mons_util.racejobinstincts = InstinctBitfield3
+			mons_util.variants_bitfield = VariantsBitfield
 			tab_logs.monsterlevels = mons_util.log_monsterlevels()
 			tab_logs.monstervariants = mons_util.log_variants()
 			tab_logs.racejobinstincts = mons_util.log_racejobinstincts()
@@ -510,7 +519,7 @@ ashita.events.register('packet_in', 'incoming chunk', function(e)
 	
 	-- handle npc menu
 	if (e.id == 0x033) or (e.id == 0x034) then
-		menus_util.handle_npc_menu(e.data)
+		menus_util.handle_npc_menu(e)
 		xichecklist_updatemenulogs()
 	elseif e.id == 0x061 then
 		-- check player info (updated when openning menu)
@@ -562,7 +571,7 @@ ashita.events.register('packet_out', 'outgoing chunk', function(e)
 	
 	-- listen to menu options
 	if (e.id==0x05B) then
-		menus_util.handle_menu_options(e.data) -- READ outgoing menu selection to determine which submenu
+		menus_util.handle_menu_options(e) -- READ outgoing menu selection to determine which menu
 	end
 end)
 
@@ -744,7 +753,7 @@ function check_keyitems(keyitemtype)
 	local keyitem_exclusions = require('maps/keyitems_exclusions')
 	local playerkeyitems = get_key_items()
 	local total, obtained = 0, 0
-	for id, keyitem in pairs(res.key_items) do
+	for id, keyitem in pairs(AshitaCore) do
 		if (keyitem.category == keyitemtype and (not keyitem_exclusions:contains(id)) ) then
 			total = total + 1
 			local completion = false
@@ -777,7 +786,8 @@ function check_playerspells(spelltype)
 	local spells_exclusions = require('maps/spells_exclusions')
 	local playerspells = get_spells()
 	local total, obtained = 0, 0
-	for id, spell in pairs(res.spells) do
+	for id=1,1019 do
+		local spell = AshitaCore:GetResourceManager():GetSpellById(id)
 		local completion = false
 		if ((spell.type == spelltype) and (not spell.unlearnable) and (not spells_exclusions[id])) then
 			total = total + 1
@@ -963,9 +973,9 @@ ashita.events.register('command', 'chronicle_command', function(e)
         return;
     end
 	if (#args == 2) then
-		if arg[2] == 'eval' then
-			assert(loadstring(table.concat(arg, ' ',2)))()
-		elseif cmds.help:contains(arg[2]) then
+		if args[2] == 'eval' then
+			assert(loadstring(table.concat(args, ' ',2)))()
+		elseif args[2]:any({'help','h'}) then
 			print(chat.header(addon.name)
 				:append(chat.message('==== xichecklist / xic ===='))
 				:append(chat.message('//xic [show|hide] to show / hide UI'))
@@ -984,19 +994,19 @@ ashita.events.register('command', 'chronicle_command', function(e)
 				:append(chat.message(string.char(0x81, 0xA1)..string.color('Atmacite Levels', 261)..'-> any Atmacite Refiner (Enrich Atmacite)'))
 				:append(chat.message(string.char(0x81, 0xA1)..string.color('Wing Skill', 261)..'-> Nation Chocobo Stable kids'))
 			)
-		elseif cmds.show:contains(arg[2]) then
+		elseif args[2] == 'show' then
 			trackermenusettings.visibility = true
 			settings.save(trackermenusettings)
 			ui:show()
-		elseif cmds.hide:contains(arg[2]) then
+		elseif args[2] == 'hide' then
 			trackermenusettings.visibility = false
 			settings.save(trackermenusettings)
 			ui:hide()
-		elseif cmds.copy:contains(arg[2]) then
+		elseif args[2] == 'copy' then
 			ashita.misc.set_clipboard(util.table_to_clipboard(tabs[active_tab].items))
 			print(chat.header(addon.name):append(chat.message('Copy to clipboard')))
 	elseif (#args == 3) then
-		elseif cmds.log:contains(arg[2]) then
+		elseif args[2] == 'log' then
 			if (arg[3]) then
 				if arg[3]:lower() == 'titles' then
 					util.log_tablog(tab_logs.titles)

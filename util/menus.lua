@@ -9,34 +9,39 @@ menu_current = {
 	npcindex = nil,
 	zoneid = nil,
 	['Option Index'] = nil,
-	['Secondary Option Index'] = nil,
 	_unknown1 = nil,
 	['Menu Parameters'] = nil,
 }
 
-function menus_util.handle_npc_menu(data)
-	parseddata = packets.parse('incoming', data)
-	local index = parseddata['NPC Index']
+function menus_util.handle_npc_menu(e)
+	local index
+	local menuId
+	if (e.id == 0x033) then
+		index = struct.unpack('H', e.data, 0x08 + 0x01)
+		menuId = struct.unpack('H', e.data, 0x0C + 0x01)
+	elseif (e.id == 0x034) then
+		index = struct.unpack('H', e.data, 0x28 + 0x01)
+		menuId = struct.unpack('H', e.data, 0x2C + 0x01)
+	end
 	local npc = index and AshitaCore:GetMemoryManager():GetEntity():GetName(index)
 	if not npc or not menus_util.menu_npcs[npc] then
 		return
 	end
 	if (menus_util.menu_npcs[npc].zoneid:contains(AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0))
-		and menus_util.menu_npcs[npc].menuid:contains(parseddata['Menu ID'])) then
-		menus_util.menu_npcs[npc]['menu_function'](data)
+		and menus_util.menu_npcs[npc].menuid:contains(menuId)) then
+		menus_util.menu_npcs[npc]['menu_function'](e)
 	end
 end
 
-function menus_util.handle_npc_submenu(data)
-	parseddata = packets.parse('incoming', data)
-	local index = (menu_current.npcindex and menu_current.zoneid==AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0)) and menu_current.npcindex or parseddata['NPC Index']
+function menus_util.handle_npc_submenu(e)
+	local index = (menu_current.npcindex and menu_current.zoneid==AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0)) and menu_current.npcindex
 	if (index == nil) then return false end
 	local npc = index and AshitaCore:GetMemoryManager():GetEntity():GetName(index)
 	if not npc or not menus_util.menu_npcs[npc] then
 		return
 	end
 	if menus_util.menu_npcs[npc].zoneid:contains(AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0)) then
-		menus_util.menu_npcs[npc]['menu_function'](data)
+		menus_util.menu_npcs[npc]['menu_function'](e)
 	end
 end
 
@@ -45,26 +50,42 @@ function menus_util.reset_current_menu()
 		npcindex = nil,
 		zoneid = nil,
 		['Option Index'] = nil,
-		['Secondary Option Index'] = nil,
 		_unknown1 = nil,
 		['Menu Parameters'] = nil,
 	}
 end
 
-function menus_util.handle_menu_options(data)
-	local parseddata = packets.parse('outgoing', data)
+function menus_util.handle_menu_options(e)
+	local TargetIndex = struct.unpack('H', e.data, 0x0C + 0x01)
+	local Zone = struct.unpack('H', e.data, 0x10 + 0x01)
+	local OptionIndex = struct.unpack('H', e.data, 0x08 + 0x01)
+	local unknown1 = struct.unpack('H', e.data, 0x0A + 0x01)
 	menu_current = {
-		npcindex = parseddata['Target Index'],
-		zoneid = parseddata['Zone'],
-		['Option Index'] = parseddata['Option Index'],
-		['Secondary Option Index'] = string.byte(data, 12),
-		_unknown1 = parseddata['_unknown1'],
+		npcindex = TargetIndex,
+		zoneid = Zone,
+		['Option Index'] = OptionIndex,
+		_unknown1 = unknown1,
 	}
 end
 
-function menus_util.handle_op_warps(data)
-	parseddata = packets.parse('incoming', data)
-	menu = parseddata['Menu Parameters']
+function get_menu_parameters(e)
+	if (e.id == 0x033) then
+		local MenuParameters = {}
+		for i = 0,255 do
+			MenuParameters[i] = (ashita.bits.unpack_be(e.data_raw, 0x50, i, 1) == 1);
+		end
+		return MenuParameters
+	elseif (e.id == 0x034) then
+		local MenuParameters = {}
+		for i = 0,255 do
+			MenuParameters[i] = (ashita.bits.unpack_be(e.data_raw, 0x08, i, 1) == 1);
+		end
+		return MenuParameters
+	end
+end
+
+function menus_util.handle_op_warps(e)
+	menu = get_menu_parameters(e)
 	subdata = menu:sub(0x1C+1, 0x1E+1)
 	for key, name in pairs(menumaps.outposts) do
 		if (not util.has_bit(subdata, key+5)) then -- +5 because mapping starts from 6th byte
@@ -100,9 +121,8 @@ function menus_util.log_outposts()
 	return output_list
 end
 
-function menus_util.handle_chatnachoq(data)
-	parseddata = packets.parse('incoming', data)
-	menu = parseddata['Menu Parameters']
+function menus_util.handle_chatnachoq(e)
+	menu = get_menu_parameters(e)
 	local mazes = menu:unpack('I', 13)
 	playertracker['mmm_mazecount'] = mazes
 	settings.save(playertracker)
@@ -111,9 +131,8 @@ function menus_util.handle_chatnachoq(data)
 	settings.save(playertracker)
 end
 
-function menus_util.handle_protowaypoint(data)
-	parseddata = packets.parse('incoming', data)
-	menu = parseddata['Menu Parameters']
+function menus_util.handle_protowaypoint(e)
+	menu = get_menu_parameters(e)
 	--subdata = menu:sub(0x1C+1, 0x1E+1)
 	for key, name in pairs(menumaps.protowaypoints) do
 		if (util.has_bit(menu, key)) then
@@ -149,19 +168,19 @@ function menus_util.log_protowaypoints()
 	return output_list
 end
 
-function menus_util.handle_burrowsnpc(data)
-	local parseddata = packets.parse('incoming', data)
+function menus_util.handle_burrowsnpc(e)
+	menu = get_menu_parameters(e)
 	local map_name = nil
 	if ((menu_current['zoneid'] == 244 and menu_current['_unknown1'] == 1) -- Upper Jeuno / Sauromugue Menu
 		or (menu_current['zoneid'] == 120 and menu_current['Option Index'] == 14)) then
 		map_name = 'Sauromugue_Champaign'
-		menus_util.handle_sauromugueburrowsmenu(map_name, parseddata['Menu Parameters'])
+		menus_util.handle_sauromugueburrowsmenu(map_name, menu)
 		playertracker.talk_to_npc['meeble_sauromugue'] = true
 		settings.save(playertracker)
 	elseif ((menu_current['zoneid'] == 244 and menu_current['_unknown1'] == 2) -- Upper Jeuno / Batallia Menu
 			or (menu_current['zoneid'] == 105 and menu_current['Option Index'] == 14)) then
 		map_name = 'Batallia_Downs'
-		menus_util.handle_batalliaburrowsmenu(map_name, parseddata['Menu Parameters'])
+		menus_util.handle_batalliaburrowsmenu(map_name, menu)
 		playertracker.talk_to_npc['meeble_batallia'] = true
 		settings.save(playertracker)
 	end
@@ -213,10 +232,9 @@ function menus_util.log_meeble_burrows()
 	return output_list
 end
 
-function menus_util.handle_katsunaga(data)
+function menus_util.handle_katsunaga(e)
 	if menu_current['_unknown1'] == 0 then
-		local parseddata = packets.parse('incoming', data)
-		menu = parseddata['Menu Parameters']
+		menu = get_menu_parameters(e)
 		for flag, id in ipairs(menumaps.fishes_menu) do
 			if (id ~= false) then
 				if util.has_bit(menu, flag) then
@@ -266,9 +284,9 @@ function get_key_items()
 	return player_KI
 end
 
-function menus_util.handle_atmacitenpc(data)
-	local parseddata = packets.parse('incoming', data)
-	local atmacite_levels = util.fourbits_to_table(parseddata['Menu Parameters'])
+function menus_util.handle_atmacitenpc(e)
+	menu = get_menu_parameters(e)
+	local atmacite_levels = util.fourbits_to_table(menu)
 	local playerkeyitems = get_key_items()
 	if (menu_current['_unknown1'] == 0 and menu_current['Option Index'] == 2) then
 		for key, atmacite in pairs(menumaps.atmacite) do
@@ -306,10 +324,10 @@ function menus_util.log_atmacitelevels()
 	return output_list
 end
 
-function menus_util.handle_chocobostablenpc(data)
-	local parseddata = packets.parse('incoming', data)
-	if (parseddata['Menu Parameters'] ~= nil) then
-		local winglevel = string.byte(parseddata['Menu Parameters'], 5)
+function menus_util.handle_chocobostablenpc(e)
+	menu = get_menu_parameters(e)
+	if (menu ~= nil) then
+		local winglevel = string.byte(menu, 5)
 		if (winglevel > playertracker['wingskill_completed']) then
 			playertracker['wingskill_completed'] = winglevel
 			playertracker.talk_to_npc['chocobokid'] = true
@@ -319,10 +337,14 @@ function menus_util.handle_chocobostablenpc(data)
 	end
 end
 
-function menus_util.handle_titles_npc(data)
-	local flags = data:sub(81, 104)
-	local parseddata = packets.parse('incoming', data)
-	local index = parseddata['NPC Index']
+function menus_util.handle_titles_npc(e)
+	local flags = e.data_raw:sub(81, 104)
+	local index
+	if (e.id == 0x033) then
+		index = struct.unpack('H', e.data, 0x08 + 0x01)
+	elseif (e.id == 0x034) then
+		index = struct.unpack('H', e.data, 0x28 + 0x01)
+	end
 	local npc = index and AshitaCore:GetMemoryManager():GetEntity():GetName(index)
 	for cat, ids in ipairs(menumaps.titlesnpc_menu[npc]) do
 		local category = flags:unpack('I', 1 + (cat - 1) * 4)
