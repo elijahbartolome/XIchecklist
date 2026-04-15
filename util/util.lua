@@ -1,8 +1,9 @@
 local util = {}
 local bit = require('bit')
+local chat = require('chat')
 
 function util.addon_log(str)
-    windower.add_to_chat(161, '[Checklist] ' .. str)
+    print(chat.header(addon.name):append( '[Checklist] ' .. str))
 end
 
 function util.has_bit(data, position)
@@ -92,7 +93,7 @@ function util.log_tablog(tbl, striplastbracket)
 		text = text:gsub("\\cs%(%d+,%d+,%d+%)", "")
 		text = text:gsub("\\cr", "")
 		if (item.completed == false) then
-			windower.add_to_chat(160, text)
+			print(chat.header(addon.name):append(chat.message(text)))
 		end
 	end
 end

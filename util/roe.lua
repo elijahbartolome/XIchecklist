@@ -1,6 +1,7 @@
 local roe_util = {}
 local roemap = require('../maps/roe_objectives')
 local roeextramap = require('../maps/roe_objectives_extra')
+local settings = require('settings')
 
 function roe_util.handle_roe_data(data)
 	for id, roe in pairs(roemap) do
@@ -13,7 +14,7 @@ end
 function roe_util.add_roe(id)
 	if (not (playerroe[tostring(id)] == true)) then
 		playerroe[tostring(id)] = true
-		playerroe:save()
+		settings.save(playerroe)
 		--util.addon_log('RoE Completed: ' .. roemap[id].name)
 	end
 end

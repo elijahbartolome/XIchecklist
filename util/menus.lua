@@ -3,6 +3,8 @@ local menumaps = require('../maps/maps_menus')
 local titlescontnt = require('../maps/titles_bycontent')
 local titlesexclusions = require('../maps/titles_exclusions')
 local titles_howtoobtain = require('../maps/titles_howtoobtain')
+local settings = require('settings')
+
 menu_current = {
 	npcindex = nil,
 	zoneid = nil,
@@ -15,11 +17,11 @@ menu_current = {
 function menus_util.handle_npc_menu(data)
 	parseddata = packets.parse('incoming', data)
 	local index = parseddata['NPC Index']
-	local npc = index and windower.ffxi.get_mob_by_index(index).name
+	local npc = index and AshitaCore:GetMemoryManager():GetEntity():GetName(index)
 	if not npc or not menus_util.menu_npcs[npc] then
 		return
 	end
-	if (menus_util.menu_npcs[npc].zoneid:contains(windower.ffxi.get_info().zone)
+	if (menus_util.menu_npcs[npc].zoneid:contains(AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0))
 		and menus_util.menu_npcs[npc].menuid:contains(parseddata['Menu ID'])) then
 		menus_util.menu_npcs[npc]['menu_function'](data)
 	end
@@ -27,13 +29,13 @@ end
 
 function menus_util.handle_npc_submenu(data)
 	parseddata = packets.parse('incoming', data)
-	local index = (menu_current.npcindex and menu_current.zoneid==windower.ffxi.get_info().zone) and menu_current.npcindex or parseddata['NPC Index']
+	local index = (menu_current.npcindex and menu_current.zoneid==AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0)) and menu_current.npcindex or parseddata['NPC Index']
 	if (index == nil) then return false end
-	local npc = index and windower.ffxi.get_mob_by_index(index).name
+	local npc = index and AshitaCore:GetMemoryManager():GetEntity():GetName(index)
 	if not npc or not menus_util.menu_npcs[npc] then
 		return
 	end
-	if menus_util.menu_npcs[npc].zoneid:contains(windower.ffxi.get_info().zone) then
+	if menus_util.menu_npcs[npc].zoneid:contains(AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0)) then
 		menus_util.menu_npcs[npc]['menu_function'](data)
 	end
 end
@@ -70,13 +72,13 @@ function menus_util.handle_op_warps(data)
 		end
 	end
 	playertracker.talk_to_npc['outpostnpc'] = true
-	playertracker:save()
+	settings.save(playertracker)
 end
 
 function menus_util.add_outpost(id)
 	if (not (playertracker.outposts_unlocks[tostring(id)] == true)) then
 		playertracker.outposts_unlocks[tostring(id)] = true
-		playertracker:save()
+		settings.save(playertracker)
 		util.addon_log('Outpost added: ' .. menumaps.outposts[id])
 	end
 end
@@ -103,10 +105,10 @@ function menus_util.handle_chatnachoq(data)
 	menu = parseddata['Menu Parameters']
 	local mazes = menu:unpack('I', 13)
 	playertracker['mmm_mazecount'] = mazes
-	playertracker:save()
+	settings.save(playertracker)
 	util.addon_log('Maze count: ' .. mazes)
 	playertracker.talk_to_npc['chatnachoq'] = true
-	playertracker:save()
+	settings.save(playertracker)
 end
 
 function menus_util.handle_protowaypoint(data)
@@ -119,13 +121,13 @@ function menus_util.handle_protowaypoint(data)
 		end
 	end
 	playertracker.talk_to_npc['protowaypoint'] = true
-	playertracker:save()
+	settings.save(playertracker)
 end
 
 function menus_util.add_protowaypoint(id)
 	if (not (playertracker.protowaypoints_unlocks[tostring(id)] == true)) then
 		playertracker.protowaypoints_unlocks[tostring(id)] = true
-		playertracker:save()
+		settings.save(playertracker)
 		util.addon_log('Proto-Waypoint added: ' .. menumaps.protowaypoints[id])
 	end
 end
@@ -155,13 +157,13 @@ function menus_util.handle_burrowsnpc(data)
 		map_name = 'Sauromugue_Champaign'
 		menus_util.handle_sauromugueburrowsmenu(map_name, parseddata['Menu Parameters'])
 		playertracker.talk_to_npc['meeble_sauromugue'] = true
-		playertracker:save()
+		settings.save(playertracker)
 	elseif ((menu_current['zoneid'] == 244 and menu_current['_unknown1'] == 2) -- Upper Jeuno / Batallia Menu
 			or (menu_current['zoneid'] == 105 and menu_current['Option Index'] == 14)) then
 		map_name = 'Batallia_Downs'
 		menus_util.handle_batalliaburrowsmenu(map_name, parseddata['Menu Parameters'])
 		playertracker.talk_to_npc['meeble_batallia'] = true
-		playertracker:save()
+		settings.save(playertracker)
 	end
 end
 
@@ -187,7 +189,7 @@ end
 function menus_util.add_meeble_burrows(id,map_name)
 	if (not (playertracker.meeble_completed[map_name][tostring(id)] == true)) then
 		playertracker.meeble_completed[map_name][tostring(id)] = true
-		playertracker:save()
+		settings.save(playertracker)
 		util.addon_log('Meeble Burrow added: ' .. menumaps.meeble_burrows[map_name][id])
 	end
 end
@@ -223,14 +225,14 @@ function menus_util.handle_katsunaga(data)
 			end
 		end
 		playertracker.talk_to_npc['katsunaga'] = true
-		playertracker:save()
+		settings.save(playertracker)
 	end
 end
 
 function menus_util.add_fish_caught(id)
 	if (not (playertracker.fishes_caught[tostring(id)] == true)) then
 		playertracker.fishes_caught[tostring(id)] = true
-		playertracker:save()
+		settings.save(playertracker)
 		util.addon_log('Fish added: ' .. res.items[id].en)
 	end
 end
@@ -253,26 +255,37 @@ function menus_util.log_fishes()
 	return output_list
 end
 
+function get_key_items()
+	local playMgr = AshitaCore:GetMemoryManager():GetPlayer();
+	local player_KI = {}
+    for i = 1,3583 do
+        if playMgr:HasKeyItem(i) then
+				table.insert(player_KI, i)
+        end
+    end
+	return player_KI
+end
+
 function menus_util.handle_atmacitenpc(data)
 	local parseddata = packets.parse('incoming', data)
 	local atmacite_levels = util.fourbits_to_table(parseddata['Menu Parameters'])
-	local playerkeyitems = windower.ffxi.get_key_items()
+	local playerkeyitems = get_key_items()
 	if (menu_current['_unknown1'] == 0 and menu_current['Option Index'] == 2) then
 		for key, atmacite in pairs(menumaps.atmacite) do
 			if (table.find(playerkeyitems, atmacite.id)) then
 				if (playertracker.atmacite_levels[tostring(key)] == nil) then
 					playertracker.atmacite_levels[tostring(key)] = atmacite_levels[key]
-					playertracker:save()
+					settings.save(playertracker)
 					util.addon_log('Atmacite added: Lv'..atmacite_levels[key].. ' ' .. atmacite.en)
 				elseif (atmacite_levels[key] > playertracker.atmacite_levels[tostring(key)]) then
 					playertracker.atmacite_levels[tostring(key)] = atmacite_levels[key]
-					playertracker:save()
+					settings.save(playertracker)
 					util.addon_log('Atmacite Updated: Lv'..atmacite_levels[key].. ' ' .. atmacite.en)
 				end
 			end
 		end
 		playertracker.talk_to_npc['atmacite_refiner'] = true
-		playertracker:save()
+		settings.save(playertracker)
 	end
 end
 
@@ -300,7 +313,7 @@ function menus_util.handle_chocobostablenpc(data)
 		if (winglevel > playertracker['wingskill_completed']) then
 			playertracker['wingskill_completed'] = winglevel
 			playertracker.talk_to_npc['chocobokid'] = true
-			playertracker:save()
+			settings.save(playertracker)
 			util.addon_log('Wing Skill updated: '..winglevel)
 		end
 	end
@@ -310,7 +323,7 @@ function menus_util.handle_titles_npc(data)
 	local flags = data:sub(81, 104)
 	local parseddata = packets.parse('incoming', data)
 	local index = parseddata['NPC Index']
-	local npc = index and windower.ffxi.get_mob_by_index(index).name
+	local npc = index and AshitaCore:GetMemoryManager():GetEntity():GetName(index)
 	for cat, ids in ipairs(menumaps.titlesnpc_menu[npc]) do
 		local category = flags:unpack('I', 1 + (cat - 1) * 4)
 		for flag, id in ipairs(ids) do
@@ -320,13 +333,13 @@ function menus_util.handle_titles_npc(data)
 		end
 	end
 	playertracker.talk_to_npc[util.cleanspaces(npc)] = true
-	playertracker:save()
+	settings.save(playertracker)
 end
 
 function menus_util.add_title(id)
 	if (not (playertitles[tostring(id)] == true)) then
 		playertitles[tostring(id)] = true
-		playertitles:save()
+		settings.save(playertitles)
 		util.addon_log('Title added: ' .. res.titles[id].en)
 	end
 end
@@ -373,7 +386,7 @@ function menus_util.list_titles_bycontent()
 		end
 		local red = 0
 		if (complete == total) then completion = true end
-		table.insert(output_list, util.list_item(nil, '--' .. content ..' titles %d/%d':format(complete, total), completion))
+		table.insert(output_list, util.list_item(nil, '--' .. content ..(' titles %d/%d'):format(complete, total), completion))
 	end
 	return output_list
 end

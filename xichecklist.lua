@@ -1,12 +1,11 @@
-_addon.name     = 'xichecklist'
-_addon.author   = 'Anokata'
-_addon.version  = '0.11.3'
-_addon.commands = {'xichecklist', 'xic'}
+addon.name     = 'xichecklist'
+addon.author   = 'Anokata'
+addon.version  = '0.11.3'
+addon.commands = {'xichecklist', 'xic'}
 
 require('sets')
-packets = require('packets')
 local texts = require('texts')
-local config = require('config')
+local settings = require('settings')
 res = require('resources')
 require('chat')
 
@@ -18,7 +17,7 @@ trackermenusettings.pos.y = 80
 trackermenusettings.visibility = true
 trackermenusettings.showcompleted = false
 
-trackermenusettings = config.load(trackermenusettings)
+trackermenusettings = settings.load(trackermenusettings)
 
 defaultplayertracker = {
 	['mastery_rank'] = 0,
@@ -424,31 +423,43 @@ function update_maintab()
 	
 end
 
-windower.register_event('incoming chunk', function(id, data, modified, injected, blocked)
+ashita.events.register('packet_in', 'incoming chunk', function(e)
 	
-	if id == 0x01B then
-		local parseddata = packets.parse('incoming', data)
-		if (parseddata['Mastery Rank'] > playertracker['mastery_rank']) then
+	if e.id == 0x01B then
+		local mastery_rank = struct.unpack('H', e.data, 0x66 + 0x01)
+		if (mastery_rank > playertracker['mastery_rank']) then
 			if (playertracker['mastery_rank'] > 0) then
-				util.addon_log('Mastery Rank increase '..parseddata['Mastery Rank'])
+				util.addon_log('Mastery Rank increase '..mastery_rank)
 			end
-			playertracker['mastery_rank'] = parseddata['Mastery Rank']
-			playertracker:save()
+			playertracker['mastery_rank'] = mastery_rank
+			settings.save(playertracker)
 		end
 	end
-	
+
 	-- do quests
-	if id == 0x056 then
-		local p = packets.parse('incoming', data)
-		local log = quest_logs[p.Type]
+	if e.id == 0x056 then
+		local type = struct.unpack('H', e.data, 0x24 + 0x01)
+		local log = quest_logs[type]
 		if log then
-			if ((p.Type == 128)) then -- if Aht Urhgan Current Quests
-				quests[log.type][log.area] = p["Current TOAU Quests"]
-			elseif ((p.Type == 192)) then -- if Aht Urhgan Completed Quests
-				quests[log.type][log.area] = p["Completed TOAU Quests"]
+			if ((type == 128)) then -- if Aht Urhgan Current Quests
+				local CurrentAhtUrhganQuests = {}
+				for i = 0,127 do
+					CurrentAhtUrhganQuests[i] = (ashita.bits.unpack_be(e.data_raw, 0x04, i, 1) == 1);
+				end
+				quests[log.type][log.area] = CurrentAhtUrhganQuests
+			elseif ((type == 192)) then -- if Aht Urhgan Completed Quests
+				local CompletedAhtUrhganQuests = {}
+				for i = 0,127 do
+					CompletedAhtUrhganQuests[i] = (ashita.bits.unpack_be(e.data_raw, 0x04, i, 1) == 1);
+				end
+				quests[log.type][log.area] = CompletedAhtUrhganQuests
 				tab_logs.quests[log.area] = quest_util.log_quests(log.area)
 			else
-				quests[log.type][log.area] = p['Quest Flags']
+				local QuestFlags = {}
+				for i = 0,255 do
+					QuestFlags[i] = (ashita.bits.unpack_be(e.data_raw, 0x04, i, 1) == 1);
+				end
+				quests[log.type][log.area] = QuestFlags
 				tab_logs.quests[log.area] = quest_util.log_quests(log.area)
 			end
 		end
@@ -456,32 +467,32 @@ windower.register_event('incoming chunk', function(id, data, modified, injected,
     end
 	
 	-- crafting skills
-	if id == 0x062 then
-		local p = packets.parse('incoming', data)
+	if e.id == 0x062 then
+		local p = packets.parse('incoming', e.data)
 		playertracker['craftingskills_completed'] = p['Fishing Level']+p['Woodworking Level']+p['Smithing Level']+p['Goldsmithing Level']+p['Clothcraft Level']
 		+p['Leathercraft Level']+p['Bonecraft Level']+p['Alchemy Level']+p['Cooking Level']+p['Synergy Level']
 	end
 	
-	if id == 0x063 then
-		local parseddata = packets.parse('incoming', data)
+	if e.id == 0x063 then
+		local order = struct.unpack('H', e.data, 0x04 + 0x01)
 		-- do warps
-		if (parseddata.Order == 6) then 
-			warps_util.warps_data = data
+		if (order == 6) then 
+			warps_util.warps_data = e.data
 			tab_logs.homepoints = warps_util.checkwarps('homepoints')
 			tab_logs.survivalguides = warps_util.checkwarps('survivalguides')
 			tab_logs.waypoints = warps_util.checkwarps('waypoints')
 			xichecklist_updatetabs('warps')
 		end
 		-- do monstrosity
-		if (parseddata.Order == 3) then
+		if (order == 3) then
 			mons_util.monster_levelspacket[1] = parseddata['Monster Level Char field']
 			mons_util.monster_instincts = util.twobits_to_table(parseddata['Instinct Bitfield 1'])
 			tab_logs.monsterlevels = mons_util.log_monsterlevels()
 			tab_logs.monster_instincts = mons_util.log_monsterinstincts()
 			xichecklist_updatetabs('monstrosity')
 		end
-		if (parseddata.Order == 4) then
-			mons_util.monster_levelspacket[2] = data:sub(0x08+1, 0x87+1)
+		if (order == 4) then
+			mons_util.monster_levelspacket[2] = e.data:sub(0x08+1, 0x87+1)
 			mons_util.racejobinstincts = parseddata['Instinct Bitfield 3']
 			mons_util.variants_bitfield = parseddata['Variants Bitfield']
 			tab_logs.monsterlevels = mons_util.log_monsterlevels()
@@ -492,43 +503,46 @@ windower.register_event('incoming chunk', function(id, data, modified, injected,
 	end
 	
 	-- handle npc menu
-	if (id == 0x033) or (id == 0x034) then
-		menus_util.handle_npc_menu(data)
+	if (e.id == 0x033) or (e.id == 0x034) then
+		menus_util.handle_npc_menu(e.data)
 		xichecklist_updatemenulogs()
-	elseif id == 0x061 then
+	elseif e.id == 0x061 then
 		-- check player info (updated when openning menu)
-		local parseddata = packets.parse('incoming', data)
-		menus_util.add_title(parseddata['Title'])
+		local title = struct.unpack('H', e.data, 0x44 + 0x01)
+		menus_util.add_title(title)
 		xichecklist_updatemenulogs()
 	end
 	
-	if id == 0x05C then
-		if menu_current.npcindex then menus_util.handle_npc_submenu(data) end
+	if e.id == 0x05C then
+		if menu_current.npcindex then menus_util.handle_npc_submenu(e.data) end
 		xichecklist_updatemenulogs()
 	end
 	
 	-- do RoE
-	if id == 0x112 then
+	if e.id == 0x112 then
 		if (not roe_data) then roe_data = '' end
-		local parseddata = packets.parse('incoming', data)
-		roe_data = roe_data .. parseddata['RoE Quest Bitfield'] -- the packet will be repeated three times, gather the data first
-		if (parseddata.Order == 3) then
-			roe_util.handle_roe_data(data)
+		local order = struct.unpack('I', e.data, 0x84 + 0x01)
+		local RoEFlags = {}
+		for i = 0,1023 do
+			RoEFlags[i] = (ashita.bits.unpack_be(e.data_raw, 0x04, i, 1) == 1);
+		end
+		roe_data = roe_data .. RoEFlags -- the packet will be repeated three times, gather the data first
+		if (order == 3) then
+			roe_util.handle_roe_data(e.data)
 			roe_data = nil -- reset
 			xichecklist_updatetabs('roe')
 		end
 	end
 	
 	-- do MMM
-	if id == 0x0AD then
-		local parseddata = packets.parse('incoming', data)
-		mmm_util.handle_mmm_data(data)
+	if e.id == 0x0AD then
+		mmm_util.handle_mmm_data(e.data)
 		tab_logs.mmmvouchers = mmm_util.log_vouchers()
 		tab_logs.mmmrunes = mmm_util.log_runes()
 		xichecklist_updatetabs('battlecontent')
 	end
 	
-	if id == 0x052 then
+	if e.id == 0x052 then
 		-- claer npc menu
 		menus_util.reset_current_menu()
 	end
@@ -538,11 +552,11 @@ windower.register_event('incoming chunk', function(id, data, modified, injected,
 	draw()
 end)
 
-windower.register_event('outgoing chunk', function(id, data, modified, injected, blocked)
+ashita.events.register('packet_out', 'outgoing chunk', function(e)
 	
 	-- listen to menu options
-	if (id==0x05B) then
-		menus_util.handle_menu_options(data) -- READ outgoing menu selection to determine which submenu
+	if (e.id==0x05B) then
+		menus_util.handle_menu_options(e.data) -- READ outgoing menu selection to determine which submenu
 	end
 end)
 
@@ -708,10 +722,21 @@ function xichecklist_updatetabs(tab)
 	end
 end
 
+function get_key_items()
+	local playMgr = AshitaCore:GetMemoryManager():GetPlayer();
+	local player_KI = {}
+    for i = 1,3583 do
+        if playMgr:HasKeyItem(i) then
+			table.insert(player_KI, i)
+        end
+    end
+	return player_KI
+end
+
 function check_keyitems(keyitemtype)
 	local output_list = {}
 	local keyitem_exclusions = require('maps/keyitems_exclusions')
-	local playerkeyitems = windower.ffxi.get_key_items()
+	local playerkeyitems = get_key_items()
 	local total, obtained = 0, 0
 	for id, keyitem in pairs(res.key_items) do
 		if (keyitem.category == keyitemtype and (not keyitem_exclusions:contains(id)) ) then
@@ -730,10 +755,21 @@ function check_keyitems(keyitemtype)
 	return output_list
 end
 
+function get_spells()
+	local playMgr = AshitaCore:GetMemoryManager():GetPlayer();
+	local player_spells = {}
+    for i = 1, 1019 do
+        if playMgr:HasSpell(i) then
+			table.insert(player_spells, i)
+        end
+    end
+	return player_spells
+end
+
 function check_playerspells(spelltype)
 	local output_list = {}
 	local spells_exclusions = require('maps/spells_exclusions')
-	local playerspells = windower.ffxi.get_spells()
+	local playerspells = get_spells()
 	local total, obtained = 0, 0
 	for id, spell in pairs(res.spells) do
 		local completion = false
@@ -757,7 +793,8 @@ function check_exp()
 	local total_jp_spent = 0
 	local total_master_levels = 0
 	local highest_master_level = 0
-	local playerinfo = windower.ffxi.get_player()
+	local playerinfo = AshitaCore:GetMemoryManager():GetPlayer()
+	--[[
 	-- merits points
 	if (type(playerinfo.merits) == 'table') then 
 		for merit, value in pairs(playerinfo.merits) do
@@ -781,6 +818,7 @@ function check_exp()
 	end
 	playertracker['Masterlevels_completed'] = total_master_levels
 	playertracker['Masterlevels_highest'] = highest_master_level
+	]]
 end
 
 -- UI TEXT OBJECT
@@ -842,7 +880,7 @@ end
 draw()
 
 -------------------------------------------------
-windower.register_event('mouse', function(type, x, y, delta, blocked)
+ashita.events.register('mouse', 'mouse_callback', function(e)
 	if (ui:visible() == false) then return end
     local px, py = ui:pos()
     local items = tabs[active_tab].items
@@ -859,16 +897,16 @@ windower.register_event('mouse', function(type, x, y, delta, blocked)
 	if (px ~= trackermenusettings.pos.x) and (py ~= trackermenusettings.pos.y) then
 		trackermenusettings.pos.x = px
 		trackermenusettings.pos.y = py
-		trackermenusettings:save()
+		settings.save(trackermenusettings)
 	end
     -- Tab Click
-	if type == 1 then
+	if e.message == 1 then
 		local tab_x = px + PADDING
 		local tab_y = py + PADDING
 		for i, tab in ipairs(tabs) do
 			local label = (i == active_tab and '['..tab.name..'] ' or ' '..tab.name..'  ')
 			local width = #label * CHAR_WIDTH + i*2
-			if inside(x, y, tab_x, tab_y, width, LINE_HEIGHT) then
+			if inside(e.x, e.y, tab_x, tab_y, width, LINE_HEIGHT) then
 				active_tab = i
 				selected = 1
 				scroll = 0
@@ -898,9 +936,9 @@ windower.register_event('mouse', function(type, x, y, delta, blocked)
         end
     end]]
 	--- mouse scroll up down
-	if delta and delta ~= 0 then
+	if e.delta and e.delta ~= 0 then
 		--if inside(x, y, px, py, win_width, (VISIBLE_ROWS + 4)) then
-			if delta > 0 then
+			if e.delta > 0 then
 				selected = math.max(1, selected - 1)
 				clamp_scroll(count)
 			else
@@ -913,146 +951,157 @@ windower.register_event('mouse', function(type, x, y, delta, blocked)
 	end
 end)
 
-windower.register_event('addon command', function(...)
-	if arg[1] == 'eval' then
-		assert(loadstring(table.concat(arg, ' ',2)))()
-	elseif cmds.help:contains(arg[1]) then
-		windower.add_to_chat(161,'==== xichecklist / xic ====')
-		windower.add_to_chat(161,'//xic [show|hide] to show / hide UI')
-		windower.add_to_chat(161,'//xic copy to copy current tab to clipboard')
-		windower.add_to_chat(161,'//xic log <category> to log in chat')
-		windower.add_to_chat(161,'==== ==== ==== ====')
-		windower.add_to_chat(161,'Require zoning to update Quests / Warps / Monstrosity / MMM')
-		windower.add_to_chat(161,'==== ==== ==== ====')
-		windower.add_to_chat(161,'Require talking to NPCs to register the following (Check README)')
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Titles', 261)..'-> 16 Title Changer NPCs')
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Fish caught', 261)..'-> Katsunaga in Mhaura (Menu: Types of fish caught)')
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Meeble Burrows', 261)..'-> any Burrow Researcher or Burrow Investigator')
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Outpost Warps', 261)..'-> any Nation Teleporter')
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('MMM Maze Count', 261)..'-> Chatnachoq (LowerJeuno)')
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Proto-Waypoint', 261)..'-> any Proto-Waypoints')
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Atmacite Levels', 261)..'-> any Atmacite Refiner (Enrich Atmacite)')
-		windower.add_to_chat(161,string.char(0x81, 0xA1)..string.color('Wing Skill', 261)..'-> Nation Chocobo Stable kids')
-	elseif cmds.show:contains(arg[1]) then
-		trackermenusettings.visibility = true
-		trackermenusettings:save()
-		ui:show()
-	elseif cmds.hide:contains(arg[1]) then
-		trackermenusettings.visibility = false
-		trackermenusettings:save()
-		ui:hide()
-	elseif cmds.copy:contains(arg[1]) then
-		windower.copy_to_clipboard(util.table_to_clipboard(tabs[active_tab].items))
-		windower.add_to_chat(100, 'Copy to clipboard')
-	elseif cmds.log:contains(arg[1]) then
-		if (arg[2]) then
-			if arg[2]:lower() == 'titles' then
-				util.log_tablog(tab_logs.titles)
-				windower.add_to_chat(160, '=== Titles (%d/%d) ===':format(playertracker['Titles_completed'], playertracker['Titles_total']))
-			elseif arg[2]:lower() == 'monstrosity' then
-				windower.add_to_chat(160, '=== Species Levels (%d/%d) ===':format(playertracker['MonsterLevels_completed'], playertracker['MonsterLevels_total']))
-				util.log_tablog(tab_logs.monsterlevels)
-				windower.add_to_chat(160, '=== Monster Variants (%d/%d) ===':format(playertracker['MonsterVariants_completed'], playertracker['MonsterVariants_total']))
-				util.log_tablog(tab_logs.monstervariants)
-				windower.add_to_chat(160, '=== Race / Job Instincts (%d/%d) ===':format(playertracker['Racejobinstinct_completed'], playertracker['Racejobinstinct_total']))
-				util.log_tablog(tab_logs.racejobinstincts)
-				windower.add_to_chat(160, '=== Monster Instincts (%d/%d) ===':format(playertracker['MonsterInsincts_completed'], playertracker['MonsterInsincts_total']))
-				util.log_tablog(tab_logs.monster_instincts)
-			elseif arg[2]:lower() == 'mmm' then
-				windower.add_to_chat(160, '=== MMM Vouchers Unlocks (%d/%d) ===':format(playertracker['mmmvouchers_completed'], playertracker['mmmvouchers_total']))
-				util.log_tablog(tab_logs.mmmvouchers)
-				windower.add_to_chat(160, '=== MMM Runes Unlocks (%d/%d) ===':format(playertracker['mmmrunes_completed'], playertracker['mmmrunes_total']))
-				util.log_tablog(tab_logs.mmmrunes)
-			elseif arg[2]:lower() == 'meeble' then
-				windower.add_to_chat(160, '=== Meeble Burrows (%d/%d) ===':format(playertracker['meebleburrows_completed'], playertracker['meebleburrows_total']))
-				util.log_tablog(tab_logs.meeble_burrows)
-			elseif arg[2]:lower() == 'warps' then
-				windower.add_to_chat(160, '=== Home Points (%d/%d) ===':format(playertracker['homepoints_completed'], playertracker['homepoints_total']))
-				util.log_tablog(tab_logs.homepoints)
-				windower.add_to_chat(160, '=== Survival Guides (%d/%d) ===':format(playertracker['survivalguides_completed'], playertracker['survivalguides_total']))
-				util.log_tablog(tab_logs.survivalguides)
-				windower.add_to_chat(160, '=== Adoulin Waypoints (%d/%d) ===':format(playertracker['waypoints_completed'], playertracker['waypoints_total']))
-				util.log_tablog(tab_logs.waypoints)
-				windower.add_to_chat(160, '=== Outpost Warps (%d/%d) ===':format(playertracker['outposts_completed'], playertracker['outposts_total']))
-				util.log_tablog(tab_logs.outposts)
-				windower.add_to_chat(160, '=== Proto-Waypoints (%d/%d) ===':format(playertracker['protowaypoints_completed'], playertracker['protowaypoints_total']))
-				util.log_tablog(tab_logs.protowaypoints)
-			elseif arg[2]:lower() == 'fish' then
-				windower.add_to_chat(160, '=== Type of Fish (%d/%d) ===':format(playertracker['fishes_completed'], playertracker['fishes_total']))
-				util.log_tablog(tab_logs.fishes)
-			elseif arg[2]:lower() == 'quests' then
-				windower.add_to_chat(160, '=== San d\'Oria Quests (%d/%d) ===':format(playertracker['sandoria_completed'], playertracker['sandoria_total']))
-				util.log_tablog(tab_logs.quests['sandoria'])
-				windower.add_to_chat(160, '=== Bastok Quests (%d/%d) ===':format(playertracker['bastok_completed'], playertracker['bastok_total']))
-				util.log_tablog(tab_logs.quests['bastok'])
-				windower.add_to_chat(160, '=== Windurst Quests (%d/%d) ===':format(playertracker['windurst_completed'], playertracker['windurst_total']))
-				util.log_tablog(tab_logs.quests['windurst'])
-				windower.add_to_chat(160, '=== Jeuno Quests (%d/%d) ===':format(playertracker['jeuno_completed'], playertracker['jeuno_total']))
-				util.log_tablog(tab_logs.quests['jeuno'])
-				windower.add_to_chat(160, '=== Aht Urhgan Quests (%d/%d) ===':format(playertracker['ahturhgan_completed'], playertracker['ahturhgan_total']))
-				util.log_tablog(tab_logs.quests['ahturhgan'])
-				windower.add_to_chat(160, '=== Crystal War Quests (%d/%d) ===':format(playertracker['crystalwar_completed'], playertracker['crystalwar_total']))
-				util.log_tablog(tab_logs.quests['crystalwar'])
-				windower.add_to_chat(160, '=== Outlands Quests (%d/%d) ===':format(playertracker['outlands_completed'], playertracker['outlands_total']))
-				util.log_tablog(tab_logs.quests['outlands'])
-				windower.add_to_chat(160, '=== Other Quests (%d/%d) ===':format(playertracker['other_completed'], playertracker['other_total']))
-				util.log_tablog(tab_logs.quests['other'])
-				windower.add_to_chat(160, '=== Abyssea Quests (%d/%d) ===':format(playertracker['abyssea_completed'], playertracker['abyssea_total']))
-				util.log_tablog(tab_logs.quests['abyssea'])
-				windower.add_to_chat(160, '=== Adoulin Quests (%d/%d) ===':format(playertracker['adoulin_completed'], playertracker['adoulin_total']))
-				util.log_tablog(tab_logs.quests['adoulin'])
-				windower.add_to_chat(160, '=== Coalition Assignments (%d/%d) ===':format(playertracker['coalition_completed'], playertracker['coalition_total']))
-				util.log_tablog(tab_logs.quests['coalition'])
-				windower.add_to_chat(160, '=== Campaign Ops (%d/%d) ===':format(playertracker['campaign_completed'], playertracker['campaign_total']))
-				util.log_tablog(tab_logs.quests['campaign2'])
-			elseif arg[2]:lower() == 'sandoria' then
-				windower.add_to_chat(160, '=== San d\'Oria Quests (%d/%d) ===':format(playertracker['sandoria_completed'], playertracker['sandoria_total']))
-				util.log_tablog(tab_logs.quests['sandoria'])
-			elseif arg[2]:lower() == 'bastok' then
-				windower.add_to_chat(160, '=== Bastok Quests (%d/%d) ===':format(playertracker['bastok_completed'], playertracker['bastok_total']))
-				util.log_tablog(tab_logs.quests['bastok'])
-			elseif arg[2]:lower() == 'windurst' then
-				windower.add_to_chat(160, '=== Windurst Quests (%d/%d) ===':format(playertracker['windurst_completed'], playertracker['windurst_total']))
-				util.log_tablog(tab_logs.quests['windurst'])
-			elseif arg[2]:lower() == 'jeuno' then
-				windower.add_to_chat(160, '=== Jeuno Quests (%d/%d) ===':format(playertracker['jeuno_completed'], playertracker['jeuno_total']))
-				util.log_tablog(tab_logs.quests['jeuno'])
-			elseif arg[2]:lower() == 'ahturhgan' then
-				windower.add_to_chat(160, '=== Aht Urhgan Quests (%d/%d) ===':format(playertracker['ahturhgan_completed'], playertracker['ahturhgan_total']))
-				util.log_tablog(tab_logs.quests['ahturhgan'])
-			elseif arg[2]:lower() == 'crystalwar' then
-				windower.add_to_chat(160, '=== Crystal War Quests (%d/%d) ===':format(playertracker['crystalwar_completed'], playertracker['crystalwar_total']))
-				util.log_tablog(tab_logs.quests['crystalwar'])
-			elseif arg[2]:lower() == 'outlands' then
-				windower.add_to_chat(160, '=== Outlands Quests (%d/%d) ===':format(playertracker['outlands_completed'], playertracker['outlands_total']))
-				util.log_tablog(tab_logs.quests['outlands'])
-			elseif arg[2]:lower() == 'other' then
-				windower.add_to_chat(160, '=== Other Quests (%d/%d) ===':format(playertracker['other_completed'], playertracker['other_total']))
-				util.log_tablog(tab_logs.quests['other'])
-			elseif arg[2]:lower() == 'abyssea' then
-				windower.add_to_chat(160, '=== Abyssea Quests (%d/%d) ===':format(playertracker['abyssea_completed'], playertracker['abyssea_total']))
-				util.log_tablog(tab_logs.quests['abyssea'])
-			elseif arg[2]:lower() == 'adoulin' then
-				windower.add_to_chat(160, '=== Adoulin Quests (%d/%d) ===':format(playertracker['adoulin_completed'], playertracker['adoulin_total']))
-				util.log_tablog(tab_logs.quests['adoulin'])
-			elseif arg[2]:lower() == 'coalition' then
-				windower.add_to_chat(160, '=== Coalition Assignments (%d/%d) ===':format(playertracker['coalition_completed'], playertracker['coalition_total']))
-				util.log_tablog(tab_logs.quests['coalition'])
-			elseif arg[2]:lower() == 'campaign' then
-				windower.add_to_chat(160, '=== Campaign Ops (%d/%d) ===':format(playertracker['campaign_completed'], playertracker['campaign_total']))
-				util.log_tablog(tab_logs.quests['campaign2'])
-			elseif (arg[2]:lower() == 'main') or (arg[2]:lower() == 'summary') then
-				for key, text in pairs(tabs[1].items) do
-					text = text:gsub('\\cs%(%d+,%d+,%d+%)', '')
-					text = text:gsub('\\cr', '')
-					windower.add_to_chat(160, text)
+ashita.events.register('command', 'chronicle_command', function(e)
+	local args = e.command:args();
+    if (#args == 0 or not args[1]:any(addon.commands)) then
+        return;
+    end
+	if (#args == 2) then
+		if arg[2] == 'eval' then
+			assert(loadstring(table.concat(arg, ' ',2)))()
+		elseif cmds.help:contains(arg[2]) then
+			print(chat.header(addon.name)
+				:append(chat.message('==== xichecklist / xic ===='))
+				:append(chat.message('//xic [show|hide] to show / hide UI'))
+				:append(chat.message('//xic copy to copy current tab to clipboard'))
+				:append(chat.message('//xic log <category> to log in chat'))
+				:append(chat.message('==== ==== ==== ===='))
+				:append(chat.message('Require zoning to update Quests / Warps / Monstrosity / MMM'))
+				:append(chat.message('==== ==== ==== ===='))
+				:append(chat.message('Require talking to NPCs to register the following (Check README)'))
+				:append(chat.message(string.char(0x81, 0xA1)..string.color('Titles', 261)..'-> 16 Title Changer NPCs'))
+				:append(chat.message(string.char(0x81, 0xA1)..string.color('Fish caught', 261)..'-> Katsunaga in Mhaura (Menu: Types of fish caught)'))
+				:append(chat.message(string.char(0x81, 0xA1)..string.color('Meeble Burrows', 261)..'-> any Burrow Researcher or Burrow Investigator'))
+				:append(chat.message(string.char(0x81, 0xA1)..string.color('Outpost Warps', 261)..'-> any Nation Teleporter'))
+				:append(chat.message(string.char(0x81, 0xA1)..string.color('MMM Maze Count', 261)..'-> Chatnachoq (LowerJeuno)'))
+				:append(chat.message(string.char(0x81, 0xA1)..string.color('Proto-Waypoint', 261)..'-> any Proto-Waypoints'))
+				:append(chat.message(string.char(0x81, 0xA1)..string.color('Atmacite Levels', 261)..'-> any Atmacite Refiner (Enrich Atmacite)'))
+				:append(chat.message(string.char(0x81, 0xA1)..string.color('Wing Skill', 261)..'-> Nation Chocobo Stable kids'))
+			)
+		elseif cmds.show:contains(arg[2]) then
+			trackermenusettings.visibility = true
+			settings.save(trackermenusettings)
+			ui:show()
+		elseif cmds.hide:contains(arg[2]) then
+			trackermenusettings.visibility = false
+			settings.save(trackermenusettings)
+			ui:hide()
+		elseif cmds.copy:contains(arg[2]) then
+			ashita.misc.set_clipboard(util.table_to_clipboard(tabs[active_tab].items))
+			print(chat.header(addon.name):append(chat.message('Copy to clipboard')))
+	elseif (#args == 3) then
+		elseif cmds.log:contains(arg[2]) then
+			if (arg[3]) then
+				if arg[3]:lower() == 'titles' then
+					util.log_tablog(tab_logs.titles)
+					print(chat.header(addon.name):append(chat.message(('=== Titles (%d/%d) ==='):format(playertracker['Titles_completed'], playertracker['Titles_total']))))
+				elseif arg[3]:lower() == 'monstrosity' then
+					print(chat.header(addon.name):append(chat.message(('=== Species Levels (%d/%d) ==='):format(playertracker['MonsterLevels_completed'], playertracker['MonsterLevels_total']))))
+					util.log_tablog(tab_logs.monsterlevels)
+					print(chat.header(addon.name):append(chat.message(('=== Monster Variants (%d/%d) ==='):format(playertracker['MonsterVariants_completed'], playertracker['MonsterVariants_total']))))
+					util.log_tablog(tab_logs.monstervariants)
+					print(chat.header(addon.name):append(chat.message(('=== Race / Job Instincts (%d/%d) ==='):format(playertracker['Racejobinstinct_completed'], playertracker['Racejobinstinct_total']))))
+					util.log_tablog(tab_logs.racejobinstincts)
+					print(chat.header(addon.name):append(chat.message(('=== Monster Instincts (%d/%d) ==='):format(playertracker['MonsterInsincts_completed'], playertracker['MonsterInsincts_total']))))
+					util.log_tablog(tab_logs.monster_instincts)
+				elseif arg[3]:lower() == 'mmm' then
+					print(chat.header(addon.name):append(chat.message(('=== MMM Vouchers Unlocks (%d/%d) ==='):format(playertracker['mmmvouchers_completed'], playertracker['mmmvouchers_total']))))
+					util.log_tablog(tab_logs.mmmvouchers)
+					print(chat.header(addon.name):append(chat.message(('=== MMM Runes Unlocks (%d/%d) ==='):format(playertracker['mmmrunes_completed'], playertracker['mmmrunes_total']))))
+					util.log_tablog(tab_logs.mmmrunes)
+				elseif arg[3]:lower() == 'meeble' then
+					print(chat.header(addon.name):append(chat.message(('=== Meeble Burrows (%d/%d) ==='):format(playertracker['meebleburrows_completed'], playertracker['meebleburrows_total']))))
+					util.log_tablog(tab_logs.meeble_burrows)
+				elseif arg[3]:lower() == 'warps' then
+					print(chat.header(addon.name):append(chat.message(('=== Home Points (%d/%d) ==='):format(playertracker['homepoints_completed'], playertracker['homepoints_total']))))
+					util.log_tablog(tab_logs.homepoints)
+					print(chat.header(addon.name):append(chat.message(('=== Survival Guides (%d/%d) ==='):format(playertracker['survivalguides_completed'], playertracker['survivalguides_total']))))
+					util.log_tablog(tab_logs.survivalguides)
+					print(chat.header(addon.name):append(chat.message(('=== Adoulin Waypoints (%d/%d) ==='):format(playertracker['waypoints_completed'], playertracker['waypoints_total']))))
+					util.log_tablog(tab_logs.waypoints)
+					print(chat.header(addon.name):append(chat.message(('=== Outpost Warps (%d/%d) ==='):format(playertracker['outposts_completed'], playertracker['outposts_total']))))
+					util.log_tablog(tab_logs.outposts)
+					print(chat.header(addon.name):append(chat.message(('=== Proto-Waypoints (%d/%d) ==='):format(playertracker['protowaypoints_completed'], playertracker['protowaypoints_total']))))
+					util.log_tablog(tab_logs.protowaypoints)
+				elseif arg[3]:lower() == 'fish' then
+					print(chat.header(addon.name):append(chat.message(('=== Type of Fish (%d/%d) ==='):format(playertracker['fishes_completed'], playertracker['fishes_total']))))
+					util.log_tablog(tab_logs.fishes)
+				elseif arg[3]:lower() == 'quests' then
+					print(chat.header(addon.name):append(chat.message(('=== San d\'Oria Quests (%d/%d) ==='):format(playertracker['sandoria_completed'], playertracker['sandoria_total']))))
+					util.log_tablog(tab_logs.quests['sandoria'])
+					print(chat.header(addon.name):append(chat.message(('=== Bastok Quests (%d/%d) ==='):format(playertracker['bastok_completed'], playertracker['bastok_total']))))
+					util.log_tablog(tab_logs.quests['bastok'])
+					print(chat.header(addon.name):append(chat.message(('=== Windurst Quests (%d/%d) ==='):format(playertracker['windurst_completed'], playertracker['windurst_total']))))
+					util.log_tablog(tab_logs.quests['windurst'])
+					print(chat.header(addon.name):append(chat.message(('=== Jeuno Quests (%d/%d) ==='):format(playertracker['jeuno_completed'], playertracker['jeuno_total']))))
+					util.log_tablog(tab_logs.quests['jeuno'])
+					print(chat.header(addon.name):append(chat.message(('=== Aht Urhgan Quests (%d/%d) ==='):format(playertracker['ahturhgan_completed'], playertracker['ahturhgan_total']))))
+					util.log_tablog(tab_logs.quests['ahturhgan'])
+					print(chat.header(addon.name):append(chat.message(('=== Crystal War Quests (%d/%d) ==='):format(playertracker['crystalwar_completed'], playertracker['crystalwar_total']))))
+					util.log_tablog(tab_logs.quests['crystalwar'])
+					print(chat.header(addon.name):append(chat.message(('=== Outlands Quests (%d/%d) ==='):format(playertracker['outlands_completed'], playertracker['outlands_total']))))
+					util.log_tablog(tab_logs.quests['outlands'])
+					print(chat.header(addon.name):append(chat.message(('=== Other Quests (%d/%d) ==='):format(playertracker['other_completed'], playertracker['other_total']))))
+					util.log_tablog(tab_logs.quests['other'])
+					print(chat.header(addon.name):append(chat.message(('=== Abyssea Quests (%d/%d) ==='):format(playertracker['abyssea_completed'], playertracker['abyssea_total']))))
+					util.log_tablog(tab_logs.quests['abyssea'])
+					print(chat.header(addon.name):append(chat.message(('=== Adoulin Quests (%d/%d) ==='):format(playertracker['adoulin_completed'], playertracker['adoulin_total']))))
+					util.log_tablog(tab_logs.quests['adoulin'])
+					print(chat.header(addon.name):append(chat.message(('=== Coalition Assignments (%d/%d) ==='):format(playertracker['coalition_completed'], playertracker['coalition_total']))))
+					util.log_tablog(tab_logs.quests['coalition'])
+					print(chat.header(addon.name):append(chat.message(('=== Campaign Ops (%d/%d) ==='):format(playertracker['campaign_completed'], playertracker['campaign_total']))))
+					util.log_tablog(tab_logs.quests['campaign2'])
+				elseif arg[3]:lower() == 'sandoria' then
+					print(chat.header(addon.name):append(chat.message(('=== San d\'Oria Quests (%d/%d) ==='):format(playertracker['sandoria_completed'], playertracker['sandoria_total']))))
+					util.log_tablog(tab_logs.quests['sandoria'])
+				elseif arg[3]:lower() == 'bastok' then
+					print(chat.header(addon.name):append(chat.message(('=== Bastok Quests (%d/%d) ==='):format(playertracker['bastok_completed'], playertracker['bastok_total']))))
+					util.log_tablog(tab_logs.quests['bastok'])
+				elseif arg[3]:lower() == 'windurst' then
+					print(chat.header(addon.name):append(chat.message(('=== Windurst Quests (%d/%d) ==='):format(playertracker['windurst_completed'], playertracker['windurst_total']))))
+					util.log_tablog(tab_logs.quests['windurst'])
+				elseif arg[3]:lower() == 'jeuno' then
+					print(chat.header(addon.name):append(chat.message(('=== Jeuno Quests (%d/%d) ==='):format(playertracker['jeuno_completed'], playertracker['jeuno_total']))))
+					util.log_tablog(tab_logs.quests['jeuno'])
+				elseif arg[3]:lower() == 'ahturhgan' then
+					print(chat.header(addon.name):append(chat.message(('=== Aht Urhgan Quests (%d/%d) ==='):format(playertracker['ahturhgan_completed'], playertracker['ahturhgan_total']))))
+					util.log_tablog(tab_logs.quests['ahturhgan'])
+				elseif arg[3]:lower() == 'crystalwar' then
+					print(chat.header(addon.name):append(chat.message(('=== Crystal War Quests (%d/%d) ==='):format(playertracker['crystalwar_completed'], playertracker['crystalwar_total']))))
+					util.log_tablog(tab_logs.quests['crystalwar'])
+				elseif arg[3]:lower() == 'outlands' then
+					print(chat.header(addon.name):append(chat.message(('=== Outlands Quests (%d/%d) ==='):format(playertracker['outlands_completed'], playertracker['outlands_total']))))
+					util.log_tablog(tab_logs.quests['outlands'])
+				elseif arg[3]:lower() == 'other' then
+					print(chat.header(addon.name):append(chat.message(('=== Other Quests (%d/%d) ==='):format(playertracker['other_completed'], playertracker['other_total']))))
+					util.log_tablog(tab_logs.quests['other'])
+				elseif arg[3]:lower() == 'abyssea' then
+					print(chat.header(addon.name):append(chat.message(('=== Abyssea Quests (%d/%d) ==='):format(playertracker['abyssea_completed'], playertracker['abyssea_total']))))
+					util.log_tablog(tab_logs.quests['abyssea'])
+				elseif arg[3]:lower() == 'adoulin' then
+					print(chat.header(addon.name):append(chat.message(('=== Adoulin Quests (%d/%d) ==='):format(playertracker['adoulin_completed'], playertracker['adoulin_total']))))
+					util.log_tablog(tab_logs.quests['adoulin'])
+				elseif arg[3]:lower() == 'coalition' then
+					print(chat.header(addon.name):append(chat.message((('=== Coalition Assignments (%d/%d) ==='):format(playertracker['coalition_completed'], playertracker['coalition_total'])))))
+					util.log_tablog(tab_logs.quests['coalition'])
+				elseif arg[3]:lower() == 'campaign' then
+					print(chat.header(addon.name):append(chat.message((('=== Campaign Ops (%d/%d) ==='):format(playertracker['campaign_completed'], playertracker['campaign_total'])))))
+					util.log_tablog(tab_logs.quests['campaign2'])
+				elseif (arg[3]:lower() == 'main') or (arg[3]:lower() == 'summary') then
+					for key, text in pairs(tabs[1].items) do
+						text = text:gsub('\\cs%(%d+,%d+,%d+%)', '')
+						text = text:gsub('\\cr', '')
+						print(chat.header(addon.name):append(chat.message((text))))
+					end
 				end
+			else
+				print(chat.header(addon.name)
+				:append(chat.message('Must specify category'))
+				:append(chat.message('Example: //xic log '..string.color('titles', 221)))
+				:append(chat.message('Available categories: main summary titles monstrosity mmm meeble warps fish quests'))
+				:append(chat.message('sandoia bastok windurst jeuno ahturhgan crystalwar outlands other abyssea adoulin coalition campaign'))
+				)
 			end
-		else
-			windower.add_to_chat(160, 'Must specify category')
-			windower.add_to_chat(160, 'Example: //xic log '..string.color('titles', 221))
-			windower.add_to_chat(160, 'Available categories: main summary titles monstrosity mmm meeble warps fish quests')
-			windower.add_to_chat(160, 'sandoia bastok windurst jeuno ahturhgan crystalwar outlands other abyssea adoulin coalition campaign')
 		end
 	end
 end)
@@ -1069,21 +1118,22 @@ end
 
 function addon_init()
 	addon_clear() -- clear on re/load
-	player = windower.ffxi.get_player()
+	player = AshitaCore:GetMemoryManager():GetParty():GetMemberIndex(0)
+	player_name = AshitaCore:GetMemoryManager():GetParty():GetMemberName(0)
 	if not player then return end
-	playertracker = config.load('data/'.. windower.ffxi.get_player().name .. '.xml', playertracker)
+	playertracker = settings.load(playertracker)
 	playertitles = {}
-	playertitles = config.load('data/'.. windower.ffxi.get_player().name .. '_titles.xml', playertitles)
+	playertitles = settings.load(playertitles)
 	playerroe = {}
-	playerroe = config.load('data/'.. windower.ffxi.get_player().name .. '_roe.xml', playerroe)
+	playerroe = settings.load(playerroe)
 	xichecklist_updatemenulogs()
 	if (trackermenusettings.visibility and player) then
 		ui:show()
 	end
 end
 
-windower.register_event('load', 'login', 'logout', addon_init)
-windower.register_event('logout', addon_clear)
-windower.register_event('unload', function()
+ashita.events.register('load', 'load_cb', addon_init);
+ashita.events.register('unload', 'unload_cb', function()
+	addon_clear()
 	ui:destroy()
 end)
