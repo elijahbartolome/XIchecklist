@@ -468,7 +468,13 @@ ashita.events.register('packet_in', 'incoming chunk', function(e)
 	
 	-- crafting skills
 	if e.id == 0x062 then
-		local p = packets.parse('incoming', e.data)
+		local craftBase = 4 + (31*4) + (48*2) + 1;
+		local skills = T{};
+		for i = 0,15 do
+			local offset = craftBase + i*2
+			local skillBase = struct.unpack('H', e.data, offset)
+			skills:append({Index=i, Value=bit.band(skillBase, 0x7FFF), Capped=(bit.band(skillBase, 0x8000) == 0x8000) })
+		end
 		playertracker['craftingskills_completed'] = p['Fishing Level']+p['Woodworking Level']+p['Smithing Level']+p['Goldsmithing Level']+p['Clothcraft Level']
 		+p['Leathercraft Level']+p['Bonecraft Level']+p['Alchemy Level']+p['Cooking Level']+p['Synergy Level']
 	end
