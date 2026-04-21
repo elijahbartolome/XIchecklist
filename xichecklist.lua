@@ -275,7 +275,7 @@ ashita.events.register('packet_in', 'incoming chunk', function(e)
 	-- log keyitems
 	if e.id == 0x055 then
 		if (not key_data) then key_data = {[0]=nil, [1]=nil, [2]=nil, [3]=nil, [4]=nil, [5]=nil, [6]=nil, [7]=nil} end
-		local port = struct.unpack('I', e.data, 0x84 + 0x01)
+		local port = struct.unpack('H', e.data, 0x84 + 0x01)
 		key_data[port] = true
 		if (key_data[0]~=nil and key_data[1]~=nil and key_data[2]~=nil and key_data[3]~=nil and key_data[4]~=nil and key_data[5]~=nil and key_data[6]~=nil and key_data[7]~=nil) then
 			key_data = nil
@@ -291,13 +291,9 @@ ashita.events.register('packet_in', 'incoming chunk', function(e)
 	if (kiCheck ~= nil) and (mountCheck ~= nil) then
 		kiCheck = nil
 		mountCheck = nil
-		tab_logs.keyitems['Permanent Key Items'] = check_keyitems('Permanent Key Items')
-		tab_logs.keyitems['Magical Maps'] = check_keyitems('Magical Maps')			
-		tab_logs.keyitems['Claim Slips'] = check_keyitems('Claim Slips')
-		tab_logs.keyitems['Active Effects'] = check_keyitems('Active Effects')
-		tab_logs.keyitems['Voidwatch'] = check_keyitems('Voidwatch')
-		tab_logs.keyitems['Mounts'] = check_keyitems('Mounts')
+		check_keyitems()
 	end
+
 	-- do quests
 	if e.id == 0x056 then
 		local type = struct.unpack('H', e.data, 0x24 + 0x01)
@@ -333,16 +329,10 @@ ashita.events.register('packet_in', 'incoming chunk', function(e)
 			end
 		end
     end
+
 	--magic skills
 	if (e.id == 0x00AA) then
-		tab_logs.magic['WhiteMagic'] = check_playerspells('WhiteMagic', 1)
-		tab_logs.magic['BlackMagic'] = check_playerspells('BlackMagic', 2)
-		tab_logs.magic['SummonerPact'] = check_playerspells('SummonerPact', 3)
-		tab_logs.magic['Ninjutsu'] = check_playerspells('Ninjutsu', 4)
-		tab_logs.magic['BardSong'] = check_playerspells('BardSong', 5)
-		tab_logs.magic['BlueMagic'] = check_playerspells('BlueMagic', 6)
-		tab_logs.magic['Geomancy'] = check_playerspells('Geomancy', 7)
-		tab_logs.magic['Trust'] = check_playerspells('Trust', 8)
+		check_playerspells()
 	end
 	
 	-- crafting skills
@@ -487,75 +477,75 @@ function xichecklist_updatemenulogs()
 	tab_logs.sheolgaol = menus_util.log_sheolgaol()
 end
 
-function get_key_items()
-	local playMgr = AshitaCore:GetMemoryManager():GetPlayer();
-	local player_KI = {}
-    for i = 1,3374 do
-        if playMgr:HasKeyItem(i) then
-			player_KI[i] = true
-        end
-    end
-	return player_KI
-end
-
-function check_keyitems(keyitemtype)
-	local output_list = T{}
+function check_keyitems()
 	local keyitem_exclusions = require('maps/keyitems_exclusions')
 	local keyitems = require('maps/key_items')
-	local playerkeyitems = get_key_items()
-	local total, obtained = 0, 0
+	local playMgr = AshitaCore:GetMemoryManager():GetPlayer();
+	local keyitemtypeTracker = {
+		['Permanent Key Items'] = {total=0, completed=0, output_list={}},
+		['Magical Maps'] = {total=0, completed=0, output_list={}},
+		['Claim Slips'] = {total=0, completed=0, output_list={}},
+		['Active Effects'] = {total=0, completed=0, output_list={}},
+		['Voidwatch'] = {total=0, completed=0, output_list={}},
+		['Mounts'] = {total=0, completed=0, output_list={}}
+	}
 	for id = 1,3374 do
 		local keyitem_name = AshitaCore:GetResourceManager():GetString('keyitems.names', id)
-		if ((not table_contains(keyitem_exclusions, id)) and keyitems[id] ~= nil and keyitemtype == keyitems[id].category) then
-			total = total + 1
-			local completion = false
-			if table_contains(playerkeyitems, id) then
-				-- key item obtained
-				obtained = obtained + 1
-				completion = true
+		if ((not table_contains(keyitem_exclusions, id)) and keyitems[id] ~= nil) then
+			local keyitemtype = keyitems[id].category
+			if keyitemtypeTracker[keyitemtype] then
+				keyitemtypeTracker[keyitemtype].total = keyitemtypeTracker[keyitemtype].total + 1
+				local completion = false
+				if playMgr:HasKeyItem(id) then
+					-- key item obtained
+					keyitemtypeTracker[keyitemtype].completed = keyitemtypeTracker[keyitemtype].completed + 1
+					completion = true
+				end
+				local list_item = util.list_item(keyitemtype, keyitem_name, completion)
+				table.insert(keyitemtypeTracker[keyitemtype].output_list, list_item)
 			end
-			local list_item = util.list_item(keyitemtype, keyitem_name, completion)
-			table.insert(output_list, list_item)
 		end
 	end
-	playertracker[util.cleanspaces(keyitemtype)..'_completed'] = obtained
-	playertracker[util.cleanspaces(keyitemtype)..'_total'] = total
-	return output_list
+	for keyitemtype, values in pairs(keyitemtypeTracker) do
+		playertracker[util.cleanspaces(keyitemtype)..'_completed'] = values.completed
+		playertracker[util.cleanspaces(keyitemtype)..'_total'] = values.total
+		tab_logs.keyitems[keyitemtype] = values.output_list
+	end
 end
 
-function get_spells()
-	local playMgr = AshitaCore:GetMemoryManager():GetPlayer();
-	local player_spells = {}
-    for i = 1, 1019 do
-        if playMgr:HasSpell(i) then
-			player_spells[i] = true
-        end
-    end
-	return player_spells
-end
-
-function check_playerspells(spelltype, typeInt)
-	local output_list = T{}
+function check_playerspells()
 	local spells_exclusions = require('maps/spells_exclusions')
-	local playerspells = get_spells()
-	local total, obtained = 0, 0
+	local playMgr = AshitaCore:GetMemoryManager():GetPlayer();
+	local magictypeTracker = {
+		[1] = {name='WhiteMagic', total=0, completed=0, output_list={}},
+		[2] = {name='BlackMagic', total=0, completed=0, output_list={}},
+		[3] = {name='SummonerPact', total=0, completed=0, output_list={}},
+		[4] = {name='Ninjutsu', total=0, completed=0, output_list={}},
+		[5] = {name='BardSong', total=0, completed=0, output_list={}},
+		[6] = {name='BlueMagic', total=0, completed=0, output_list={}},
+		[7] = {name='Geomancyt', total=0, completed=0, output_list={}},
+		[8] = {name='Trust', total=0, completed=0, output_list={}},
+	}
 	for id=1,1019 do
 		local spell = AshitaCore:GetResourceManager():GetSpellById(id)
 		local completion = false
-		if ((spell.Type == typeInt) and (not table_contains(spells_exclusions, id))) then
-			total = total + 1
-			if table_contains(playerspells, id) then
+		if (not table_contains(spells_exclusions, id)) then
+			local type = spell.Type
+			magictypeTracker[type].total = magictypeTracker[type].total + 1
+			if playMgr:HasSpell(id) then
 				-- spell learned
-				obtained = obtained + 1
+				magictypeTracker[type].completed = magictypeTracker[type].completed + 1
 				completion = true
 			end
-			local list_item = util.list_item(spelltype, spell.Name[1], completion, nil)
-			table.insert(output_list, list_item)
+			local list_item = util.list_item(magictypeTracker[type].name, spell.Name[1], completion, nil)
+			table.insert(magictypeTracker[type].output_list, list_item)
 		end
 	end
-	playertracker[spelltype..'_completed'] = obtained
-	playertracker[spelltype..'_total'] = total
-	return output_list
+	for _, magictype in ipairs(magictypeTracker) do
+		playertracker[util.cleanspaces(magictype.name)..'_completed'] = magictype.completed
+		playertracker[util.cleanspaces(magictype.name)..'_total'] = magictype.total
+		tab_logs.keyitems[magictype.name] = magictype.output_list
+	end
 end
 
 function check_exp()
