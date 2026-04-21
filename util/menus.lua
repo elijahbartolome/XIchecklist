@@ -1,6 +1,5 @@
 local menus_util = {}
 local menumaps = require('../maps/maps_menus')
-local titlescontnt = require('../maps/titles_bycontent')
 local titlesexclusions = require('../maps/titles_exclusions')
 local titles_howtoobtain = require('../maps/titles_howtoobtain')
 
@@ -13,10 +12,7 @@ menu_current = {
 }
 
 function table_contains(tbl, x)
-    for _, value in pairs(tbl) do
-        if value == x then return true end
-    end
-    return false
+    return tbl[x]
 end
 
 function menus_util.handle_npc_menu(e)
@@ -30,12 +26,12 @@ function menus_util.handle_npc_menu(e)
 		menuId = struct.unpack('H', e.data, 0x2C + 0x01)
 	end
 	local npc = index and AshitaCore:GetMemoryManager():GetEntity():GetName(index)
-	if not npc or not menus_util.menu_npcs[npc] then
+	if not npc or not menu_npcs[npc] then
 		return
 	end
-	if (table_contains(menus_util.menu_npcs[npc].zoneid, AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0)) 
-		and table_contains(menus_util.menu_npcs[npc].menuid, menuId)) then
-		menus_util.menu_npcs[npc]['menu_function'](e)
+	if (table_contains(menu_npcs[npc].zoneid, AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0)) 
+		and table_contains(menu_npcs[npc].menuid, menuId)) then
+		menu_npcs[npc]['menu_function'](e)
 	end
 end
 
@@ -43,11 +39,11 @@ function menus_util.handle_npc_submenu(e)
 	local index = (menu_current.npcindex and menu_current.zoneid==AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0)) and menu_current.npcindex
 	if (index == nil) then return false end
 	local npc = index and AshitaCore:GetMemoryManager():GetEntity():GetName(index)
-	if not npc or not menus_util.menu_npcs[npc] then
+	if not npc or not menu_npcs[npc] then
 		return
 	end
-	if table_contains(menus_util.menu_npcs[npc].zoneid, AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0)) then
-		menus_util.menu_npcs[npc]['menu_function'](e)
+	if table_contains(menu_npcs[npc].zoneid, AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0)) then
+		menu_npcs[npc]['menu_function'](e)
 	end
 end
 
@@ -78,19 +74,19 @@ function get_menu_parameters(e)
 	if (e.id == 0x033) then
 		local MenuParameters = {}
 		for i = 0,255 do
-			MenuParameters[i] = (ashita.bits.unpack_be(e.data_raw, 0x50, i, 1) == 1);
+			MenuParameters[i+1] = (ashita.bits.unpack_be(e.data_raw, 0x50, i, 1) == 1);
 		end
 		return MenuParameters
 	elseif (e.id == 0x034) then
 		local MenuParameters = {}
 		for i = 0,255 do
-			MenuParameters[i] = (ashita.bits.unpack_be(e.data_raw, 0x08, i, 1) == 1);
+			MenuParameters[i+1] = (ashita.bits.unpack_be(e.data_raw, 0x08, i, 1) == 1);
 		end
 		return MenuParameters
 	elseif (e.id == 0x05C) then
 		local MenuParameters = {}
 		for i = 0,255 do
-			MenuParameters[i] = (ashita.bits.unpack_be(e.data_raw, 0x04, i, 1) == 1);
+			MenuParameters[i+1] = (ashita.bits.unpack_be(e.data_raw, 0x04, i, 1) == 1);
 		end
 		return MenuParameters
 	end
@@ -98,9 +94,12 @@ end
 
 function menus_util.handle_op_warps(e)
 	menu = get_menu_parameters(e)
-	subdata = menu:sub(0x1C+1, 0x1E+1)
+	subdata = {}
+	for i = 229, 255 do
+		subdata[i-229] = menu[i]
+	end
 	for key, name in pairs(menumaps.outposts) do
-		if (not util.has_bit(subdata, key+5)) then -- +5 because mapping starts from 6th byte
+		if (not util.has_bit(subdata, key+1)) then
 			menus_util.add_outpost(key)
 		end
 	end
@@ -147,7 +146,7 @@ function menus_util.handle_protowaypoint(e)
 	menu = get_menu_parameters(e)
 	--subdata = menu:sub(0x1C+1, 0x1E+1)
 	for key, name in pairs(menumaps.protowaypoints) do
-		if (util.has_bit(menu, key)) then
+		if (util.has_bit(menu, key+1)) then
 			menus_util.add_protowaypoint(key)
 		end
 	end
@@ -201,7 +200,7 @@ end
 function menus_util.handle_sauromugueburrowsmenu(map_name, menu_parameters)
 	local burrowmap = menumaps.meeble_burrows[map_name]
 	for id, name in pairs(burrowmap) do
-		if util.has_bit(menu_parameters, id) then
+		if util.has_bit(menu_parameters, id+1) then
 			menus_util.add_meeble_burrows(id,map_name)
 		end
 	end
@@ -249,7 +248,7 @@ function menus_util.handle_katsunaga(e)
 		menu = get_menu_parameters(e)
 		for flag, id in ipairs(menumaps.fishes_menu) do
 			if (id ~= false) then
-				if util.has_bit(menu, flag) then
+				if util.has_bit(menu, flag+1) then
 					menus_util.add_fish_caught(id)
 				end
 			end
@@ -290,7 +289,7 @@ function get_key_items()
 	local player_KI = {}
     for i = 1,3583 do
         if playMgr:HasKeyItem(i) then
-			table.insert(player_KI, i)
+			player_KI[i] = true
         end
     end
 	return player_KI
@@ -302,16 +301,9 @@ function menus_util.handle_atmacitenpc(e)
 	local playerkeyitems = get_key_items()
 	if (menu_current['_unknown1'] == 0 and menu_current['Option Index'] == 2) then
 		for key, atmacite in pairs(menumaps.atmacite) do
-			if (table.find(playerkeyitems, atmacite.id)) then
-				if (playertracker.atmacite_levels[tostring(key)] == nil) then
-					playertracker.atmacite_levels[tostring(key)] = atmacite_levels[key]
-					
-					util.addon_log('Atmacite added: Lv'..atmacite_levels[key].. ' ' .. atmacite.en)
-				elseif (atmacite_levels[key] > playertracker.atmacite_levels[tostring(key)]) then
-					playertracker.atmacite_levels[tostring(key)] = atmacite_levels[key]
-					
-					util.addon_log('Atmacite Updated: Lv'..atmacite_levels[key].. ' ' .. atmacite.en)
-				end
+			if (table_contains(playerkeyitems, atmacite.id)) then
+				playertracker.atmacite_levels[tostring(key)] = atmacite_levels[key]
+				util.addon_log('Atmacite Updated: Lv'..atmacite_levels[key].. ' ' .. atmacite.en)
 			end
 		end
 		playertracker.talk_to_npc['atmacite_refiner'] = true
@@ -339,7 +331,7 @@ end
 function menus_util.handle_chocobostablenpc(e)
 	menu = get_menu_parameters(e)
 	if (menu ~= nil) then
-		local winglevel = string.byte(menu, 5)
+		local winglevel = ashita.bits.unpack_be(e.data_raw, 0x08 + 4, 0, 8)
 		if (winglevel > playertracker['wingskill_completed']) then
 			playertracker['wingskill_completed'] = winglevel
 			playertracker.talk_to_npc['chocobokid'] = true
@@ -372,8 +364,8 @@ end
 
 function menus_util.add_title(id)
 	local titles = require('maps/titles')
-	if (not (playertitles[id] == true)) then
-		playertitles[id] = true
+	if (not (playertracker.titles[id] == true)) then
+		playertracker.titles[id] = true
 		util.addon_log('Title added: ' .. titles[id].en)
 	end
 end
@@ -388,9 +380,9 @@ function menus_util.log_titles()
 		local obtainmethod = ''
 		if (titles[key]) then
 			if (titles_howtoobtain[titles[key].en]) then
-				obtainmethod = '\\cs(255,255,255) [' .. titles_howtoobtain[titles[key].en] .. ']\\cr'
+				obtainmethod = '[' .. titles_howtoobtain[titles[key].en] .. ']'
 			end
-			if (playertitles[key] == true) then
+			if (playertracker.titles[key] == true) then
 				complete = complete+1
 				completion = true
 			else
@@ -410,70 +402,110 @@ end
 
 function menus_util.list_titles_bycontent()
 	output_list = {}
-	for content, titles in pairs(titlescontnt) do
+	local titlescontent = require('../maps/titles_bycontent')
+	for _, titles in ipairs(titlescontent) do
 		local total, complete = 0,0
 		local completion = false
-		for key, titleid in ipairs(titles) do
+		local content = titles[1]
+		for titleid in pairs(titles[2]) do
 			total = total+1
-			if (titlesexclusions[titleid] ~= nil) then total = total-1 end
-			if (playertitles[tostring(titleid)] == true) then
+			if table_contains(titlesexclusions, titleid) then total = total-1 end
+			if (playertracker.titles[titleid] == true) then
 				complete = complete+1
 				if (table_contains(titlesexclusions, titleid)) then total = total+1 end
 			end
 		end
-		local red = 0
 		if (complete == total) then completion = true end
 		table.insert(output_list, util.list_item(nil, '--' .. content ..(' titles %d/%d'):format(complete, total), completion, nil))
 	end
 	return output_list
 end
 
+function menus_util.handle_odyssey_questionmark(e)
+	menu = get_menu_parameters(e)
+	menu_data = util.byte_to_table_reverse(menu)
+	if (menu_current['Option Index'] == 2) then 
+		-- SheolA todo
+		
+	elseif (menu_current['Option Index'] == 8 or menu_current['Option Index'] == 9 or menu_current['Option Index'] == 10) then -- Choose Sheo Gaol status report
+		for byteidx, name in pairs (menumaps.odyssey.gaol[menu_current['Option Index']]) do
+			local data = menu_data[byteidx]
+			local venglevel = bit.band(data, 0x1F) -- 5 bits are the veng level
+			if (not playertracker.sheolgaol[tostring(menu_current['Option Index'])][tostring(byteidx)]) then
+				util.addon_log(name..' V'..venglevel..' Added')
+			elseif (venglevel > playertracker.sheolgaol[tostring(menu_current['Option Index'])][tostring(byteidx)]) then
+				util.addon_log(name..' V'..venglevel..' Updated')
+			end 
+			playertracker.sheolgaol[tostring(menu_current['Option Index'])][tostring(byteidx)] = venglevel
+		end
+		playertracker.talk_to_npc['sheolgaol'] = true
+	end
+end
 
-menus_util.menu_npcs = {
+function menus_util.log_sheolgaol()
+	local output_list = {}
+	local total, complete = 0,0
+	for optionidx, optiontbl in pairs(menumaps.odyssey.gaol) do
+		for byteidx, name in pairs (optiontbl) do
+			local venglevel = playertracker.sheolgaol[tostring(optionidx)][tostring(byteidx)] or 0
+			local completion = false
+			if venglevel == 25 then completion = true end
+			table.insert(output_list, util.list_item('ShelGaol', 'V'..venglevel..' '..name, completion))
+			complete = complete+venglevel
+		end
+	end
+	playertracker['sheolgaoltiers_completed'] = complete
+	return output_list
+end
+
+menu_npcs = {
 	-- Outpost Warp NPCs
-	['Conrad'] = {zoneid={234}, menuid={584,581}, menu_function=menus_util.handle_op_warps},
-	['Jeanvirgaud'] = {zoneid={231}, menuid={716,864}, menu_function=menus_util.handle_op_warps},
-	['Rottata'] = {zoneid={240}, menuid={653,552}, menu_function=menus_util.handle_op_warps},
+	['Conrad'] = {zoneid={[234] = true}, menuid={[584] = true,[581] = true}, menu_function=menus_util.handle_op_warps},
+	['Jeanvirgaud'] = {zoneid={[231] = true}, menuid={[716] = true,[864] = true}, menu_function=menus_util.handle_op_warps},
+	['Rottata'] = {zoneid={[240] = true}, menuid={[653] = true,[552] = true}, menu_function=menus_util.handle_op_warps},
 	-- MMM NPC
-	['Chatnachoq'] = {zoneid={245}, menuid={10095}, menu_function=menus_util.handle_chatnachoq},
+	['Chatnachoq'] = {zoneid={[245] = true}, menuid={[10095] = true}, menu_function=menus_util.handle_chatnachoq},
 	-- Proto-Waypoint NPCs
-	['Proto-Waypoint'] = {zoneid={243,248,249,247,252}, menuid={10209,10012,345,141,266}, menu_function=menus_util.handle_protowaypoint},
+	['Proto-Waypoint'] = {zoneid={[243] = true,[248] = true,[249] = true,[247] = true,[252] = true}, menuid={[10209] = true,[10012] = true,[345] = true,[141] = true,[266] = true}, menu_function=menus_util.handle_protowaypoint},
 	
 	-- Meenle Burrow
-	['Burrow Investigator'] = {zoneid={244}, menuid={5500}, menu_function=menus_util.handle_burrowsnpc},
-	['Burrow Researcher'] = {zoneid={120,105}, menuid={5500}, menu_function=menus_util.handle_burrowsnpc},
+	['Burrow Investigator'] = {zoneid={[244] = true}, menuid={[5500] = true}, menu_function=menus_util.handle_burrowsnpc},
+	['Burrow Researcher'] = {zoneid={[120] = true,[105] = true}, menuid={[5500] = true}, menu_function=menus_util.handle_burrowsnpc},
 	
 	-- Fishing NPC
-	['Katsunaga'] = {zoneid={249}, menuid={197}, menu_function=menus_util.handle_katsunaga},
+	['Katsunaga'] = {zoneid={[249] = true}, menuid={[197] = true}, menu_function=menus_util.handle_katsunaga},
 	
 	-- Atmacite Refiner
 	['Atmacite Refiner'] = {
-	zoneid={26,51,80,84,87,91,94,98,105,110,120,126,230,235,238,247,250,252}, 
-	menuid={6,7,8,15,16,24,25,46,49,79,264,627,657,962,1023}, 
+	zoneid={[26] = true,[51] = true,[80] = true,[84] = true,[87] = true,[91] = true,[94] = true,[98] = true,[105] = true,[110] = true,[120] = true,[126] = true,[230] = true,[235] = true,[238] = true,[247] = true,[250] = true,[252] = true}, 
+	menuid={[6] = true,[7] = true,[8] = true,[15] = true,[16] = true,[24] = true,[25] = true,[46] = true,[49] = true,[79] = true,[264] = true,[627] = true,[657] = true,[962] = true,[1023] = true}, 
 	menu_function=menus_util.handle_atmacitenpc},
 	
 	-- Chocobo NPC
-	['Arvilauge'] = {zoneid={230}, menuid={846}, menu_function=menus_util.handle_chocobostablenpc},
-	['Gonija'] = {zoneid={234}, menuid={534}, menu_function=menus_util.handle_chocobostablenpc},
-	['Kiria-Romaria'] = {zoneid={241}, menuid={761}, menu_function=menus_util.handle_chocobostablenpc},
+	['Arvilauge'] = {zoneid={[230] = true}, menuid={[846] = true}, menu_function=menus_util.handle_chocobostablenpc},
+	['Gonija'] = {zoneid={[234] = true}, menuid={[534] = true}, menu_function=menus_util.handle_chocobostablenpc},
+	['Kiria-Romaria'] = {zoneid={[241] = true}, menuid={[761] = true}, menu_function=menus_util.handle_chocobostablenpc},
 	
 	-- Title Changer NPCs
-	["Aligi-Kufongi"] = {zoneid={26}, menuid={342}, menu_function=menus_util.handle_titles_npc},
-	["Koyol-Futenol"] = {zoneid={50}, menuid={644}, menu_function=menus_util.handle_titles_npc},
-	["Tamba-Namba"] = {zoneid={80}, menuid={306}, menu_function=menus_util.handle_titles_npc},
-	["Bhio Fehriata"] = {zoneid={87}, menuid={167}, menu_function=menus_util.handle_titles_npc},
-	["Cattah Pamjah"] = {zoneid={94}, menuid={138}, menu_function=menus_util.handle_titles_npc},
-	["Moozo-Koozo"] = {zoneid={230}, menuid={675}, menu_function=menus_util.handle_titles_npc},
-	["Styi Palneh"] = {zoneid={236}, menuid={200}, menu_function=menus_util.handle_titles_npc},
-	["Burute-Sorute"] = {zoneid={239}, menuid={10004}, menu_function=menus_util.handle_titles_npc},
-	["Tuh Almobankha"] = {zoneid={245}, menuid={10014}, menu_function=menus_util.handle_titles_npc},
-	["Zuah Lepahnyu"] = {zoneid={246}, menuid={330}, menu_function=menus_util.handle_titles_npc},
-	["Shupah Mujuuk"] = {zoneid={247}, menuid={1011}, menu_function=menus_util.handle_titles_npc},
-	["Yulon-Polon"] = {zoneid={248}, menuid={10001}, menu_function=menus_util.handle_titles_npc},
-	["Willah Maratahya"] = {zoneid={249}, menuid={10001}, menu_function=menus_util.handle_titles_npc},
-	["Eron-Tomaron"] = {zoneid={250}, menuid={10013}, menu_function=menus_util.handle_titles_npc},
-	["Quntsu-Nointsu"] = {zoneid={252}, menuid={1011}, menu_function=menus_util.handle_titles_npc},
-	["Debadle-Levadle"] = {zoneid={256}, menuid={15}, menu_function=menus_util.handle_titles_npc},
+	["Aligi-Kufongi"] = {zoneid={[26] = true}, menuid={[342] = true}, menu_function=menus_util.handle_titles_npc},
+	["Koyol-Futenol"] = {zoneid={[50] = true}, menuid={[644] = true}, menu_function=menus_util.handle_titles_npc},
+	["Tamba-Namba"] = {zoneid={[80] = true}, menuid={[306] = true}, menu_function=menus_util.handle_titles_npc},
+	["Bhio Fehriata"] = {zoneid={[87] = true}, menuid={[167] = true}, menu_function=menus_util.handle_titles_npc},
+	["Cattah Pamjah"] = {zoneid={[94] = true}, menuid={[138] = true}, menu_function=menus_util.handle_titles_npc},
+	["Moozo-Koozo"] = {zoneid={[230] = true}, menuid={[675] = true}, menu_function=menus_util.handle_titles_npc},
+	["Styi Palneh"] = {zoneid={[236] = true}, menuid={[200] = true}, menu_function=menus_util.handle_titles_npc},
+	["Burute-Sorute"] = {zoneid={[239] = true}, menuid={[10004] = true}, menu_function=menus_util.handle_titles_npc},
+	["Tuh Almobankha"] = {zoneid={[245] = true}, menuid={[10014] = true}, menu_function=menus_util.handle_titles_npc},
+	["Zuah Lepahnyu"] = {zoneid={[246] = true}, menuid={[330] = true}, menu_function=menus_util.handle_titles_npc},
+	["Shupah Mujuuk"] = {zoneid={[247] = true}, menuid={[1011] = true}, menu_function=menus_util.handle_titles_npc},
+	["Yulon-Polon"] = {zoneid={[248] = true}, menuid={[10001] = true}, menu_function=menus_util.handle_titles_npc},
+	["Willah Maratahya"] = {zoneid={[249] = true}, menuid={[10001] = true}, menu_function=menus_util.handle_titles_npc},
+	["Eron-Tomaron"] = {zoneid={[250] = true}, menuid={[10013] = true}, menu_function=menus_util.handle_titles_npc},
+	["Quntsu-Nointsu"] = {zoneid={[252] = true}, menuid={[1011] = true}, menu_function=menus_util.handle_titles_npc},
+	["Debadle-Levadle"] = {zoneid={[256] = true}, menuid={[15] = true}, menu_function=menus_util.handle_titles_npc},
+
+	-- ??? Odyssey
+	["???"] = {zoneid={[247] = true}, menuid={[2001] = true}, menu_function=menus_util.handle_odyssey_questionmark},
 }
 
 return menus_util

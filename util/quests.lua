@@ -52,9 +52,7 @@ function quest_util.log_quests(quest_area)
 	if (quest_area == 'campaign') then
 		if not quests.completed['campaign1'] then return false end
 		if not quests.completed['campaign2'] then return false end
-		--gotta insert a dummy value here before concatenating the two tables
-		quests.completed[quest_area] = util.table_concat(quests.completed['campaign1'], {67})
-		quests.completed[quest_area] = util.table_concat(quests.completed[quest_area], quests.completed['campaign2'])
+		quests.completed[quest_area] = util.table_concat(quests.completed['campaign1'], quests.completed['campaign2'])
 	end
     local complete,total = 0, 0
 	local output_list = {}
@@ -63,14 +61,14 @@ function quest_util.log_quests(quest_area)
 		local completion = false
 		if maps[quest_area][key] then
 			total = total + 1
-            if util.has_bit(quests.completed[quest_area], key) then
+            if util.has_bit(quests.completed[quest_area], key+1) then
                 complete = complete + 1
 				completion = true
 			else
 				if (quests.mutual_exclusive[quest_area] and quests.mutual_exclusive[quest_area][key]) then -- check if mutual quests involved
 					--total = total - quests.mutual_exclusive[quest_type]:length() + 1 -- avoid multiple counts
 					for alternative in pairs(quests.mutual_exclusive[quest_area]) do
-						if util.has_bit(quests.completed[quest_area], alternative) then
+						if util.has_bit(quests.completed[quest_area], alternative+1) then
 							total = total - 1 --reduce total if alternative mutually exclusive quest is completed
 							mutualcompleted = true
 						end

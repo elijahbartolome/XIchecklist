@@ -5,9 +5,9 @@ local settings = require('settings')
 require('util/util')
 
 function roe_util.handle_roe_data(roe_data)
-	for id, roe in pairs(roemap) do
+	for id=1,4086 do
 		if (util.has_bit(roe_data, id)) then
-			table.insert(playerroe, id)
+			playertracker.roe[id] = true
 		end
 	end
 end
@@ -17,18 +17,19 @@ function roe_util.log_roe()
 	local total, complete = 0,0
 	local hiddentotal, hiddencomplete = 0,0
 	for key= 1,4086  do
-		total = total+1
-		local completion = false
-		if (roeextramap[key]) then hiddentotal = hiddentotal+1 end
-		if table_contains(playerroe, key)  then
-			complete = complete+1
-			completion = true
-			if (roeextramap[key]) then hiddencomplete = hiddencomplete+1 end
+		if roemap[key] ~= nil then
+			total = total+1
+			local completion = false
+			if (roeextramap[key]) then hiddentotal = hiddentotal+1 end
+			if table_contains(playertracker.roe, key+1)  then
+				complete = complete+1
+				completion = true
+				if (roeextramap[key]) then hiddencomplete = hiddencomplete+1 end
+			end
+			if (not table_contains(roeextramap, key)) then
+				table.insert(output_list, util.list_item(nil, roemap[key].name, completion))
+			end
 		end
-		if (not table_contains(roeextramap, key) and roemap[key] ~= nil) then
-			table.insert(output_list, util.list_item(nil, roemap[key].name, completion))
-		end
-		
 	end
 	playertracker['RoE_completed'] = complete - hiddencomplete
 	playertracker['RoE_total'] = total - hiddentotal

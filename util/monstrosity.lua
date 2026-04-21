@@ -22,7 +22,7 @@ function mons_util.log_racejobinstincts()
 	for id, name in pairs(map_racejobinstincts) do
 		total = total+1
 		local completion = false
-		if util.has_bit(mons_util.racejobinstincts, id) then
+		if util.has_bit(mons_util.racejobinstincts, id +1) then
 			obtained = obtained+1
 			completion = true
 		end
@@ -37,18 +37,26 @@ function mons_util.log_monsterlevels()
 	if (mons_util.monster_levelspacket[1] == nil or mons_util.monster_levelspacket[2] == nil) then 
 		return
 	else 
-		mons_util.monster_levels = util.table_concat(mons_util.monster_levelspacket[1], {67})
-		mons_util.monster_levels = util.table_concat(mons_util.monster_levels, mons_util.monster_levelspacket[2])
+		mons_util.monster_levels = util.table_concat(mons_util.monster_levelspacket[1], mons_util.monster_levelspacket[2])
 	end
 	if mons_util.monster_levels==nil then return end
+	local monster_level_bytes = util.byte_to_table_reverse(mons_util.monster_levels)
 	local output_list = {}
 	local total, complete = 0, 0
 	for id, monster in pairs(map_species) do
 		total = total+99
 		local completion = false
-		complete = complete + (mons_util.monster_levels[id] and 1 or 0)
-		if (mons_util.monster_levels[id] == 99) then completion = true end
-		table.insert(output_list, util.list_item(nil, 'Lv. ' .. (mons_util.monster_levels[id] and 1 or 0) .. ' ' .. monster, completion)) -- add monster
+		local monster_level = 0
+		if (id ~= 254 and id ~= 255) then
+			monster_level = monster_level_bytes[id+1]
+		elseif (id == 254) then
+			monster_level = monster_level_bytes[129]
+		elseif (id == 255) then
+			monster_level = monster_level_bytes[130]
+		end
+		complete = complete + monster_level
+		if (monster_level == 99) then completion = true end
+		table.insert(output_list, util.list_item(nil, 'Lv. ' .. (monster_level) .. ' ' .. monster, completion)) -- add monster
 	end
 	playertracker['MonsterLevels_completed'] = complete
 	playertracker['MonsterLevels_total'] = total	
@@ -80,7 +88,7 @@ function mons_util.log_monsterinstincts()
 	local total, obtained = 0, 0
 	for table_id, unlocked_level in pairs(mons_util.monster_instincts) do
 		--total = total+3
-		local instinct_index_base = 3 * (table_id - 1)
+		local instinct_index_base = 3 * (table_id)
 		for instinct_index=1, 3 do
 			local completion = false
 			if (map_monsterinstincts[instinct_index_base+instinct_index]) then

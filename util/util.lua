@@ -3,11 +3,21 @@ local bit = require('bit')
 local chat = require('chat')
 
 function util.addon_log(str)
-    print(chat.header(addon.name):append( '[Checklist] ' .. str))
+    print(chat.header(addon.name):append(str))
 end
 
 function util.has_bit(data, position)
     return data[position]
+end
+
+function util.reverse(x, n)
+    local result = 0
+	for i=1,n do
+		result = bit.lshift(result, 1)
+		result = bit.bor(bit.band(x, 1), result)
+		x = bit.rshift(x, 1)
+	end
+	return result
 end
 
 function util.table_concat(t1, t2)
@@ -17,13 +27,37 @@ function util.table_concat(t1, t2)
     return t1
 end
 
+function util.byte_to_table(data)
+	local result = {}
+	for i = 1, #data, 8 do
+		local value = 0
+		for j = 0, 7 do 
+			value = value + 2^(7-j) * (data[i + j] and 1 or 0)
+		end
+		result[#result + 1] = value
+	end
+	return result
+end
+
+function util.byte_to_table_reverse(data)
+	local result = {}
+	for i = 1, #data, 8 do
+		local value = 0
+		for j = 0, 7 do 
+			value = value + 2^(j) * (data[i + j] and 1 or 0)
+		end
+		result[#result + 1] = value
+	end
+	return result
+end
+
 function util.twobits_to_table(data)
 -- Extract 2-bit values into a table
 	local result = {}
 	for i = 1, #data, 2 do
 		local value = 0
-		for j = 1, 2 do
-			value = value + 2^(j - 1) * (data[i + j] and 1 or 0)
+		for j = 0, 1 do
+			value = value + 2^(j) * (data[i + j] and 1 or 0)
 		end
 		result[#result + 1] = value
 	end
@@ -35,13 +69,13 @@ function util.fourbits_to_table(data)
     for i = 1, #data, 8 do
         -- lower 4 bits (bits 0–3)
 		local low = 0
-		for j = 1, 4 do
-			low = low + 2^(j - 1) * (data[i + j] and 1 or 0)
+		for j = 0, 3 do
+			low = low + 2^(j) * (data[i + j] and 1 or 0)
 		end
         -- upper 4 bits (bits 4–7)
         local high = 0
-		for j = 1, 4 do
-			high = high + 2^(j - 1) * (data[i + j + 4] and 1 or 0)
+		for j = 0, 3 do
+			high = high + 2^(j) * (data[i + j + 4] and 1 or 0)
 		end
         -- (LSB first)
         result[#result + 1] = low

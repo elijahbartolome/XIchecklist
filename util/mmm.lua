@@ -6,12 +6,12 @@ local runes_unlocks = nil
 function mmm_util.handle_mmm_data(e)
 	local VoucherUnlocksField = {}
 	for i = 0,8 do
-		VoucherUnlocksField[i] = (ashita.bits.unpack_be(e.data_raw, 0x04, i, 1) == 1);
+		VoucherUnlocksField[i+1] = (ashita.bits.unpack_be(e.data_raw, 0x04, i, 1) == 1);
 	end
 	mmm_util.vouchers_unlocks = VoucherUnlocksField
 	local RuneUnlocksField = {}
 	for i = 0,99 do
-		RuneUnlocksField[i] = (ashita.bits.unpack_be(e.data_raw, 0x0C, i, 1) == 1);
+		RuneUnlocksField[i+1] = (ashita.bits.unpack_be(e.data_raw, 0x0C, i, 1) == 1);
 	end
 	mmm_util.runes_unlocks = RuneUnlocksField
 end
@@ -23,7 +23,7 @@ function mmm_util.log_vouchers()
 	for id, voucher in pairs(map_mmm['vouchers']) do
 		total = total+1
 		local completion = false
-		if util.has_bit(mmm_util.vouchers_unlocks, id) then
+		if util.has_bit(mmm_util.vouchers_unlocks, id+1) then
 			obtained = obtained+1
 			completion = true
 		end
@@ -41,7 +41,7 @@ function mmm_util.log_runes()
 	for id, rune in pairs(map_mmm['runes']) do
 		total = total+1
 		local completion = false
-		if util.has_bit(mmm_util.runes_unlocks, id) then
+		if util.has_bit(mmm_util.runes_unlocks, id+1) then
 			obtained = obtained+1
 			completion = true
 		end

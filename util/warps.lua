@@ -16,7 +16,7 @@ function warps_util.checkwarps(warptype)
 	for index, name in pairs(warps[warptype].map) do
 		total = total+1
 		local completion = false
-		if (util.has_bit(subdata, index)) then
+		if (util.has_bit(subdata, index+1)) then
 			obtained = obtained+1
 			completion = true
 		end

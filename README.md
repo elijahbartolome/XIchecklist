@@ -1,12 +1,11 @@
 ## **Usage**:
 | Command | Description |
 |---|---|
-| `//lua load xichecklist` | load then <ins>**zone**</ins> to get the UI menu updated |
-| `//xic help` | print help in chatlog |
-| `//xic hide` | hide the UI |
-| `//xic show` | show the UI |
-| `//xic copy` | copy current tab to clipboard |
-| `//xic log <category>` | print <category> in chat log.<br>Example: `//xic log summary`<br>Available categories `main` `summary` `titles` `monstrosity` `mmm` `meeble` `warps` `fish` `quests` (`sandoria` `bastok` `windurst` `jeuno` `ahturhgan` `crystalwar` `outlands` `other` `abyssea` `adoulin` `coalition` `campaign`)   |
+| `/addon load xichecklist` | load then <ins>**zone**</ins> to get the UI menu updated |
+| `/xic help` | print help in chatlog |
+| `/xic hide` | hide the UI |
+| `/xic show` | show the UI |
+| `/xic log <category>` | print <category> in chat log.<br>Example: `/xic log titles`<br>Available categories `titles` `monstrosity` `mmm` `meeble` `warps` `fish` `quests` (`sandoria` `bastok` `windurst` `jeuno` `ahturhgan` `crystalwar` `outlands` `other` `abyssea` `adoulin` `coalition` `campaign`)   |
 
 The following are updated by talking to NPCs (some require opening certain menus)  
 will be saved in config so only need to do it once (or when need to update)
@@ -25,7 +24,7 @@ will be saved in config so only need to do it once (or when need to update)
 <br>
 
 **Note**:
-1. By default anything completed is hidden from the UI, to show completed objectives (in green) edit the `settings.xml` and change the `showcompleted` to `true`
+1. By default anything completed is hidden from the UI, to show completed objectives (in green), use the command `xic showcomplete`
 2. First load may freeze a few seconds due to first-time registering of RoEs.
 
 ## **Tracking**:
@@ -43,26 +42,20 @@ will be saved in config so only need to do it once (or when need to update)
 - Key items `(Permenant / Maps / Mounts / Claim Slips / Job KIs)`
 - Magic Spells `(White Magic / Black Magic / Summoner Pacts / Ninjutsu / Bard Songs / Blue Magic / Trusts)`
 - leveling related `(Merit / Job points / Master levels / Fishing Skill / Crafting Skill / Wing Skill)`
+- Sheol Gaol 
 
+![screenshot](https://imgur.com/yyldUyv.png)
 
+![screenshot2](https://imgur.com/eWG0YPj.png)
 
+![screenshot3](https://imgur.com/fzTX99m.png)
 
-![screenshot](https://i.imgur.com/ckMMXEe.jpeg)
+![screenshot4](https://imgur.com/02S7SY6.png)
 
-the menu will only show missing items like quests,key items, spells, home points, suvivsal guides , waypoint etc
-
-![screenshot2](https://i.imgur.com/2UsoS9N.png)
-
-![screenshot3](https://i.imgur.com/Ex6SHRJ.png)
-
-![screenshot4](https://i.imgur.com/wUWDWqE.png)
-
-![screenshot5](https://i.imgur.com/c9ZEjBP.png)
+![screenshot5](https://imgur.com/mFtw4Ff.png)
 
 - this thing is free to use/share/edit/anything i dont care what you do with it
 
-
-- need help mapping the warps_waypoints.lua correctly (assign numbers and #FS)
 
 
 
@@ -70,22 +63,7 @@ the menu will only show missing items like quests,key items, spells, home points
 ### **Changes**:
 
 - 0.1.0 - release
-- 0.1.1 - added Monstrosity levels and race/job instincts
-- 0.1.2 - add Monstrosity variants
-- 0.2.0 - added titles (thanks to kaytecat)
-- 0.2.1 - added list of Titles by content
-- 0.3.0 - added RoE Tracking (thanks to Daleterrence / Darkdoom for resources)
-- 0.3.1 - added title exclusions & removed unlearnable spells
-- 0.4.0 - A lot fixes
-- 0.4.1 - removed non-implemented monstrosity
-- 0.5.0 - added title obtain method, for quick reference in missing titles
-- 0.5.2 - fixed unlearnable spells & waypoint mapping
-- 0.6.0 - added Outpost warps / Monster Instincts + fixes/cleanup
-- 0.7.0 - added Moblin Maze Mongers (Vouchers / Runes / Maze count) & Active Effects (Dynamis/Sortie Job KIs)
-- 0.8.0 - added Proto-Waypoints
-- 0.9.0 - added Fishes Caught / Meeble Burrows / Merits , moved Coalitions under Quests
-- 0.9.2 - added Total Points / Mastery Rank / command to copy to clipboard
-- 0.9.3 - added fishing / crafting skills.
-- 0.9.4 - added Atmacite, Atmacite levels & Wing Skill.
-- 0.10.0 - Added "Talk to NPC" addon help in tabs that require npc interaction to register
-- 0.11.0 - Added `//xic log` command, now registers which NPC talked to for updating the checklist.
+
+## Credits
+Most of the code is based off HiPotionQ8's Windower addon XIchecklist
+Thanks to Thorny for providing code snippets to help guide the porting

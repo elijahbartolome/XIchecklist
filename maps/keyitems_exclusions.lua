@@ -1,249 +1,249 @@
 return {
 	
 	-- Non-player KIs
-	347, -- Dynamis Debugger
-	811, -- Replay Debugger
-	619, -- All-You-Can-Ride Pass
+	[347] = true, -- Dynamis Debugger
+	[811] = true, -- Replay Debugger
+	[619] = true, -- All-You-Can-Ride Pass
 	
 	-- Unknown fishing flags
-	1980, -- Spiffy Synth. (4)
-	1981, -- Spiffy Synth. (5)
-	1991, -- Spiffy Synth. (7)
-	1999, -- Spiffy Synth. (7)
-	2006, -- Spiffy Synth. (6)
-	2007, -- Spiffy Synth. (7)
-	2015, -- Spiffy Synth. (7)
-	2022, -- Spiffy Synth. (6)
-	2023, -- Spiffy Synth. (7)
-	2030, -- Spiffy Synth. (6)
-	2031, -- Spiffy Synth. (7)
-	2047, -- Spiffy Synth. (7)
+	[1980] = true, -- Spiffy Synth. ([4] = true)
+	[1981] = true, -- Spiffy Synth. ([5] = true)
+	[1991] = true, -- Spiffy Synth. ([7] = true)
+	[1999] = true, -- Spiffy Synth. ([7] = true)
+	[2006] = true, -- Spiffy Synth. ([6] = true)
+	[2007] = true, -- Spiffy Synth. ([7] = true)
+	[2015] = true, -- Spiffy Synth. ([7] = true)
+	[2022] = true, -- Spiffy Synth. ([6] = true)
+	[2023] = true, -- Spiffy Synth. ([7] = true)
+	[2030] = true, -- Spiffy Synth. ([6] = true)
+	[2031] = true, -- Spiffy Synth. ([7] = true)
+	[2047] = true, -- Spiffy Synth. ([7] = true)
 	
 	-- old events no longer playable
-	3136, -- sheet of Shadow Lord tunes
-	3181, -- tentacle touching ticket
+	[3136] = true, -- sheet of Shadow Lord tunes
+	[3181] = true, -- tentacle touching ticket
 	
 	-- Magical Maps
-	1866, -- map of Leujaoam Sanctum
-	1867, -- map of the Training Grounds
-	1868, -- map of Lebros Cavern
-	1869, -- map of Ilrusi Atoll
-	1870, -- map of Periqia
-	1871, -- map of Nyzul Isle
-	1873, --map of the Colosseum
+	[1866] = true, -- map of Leujaoam Sanctum
+	[1867] = true, -- map of the Training Grounds
+	[1868] = true, -- map of Lebros Cavern
+	[1869] = true, -- map of Ilrusi Atoll
+	[1870] = true, -- map of Periqia
+	[1871] = true, -- map of Nyzul Isle
+	[1873] = true, --map of the Colosseum
 	
-	1875, -- map of Zhayolm Remnants
-	1876, -- map of Arrapago Remnants
-	1877, -- map of Bhaflau Remnants
-	1878, -- map of Silver Sea Remnants
+	[1875] = true, -- map of Zhayolm Remnants
+	[1876] = true, -- map of Arrapago Remnants
+	[1877] = true, -- map of Bhaflau Remnants
+	[1878] = true, -- map of Silver Sea Remnants
 	
-	1880, -- map of Everbloom Hollow
-	1882, -- map of Ruhotz Silvermines
-	1884, -- map of Ghoyu's Reverie
+	[1880] = true, -- map of Everbloom Hollow
+	[1882] = true, -- map of Ruhotz Silvermines
+	[1884] = true, -- map of Ghoyu's Reverie
 	
-	2302, -- map of Rala Waterways [U]
-	2303, -- map of Yorcia Weald [U]
-	2304, -- map of Cirdas Caverns [U]
-	2305, -- map of Outer Ra'Kaznar [U]
+	[2302] = true, -- map of Rala Waterways [U]
+	[2303] = true, -- map of Yorcia Weald [U]
+	[2304] = true, -- map of Cirdas Caverns [U]
+	[2305] = true, -- map of Outer Ra'Kaznar [U]
 	
 	-- Active Effects
 	-- Mog Enhancements
-	512, -- Moghancement: Fire
-	513, -- Moghancement: Ice
-	514, -- Moghancement: Wind
-	515, -- Moghancement: Earth
-	516, -- Moghancement: Lightning
-	517, -- Moghancement: Water
-	518, -- Moghancement: Light
-	519, -- Moghancement: Dark
-	520, -- Moghancement: Experience
-	521, -- Moghancement: Gardening
-	522, -- Moghancement: Desynthesis
-	523, -- Moghancement: Fishing
-	524, -- Moghancement: Woodworking
-	525, -- Moghancement: Smithing
-	526, -- Moghancement: Goldsmithing
-	527, -- Moghancement: Clothcraft
-	528, -- Moghancement: Leathercraft
-	529, -- Moghancement: Bonecraft
-	530, -- Moghancement: Alchemy
-	531, -- Moghancement: Cooking
-	532, -- Moghancement: Conquest
-	533, -- Moghancement: Region
-	534, -- Moghancement: Fishing
-	535, -- Moghancement: San. Conquest
-	536, -- Moghancement: Bas. Conquest
-	537, -- Moghancement: Win. Conquest
-	538, -- Moghancement: Money
-	539, -- Moghancement: Campaign
-	540, -- Moghancement: Money II
-	541, -- Moghancement: Skill Gains
-	542, -- Moghancement: Bounty
-	543, -- Moghancement: Mandragora Mania
-	544, -- Moglification: Fishing
-	545, -- Moglification: Woodworking
-	546, -- Moglification: Smithing
-	547, -- Moglification: Goldsmithing
-	548, -- Moglification: Clothcraft
-	549, -- Moglification: Leathercraft
-	550, -- Moglification: Bonecraft
-	551, -- Moglification: Alchemy
-	552, -- Moglification: Cooking
-	553, -- Mega Moglification: Fishing
-	554, -- Mega Moglification: Woodwork.
-	555, -- Mega Moglification: Smithing
-	556, -- Mega Moglification: Goldsmith.
-	557, -- Mega Moglification: Clothcraft
-	558, -- Mega Moglification: Leathrcrft.
-	559, -- Mega Moglification: Bonecraft
-	560, -- Mega Moglification: Alchemy
-	561, -- Mega Moglification: Cooking
-	562, -- Moglification: Experience Boost
-	563, -- Moglification: Capacity Boost
-	564, -- Moglification: Synergy Skill Gains
-	565, -- Moglification: Furnace Duration
-	566, -- Moglification: Resist Death
-	567, -- Moglification: A.M.A.N. Trove
+	[512] = true, -- Moghancement: Fire
+	[513] = true, -- Moghancement: Ice
+	[514] = true, -- Moghancement: Wind
+	[515] = true, -- Moghancement: Earth
+	[516] = true, -- Moghancement: Lightning
+	[517] = true, -- Moghancement: Water
+	[518] = true, -- Moghancement: Light
+	[519] = true, -- Moghancement: Dark
+	[520] = true, -- Moghancement: Experience
+	[521] = true, -- Moghancement: Gardening
+	[522] = true, -- Moghancement: Desynthesis
+	[523] = true, -- Moghancement: Fishing
+	[524] = true, -- Moghancement: Woodworking
+	[525] = true, -- Moghancement: Smithing
+	[526] = true, -- Moghancement: Goldsmithing
+	[527] = true, -- Moghancement: Clothcraft
+	[528] = true, -- Moghancement: Leathercraft
+	[529] = true, -- Moghancement: Bonecraft
+	[530] = true, -- Moghancement: Alchemy
+	[531] = true, -- Moghancement: Cooking
+	[532] = true, -- Moghancement: Conquest
+	[533] = true, -- Moghancement: Region
+	[534] = true, -- Moghancement: Fishing
+	[535] = true, -- Moghancement: San. Conquest
+	[536] = true, -- Moghancement: Bas. Conquest
+	[537] = true, -- Moghancement: Win. Conquest
+	[538] = true, -- Moghancement: Money
+	[539] = true, -- Moghancement: Campaign
+	[540] = true, -- Moghancement: Money II
+	[541] = true, -- Moghancement: Skill Gains
+	[542] = true, -- Moghancement: Bounty
+	[543] = true, -- Moghancement: Mandragora Mania
+	[544] = true, -- Moglification: Fishing
+	[545] = true, -- Moglification: Woodworking
+	[546] = true, -- Moglification: Smithing
+	[547] = true, -- Moglification: Goldsmithing
+	[548] = true, -- Moglification: Clothcraft
+	[549] = true, -- Moglification: Leathercraft
+	[550] = true, -- Moglification: Bonecraft
+	[551] = true, -- Moglification: Alchemy
+	[552] = true, -- Moglification: Cooking
+	[553] = true, -- Mega Moglification: Fishing
+	[554] = true, -- Mega Moglification: Woodwork.
+	[555] = true, -- Mega Moglification: Smithing
+	[556] = true, -- Mega Moglification: Goldsmith.
+	[557] = true, -- Mega Moglification: Clothcraft
+	[558] = true, -- Mega Moglification: Leathrcrft.
+	[559] = true, -- Mega Moglification: Bonecraft
+	[560] = true, -- Mega Moglification: Alchemy
+	[561] = true, -- Mega Moglification: Cooking
+	[562] = true, -- Moglification: Experience Boost
+	[563] = true, -- Moglification: Capacity Boost
+	[564] = true, -- Moglification: Synergy Skill Gains
+	[565] = true, -- Moglification: Furnace Duration
+	[566] = true, -- Moglification: Resist Death
+	[567] = true, -- Moglification: A.M.A.N. Trove
 
-	2848, -- Moglification: Resist Sleep
-	2849, -- Moglification: Resist Poison
-	2850, -- Moglification: Resist Paralysis
-	2852, -- Moglification: Resist Silence
-	2853, -- Moglification: Resist Petrification
-	2854, -- Moglification: Resist Virus
-	2855, -- Moglification: Resist Curse
+	[2848] = true, -- Moglification: Resist Sleep
+	[2849] = true, -- Moglification: Resist Poison
+	[2850] = true, -- Moglification: Resist Paralysis
+	[2852] = true, -- Moglification: Resist Silence
+	[2853] = true, -- Moglification: Resist Petrification
+	[2854] = true, -- Moglification: Resist Virus
+	[2855] = true, -- Moglification: Resist Curse
 
 	-- Cheers
-	2716, -- Cheer: Lamb
-	2717, -- Cheer: Sheep
-	2718, -- Cheer: Karakul
-	2719, -- Cheer: Ram
-	2720, -- Cheer: Sapling
-	2721, -- Cheer: G. Fol. Treant
-	2722, -- Cheer: R. Fol. Treant
-	2723, -- Cheer: Baby Rabbit
-	2724, -- Cheer: Rabbit
-	2725, -- Cheer: White Rabbit
-	2726, -- Cheer: Baby Lizard
-	2727, -- Cheer: Lizard
-	2728, -- Cheer: Alabaster Lizard
-	2729, -- Cheer: Baby Cockatrice
-	2730, -- Cheer: Cockatrice
-	2731, -- Cheer: Ziz
-	2732, -- Cheer: Baby Raptor
-	2733, -- Cheer: Raptor
-	2734, -- Cheer: Red Raptor
-	2735, -- Cheer: Baby Eft
-	2736, -- Cheer: Eft
-	2737, -- Cheer: Tarichuk
-	2738, -- Cheer: Dhalmel Calf
-	2739, -- Cheer: Dhalmel
-	2740, -- Cheer: Great Dhalmel
-	2741, -- Cheer: Sea Monk Larva
-	2742, -- Cheer: Sea Monk
-	2743, -- Cheer: Blue Sea Monk
-	2744, -- Cheer: Uragnite Youngling
-	2745, -- Cheer: Uragnite
-	2746, -- Cheer: Limascabra
-	2747, -- Cheer: Immature Crab
-	2748, -- Cheer: Crab
-	2749, -- Cheer: Porter Crab
-	2750, -- Cheer: Baby Colibri
-	2751, -- Cheer: Colibri
-	2752, -- Cheer: Toucalibri
-	2753, -- Cheer: Coeurl Cub
-	2754, -- Cheer: Coeurl
-	2755, -- Cheer: Lynx
-	2756, -- Cheer: Buffalo Calf
-	2757, -- Cheer: Buffalo
-	2758, -- Cheer: Mini Slime
-	2759, -- Cheer: Slime
-	2760, -- Cheer: Clot
-	2761, -- Cheer: Hecteyes
-	2762, -- Cheer: Tiny Bugard
-	2763, -- Cheer: Bugard
-	2764, -- Cheer: Abyssobugard
-	2765, -- Cheer: Baby Adamantoise
-	2766, -- Cheer: Adamantoise
-	2767, -- Cheer: Great Adamantoise
-	2768, -- Cheer: White Adamantoise
-	2769, -- Cheer: Ferromantoise
-	2770, -- Cheer: Great Ferromantoise
-	2771, -- Cheer: Cluster
-	2772, -- Cheer: Bomb
-	2773, -- Cheer: Djinn
-	2774, -- Cheer: Snoll
-	2775, -- Cheer: Behemoth Cub
-	2776, -- Cheer: Behemoth
-	2777, -- Cheer: King Behemoth
-	2778, -- Cheer: Elasmoth
-	2779, -- Cheer: Skormoth
-	2780, -- Cheer: Dragon Hatchling
-	2781, -- Cheer: Wyvern
-	2782, -- Cheer: Blue Wyvern
-	2783, -- Cheer: Green Wyvern
-	2784, -- Cheer: Abyssal Wyrm
-	2785, -- Cheer: Lunar Wyrm
-	2786, -- Cheer: Blazing Wyrm
-	2787, -- Cheer: Pequetender
-	2788, -- Cheer: Sabotender
-	2789, -- Cheer: Jumbotender
+	[2716] = true, -- Cheer: Lamb
+	[2717] = true, -- Cheer: Sheep
+	[2718] = true, -- Cheer: Karakul
+	[2719] = true, -- Cheer: Ram
+	[2720] = true, -- Cheer: Sapling
+	[2721] = true, -- Cheer: G. Fol. Treant
+	[2722] = true, -- Cheer: R. Fol. Treant
+	[2723] = true, -- Cheer: Baby Rabbit
+	[2724] = true, -- Cheer: Rabbit
+	[2725] = true, -- Cheer: White Rabbit
+	[2726] = true, -- Cheer: Baby Lizard
+	[2727] = true, -- Cheer: Lizard
+	[2728] = true, -- Cheer: Alabaster Lizard
+	[2729] = true, -- Cheer: Baby Cockatrice
+	[2730] = true, -- Cheer: Cockatrice
+	[2731] = true, -- Cheer: Ziz
+	[2732] = true, -- Cheer: Baby Raptor
+	[2733] = true, -- Cheer: Raptor
+	[2734] = true, -- Cheer: Red Raptor
+	[2735] = true, -- Cheer: Baby Eft
+	[2736] = true, -- Cheer: Eft
+	[2737] = true, -- Cheer: Tarichuk
+	[2738] = true, -- Cheer: Dhalmel Calf
+	[2739] = true, -- Cheer: Dhalmel
+	[2740] = true, -- Cheer: Great Dhalmel
+	[2741] = true, -- Cheer: Sea Monk Larva
+	[2742] = true, -- Cheer: Sea Monk
+	[2743] = true, -- Cheer: Blue Sea Monk
+	[2744] = true, -- Cheer: Uragnite Youngling
+	[2745] = true, -- Cheer: Uragnite
+	[2746] = true, -- Cheer: Limascabra
+	[2747] = true, -- Cheer: Immature Crab
+	[2748] = true, -- Cheer: Crab
+	[2749] = true, -- Cheer: Porter Crab
+	[2750] = true, -- Cheer: Baby Colibri
+	[2751] = true, -- Cheer: Colibri
+	[2752] = true, -- Cheer: Toucalibri
+	[2753] = true, -- Cheer: Coeurl Cub
+	[2754] = true, -- Cheer: Coeurl
+	[2755] = true, -- Cheer: Lynx
+	[2756] = true, -- Cheer: Buffalo Calf
+	[2757] = true, -- Cheer: Buffalo
+	[2758] = true, -- Cheer: Mini Slime
+	[2759] = true, -- Cheer: Slime
+	[2760] = true, -- Cheer: Clot
+	[2761] = true, -- Cheer: Hecteyes
+	[2762] = true, -- Cheer: Tiny Bugard
+	[2763] = true, -- Cheer: Bugard
+	[2764] = true, -- Cheer: Abyssobugard
+	[2765] = true, -- Cheer: Baby Adamantoise
+	[2766] = true, -- Cheer: Adamantoise
+	[2767] = true, -- Cheer: Great Adamantoise
+	[2768] = true, -- Cheer: White Adamantoise
+	[2769] = true, -- Cheer: Ferromantoise
+	[2770] = true, -- Cheer: Great Ferromantoise
+	[2771] = true, -- Cheer: Cluster
+	[2772] = true, -- Cheer: Bomb
+	[2773] = true, -- Cheer: Djinn
+	[2774] = true, -- Cheer: Snoll
+	[2775] = true, -- Cheer: Behemoth Cub
+	[2776] = true, -- Cheer: Behemoth
+	[2777] = true, -- Cheer: King Behemoth
+	[2778] = true, -- Cheer: Elasmoth
+	[2779] = true, -- Cheer: Skormoth
+	[2780] = true, -- Cheer: Dragon Hatchling
+	[2781] = true, -- Cheer: Wyvern
+	[2782] = true, -- Cheer: Blue Wyvern
+	[2783] = true, -- Cheer: Green Wyvern
+	[2784] = true, -- Cheer: Abyssal Wyrm
+	[2785] = true, -- Cheer: Lunar Wyrm
+	[2786] = true, -- Cheer: Blazing Wyrm
+	[2787] = true, -- Cheer: Pequetender
+	[2788] = true, -- Cheer: Sabotender
+	[2789] = true, -- Cheer: Jumbotender
 
-	3202, -- Cheer: Mandragora Sproutling
-	3203, -- Cheer: Mandragora
-	3204, -- Cheer: Elder Mandragora
-	3205, -- Cheer: Lycopodium
-	3206, -- Cheer: Ake-Ome
-	3207, -- Cheer: Adenium
-	3208, -- Cheer: Elder Adenium
-	3209, -- Cheer: Korrigan
-	3210, -- Cheer: Pachypodium
-	3211, -- Cheer: Citrullus
+	[3202] = true, -- Cheer: Mandragora Sproutling
+	[3203] = true, -- Cheer: Mandragora
+	[3204] = true, -- Cheer: Elder Mandragora
+	[3205] = true, -- Cheer: Lycopodium
+	[3206] = true, -- Cheer: Ake-Ome
+	[3207] = true, -- Cheer: Adenium
+	[3208] = true, -- Cheer: Elder Adenium
+	[3209] = true, -- Cheer: Korrigan
+	[3210] = true, -- Cheer: Pachypodium
+	[3211] = true, -- Cheer: Citrullus
 	
 	-- Voidwatch
-	366, -- crimson stratum abyssite
-	367, -- crimson stratum abyssite II
-	368, -- crimson stratum abyssite III
-	369, -- crimson stratum abyssite IV
-	370, -- indigo stratum abyssite
-	371, -- indigo stratum abyssite II
-	372, -- indigo stratum abyssite III
-	373, -- indigo stratum abyssite IV
-	374, -- jade stratum abyssite
-	375, -- jade stratum abyssite II
-	376, -- jade stratum abyssite III
-	377, -- jade stratum abyssite IV
+	[366] = true, -- crimson stratum abyssite
+	[367] = true, -- crimson stratum abyssite II
+	[368] = true, -- crimson stratum abyssite III
+	[369] = true, -- crimson stratum abyssite IV
+	[370] = true, -- indigo stratum abyssite
+	[371] = true, -- indigo stratum abyssite II
+	[372] = true, -- indigo stratum abyssite III
+	[373] = true, -- indigo stratum abyssite IV
+	[374] = true, -- jade stratum abyssite
+	[375] = true, -- jade stratum abyssite II
+	[376] = true, -- jade stratum abyssite III
+	[377] = true, -- jade stratum abyssite IV
 	
-	1444, -- white stratum abyssite
-	1445, -- white stratum abyssite II
-	1446, -- white stratum abyssite III
-	1447, -- ashen stratum abyssite
-	1448, -- ashen stratum abyssite II
-	1449, -- ashen stratum abyssite III
-	1450, -- white stratum abyssite IV
-	1451, -- white stratum abyssite V
-	1452, -- white stratum abyssite VI
+	[1444] = true, -- white stratum abyssite
+	[1445] = true, -- white stratum abyssite II
+	[1446] = true, -- white stratum abyssite III
+	[1447] = true, -- ashen stratum abyssite
+	[1448] = true, -- ashen stratum abyssite II
+	[1449] = true, -- ashen stratum abyssite III
+	[1450] = true, -- white stratum abyssite IV
+	[1451] = true, -- white stratum abyssite V
+	[1452] = true, -- white stratum abyssite VI
 	
-	1539, -- voidstone
-	1540, -- voidstone
-	1541, -- voidstone
-	1542, -- voidstone
-	1543, -- voidstone
-	1544, -- voidstone
+	[1539] = true, -- voidstone
+	[1540] = true, -- voidstone
+	[1541] = true, -- voidstone
+	[1542] = true, -- voidstone
+	[1543] = true, -- voidstone
+	[1544] = true, -- voidstone
 	
-	1556, -- beguiling petrifact
-	1557, -- seductive petrifact
-	1558, -- maddening petrifact
+	[1556] = true, -- beguiling petrifact
+	[1557] = true, -- seductive petrifact
+	[1558] = true, -- maddening petrifact
 	
-	1805, -- void cluster
+	[1805] = true, -- void cluster
 	
-	2048, -- Voidwatch alarum
+	[2048] = true, -- Voidwatch alarum
 	
-	2060, -- hyacinth stratum abyssite
-	2062, -- amber stratum abyssite
+	[2060] = true, -- hyacinth stratum abyssite
+	[2062] = true, -- amber stratum abyssite
 	
-	2065, -- Kupofried's corundum
-	2066, -- Kupofried's corundum
-	2067, -- Kupofried's corundum
+	[2065] = true, -- Kupofried's corundum
+	[2066] = true, -- Kupofried's corundum
+	[2067] = true, -- Kupofried's corundum
 	
 }
