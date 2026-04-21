@@ -6,6 +6,7 @@
 | `/xic hide` | hide the UI |
 | `/xic show` | show the UI |
 | `/xic log <category>` | print <category> in chat log.<br>Example: `/xic log titles`<br>Available categories `titles` `monstrosity` `mmm` `meeble` `warps` `fish` `quests` (`sandoria` `bastok` `windurst` `jeuno` `ahturhgan` `crystalwar` `outlands` `other` `abyssea` `adoulin` `coalition` `campaign`)   |
+| `/xic showcomplete` | show completed objectives in green |
 
 The following are updated by talking to NPCs (some require opening certain menus)  
 will be saved in config so only need to do it once (or when need to update)
@@ -20,6 +21,7 @@ will be saved in config so only need to do it once (or when need to update)
 | Meeble Burrows | Speak to any [Burrow Researcher](https://www.bg-wiki.com/ffxi/Burrow_Researcher) or [Burrow Investigator](https://www.bg-wiki.com/ffxi/Burrow_Investigator) <br>`(Menu: Review expedition specifics -> Zone)` |
 | Atmacite levels | Speak to any [Atmacite Refiner](https://www.bg-wiki.com/ffxi/Atmacite_Refiner) <br>`(Menu: Enrich Atmacite)` |
 | Wing Skill | Speak to chocobo kids [Arvilauge/Gonija/Kiria-Romaria](https://www.bg-wiki.com/ffxi/Category:Chocobo_Digging#Basics) |
+| Sheol Gaol Vengeance | Speak to [??? in Rabao](https://www.bg-wiki.com/ffxi/Category:Odyssey) |
 
 <br>
 
