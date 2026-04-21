@@ -10,7 +10,7 @@ function mmm_util.handle_mmm_data(e)
 	end
 	mmm_util.vouchers_unlocks = VoucherUnlocksField
 	local RuneUnlocksField = {}
-	for i = 0,99 do
+	for i = 0,200 do
 		RuneUnlocksField[i+1] = (ashita.bits.unpack_be(e.data_raw, 0x0C, i, 1) == 1);
 	end
 	mmm_util.runes_unlocks = RuneUnlocksField
@@ -29,8 +29,8 @@ function mmm_util.log_vouchers()
 		end
 		table.insert(output_list, util.list_item(nil, voucher, completion))
 	end
-	playertracker['mmmvouchers_completed'] = obtained
-	playertracker['mmmvouchers_total'] = total
+	tab_logs['mmmvouchers_completed'] = obtained
+	tab_logs['mmmvouchers_total'] = total
 	return output_list
 end
 
@@ -47,8 +47,8 @@ function mmm_util.log_runes()
 		end
 		table.insert(output_list, util.list_item(nil, rune, completion))
 	end
-	playertracker['mmmrunes_completed'] = obtained
-	playertracker['mmmrunes_total'] = total
+	tab_logs['mmmrunes_completed'] = obtained
+	tab_logs['mmmrunes_total'] = total
 	return output_list
 end
 

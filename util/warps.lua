@@ -22,8 +22,8 @@ function warps_util.checkwarps(warptype)
 		end
 		table.insert(output_list, util.list_item(warptype, name, completion))
 	end
-	playertracker[warptype..'_completed'] = obtained
-	playertracker[warptype..'_total'] = total		
+	tab_logs[warptype..'_completed'] = obtained
+	tab_logs[warptype..'_total'] = total		
 	return output_list
 end
 

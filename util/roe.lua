@@ -7,7 +7,7 @@ require('util/util')
 function roe_util.handle_roe_data(roe_data)
 	for id=1,4086 do
 		if (util.has_bit(roe_data, id)) then
-			playertracker.roe[id] = true
+			tab_logs.roe[id] = true
 		end
 	end
 end
@@ -21,7 +21,7 @@ function roe_util.log_roe()
 			total = total+1
 			local completion = false
 			if (roeextramap[key]) then hiddentotal = hiddentotal+1 end
-			if table_contains(playertracker.roe, key+1)  then
+			if table_contains(tab_logs.roe, key+1)  then
 				complete = complete+1
 				completion = true
 				if (roeextramap[key]) then hiddencomplete = hiddencomplete+1 end
@@ -31,8 +31,8 @@ function roe_util.log_roe()
 			end
 		end
 	end
-	playertracker['RoE_completed'] = complete - hiddencomplete
-	playertracker['RoE_total'] = total - hiddentotal
+	tab_logs['RoE_completed'] = complete - hiddencomplete
+	tab_logs['RoE_total'] = total - hiddentotal
 	return output_list
 end
 

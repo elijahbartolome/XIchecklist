@@ -80,8 +80,8 @@ function quest_util.log_quests(quest_area)
 			end
         end
 	end
-	playertracker[quest_area..'_completed'] = complete
-	playertracker[quest_area..'_total'] = total
+	tab_logs[quest_area..'_completed'] = complete
+	tab_logs[quest_area..'_total'] = total
 	return output_list
 end
 

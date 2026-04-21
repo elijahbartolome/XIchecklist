@@ -104,7 +104,7 @@ function menus_util.handle_op_warps(e)
 		end
 	end
 	playertracker.talk_to_npc['outpostnpc'] = true
-	
+	menus_util.log_outposts()
 end
 
 function menus_util.add_outpost(id)
@@ -129,12 +129,12 @@ function menus_util.log_outposts()
 	end
 	playertracker['outposts_completed'] = complete
 	playertracker['outposts_total'] = total
-	return output_list
+	tab_logs.outposts = output_list
 end
 
 function menus_util.handle_chatnachoq(e)
 	menu = get_menu_parameters(e)
-	local mazes = menu:unpack('I', 13)
+	local mazes = struct.unpack('I', e.data, 14)
 	playertracker['mmm_mazecount'] = mazes
 	
 	util.addon_log('Maze count: ' .. mazes)
@@ -151,7 +151,7 @@ function menus_util.handle_protowaypoint(e)
 		end
 	end
 	playertracker.talk_to_npc['protowaypoint'] = true
-	
+	menus_util.log_protowaypoints()
 end
 
 function menus_util.add_protowaypoint(id)
@@ -176,7 +176,7 @@ function menus_util.log_protowaypoints()
 	end
 	playertracker['protowaypoints_completed'] = complete
 	playertracker['protowaypoints_total'] = total
-	return output_list
+	tab_logs.protowaypoints = output_list
 end
 
 function menus_util.handle_burrowsnpc(e)
@@ -187,13 +187,13 @@ function menus_util.handle_burrowsnpc(e)
 		map_name = 'Sauromugue_Champaign'
 		menus_util.handle_sauromugueburrowsmenu(map_name, menu)
 		playertracker.talk_to_npc['meeble_sauromugue'] = true
-		
+		menus_util.log_meeble_burrows()
 	elseif ((menu_current['zoneid'] == 244 and menu_current['_unknown1'] == 2) -- Upper Jeuno / Batallia Menu
 			or (menu_current['zoneid'] == 105 and menu_current['Option Index'] == 14)) then
 		map_name = 'Batallia_Downs'
 		menus_util.handle_batalliaburrowsmenu(map_name, menu)
 		playertracker.talk_to_npc['meeble_batallia'] = true
-		
+		menus_util.log_meeble_burrows()
 	end
 end
 
@@ -240,7 +240,7 @@ function menus_util.log_meeble_burrows()
 	end
 	playertracker['meebleburrows_completed'] = complete
 	playertracker['meebleburrows_total'] = total
-	return output_list
+	tab_logs.meeble_burrows = output_list
 end
 
 function menus_util.handle_katsunaga(e)
@@ -254,7 +254,7 @@ function menus_util.handle_katsunaga(e)
 			end
 		end
 		playertracker.talk_to_npc['katsunaga'] = true
-		
+		menus_util.log_fishes()
 	end
 end
 
@@ -281,7 +281,7 @@ function menus_util.log_fishes()
 		end
 	end
 	playertracker['fishes_completed'] = complete
-	return output_list
+	tab_logs.fishes = output_list
 end
 
 function get_key_items()
@@ -307,7 +307,7 @@ function menus_util.handle_atmacitenpc(e)
 			end
 		end
 		playertracker.talk_to_npc['atmacite_refiner'] = true
-		
+		menus_util.log_atmacitelevels()
 	end
 end
 
@@ -325,7 +325,7 @@ function menus_util.log_atmacitelevels()
 		table.insert(output_list, util.list_item('atmacite', 'Lv. ('..level..'/15) ' .. atmacite.en, completion, nil))
 	end
 	playertracker['atmacitelevels_completed'] = complete
-	return output_list
+	tab_logs.atmacite_levels = output_list
 end
 
 function menus_util.handle_chocobostablenpc(e)
@@ -359,7 +359,7 @@ function menus_util.handle_titles_npc(e)
 		end
 	end
 	playertracker.talk_to_npc[util.cleanspaces(npc)] = true
-	
+	menus_util.log_titles()
 end
 
 function menus_util.add_title(id)
@@ -397,7 +397,7 @@ function menus_util.log_titles()
 	end
 	playertracker['Titles_completed'] = complete
 	playertracker['Titles_total'] = total
-	return output_list
+	tab_logs.titles = output_list
 end
 
 function menus_util.list_titles_bycontent()
@@ -439,6 +439,7 @@ function menus_util.handle_odyssey_questionmark(e)
 			playertracker.sheolgaol[tostring(menu_current['Option Index'])][tostring(byteidx)] = venglevel
 		end
 		playertracker.talk_to_npc['sheolgaol'] = true
+		menus_util.log_sheolgaol()
 	end
 end
 
@@ -455,7 +456,7 @@ function menus_util.log_sheolgaol()
 		end
 	end
 	playertracker['sheolgaoltiers_completed'] = complete
-	return output_list
+	tab_logs.sheolgaol = output_list
 end
 
 menu_npcs = {

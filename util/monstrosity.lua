@@ -28,8 +28,8 @@ function mons_util.log_racejobinstincts()
 		end
 		table.insert(output_list, util.list_item(nil, name, completion))
 	end
-	playertracker['Racejobinstinct_completed'] = obtained
-	playertracker['Racejobinstinct_total'] = total	
+	tab_logs['Racejobinstinct_completed'] = obtained
+	tab_logs['Racejobinstinct_total'] = total	
 	return output_list
 end
 
@@ -58,8 +58,8 @@ function mons_util.log_monsterlevels()
 		if (monster_level == 99) then completion = true end
 		table.insert(output_list, util.list_item(nil, 'Lv. ' .. (monster_level) .. ' ' .. monster, completion)) -- add monster
 	end
-	playertracker['MonsterLevels_completed'] = complete
-	playertracker['MonsterLevels_total'] = total	
+	tab_logs['MonsterLevels_completed'] = complete
+	tab_logs['MonsterLevels_total'] = total	
 	return output_list
 end
 
@@ -76,8 +76,8 @@ function mons_util.log_variants()
 		end
 		table.insert(output_list, util.list_item(nil, name, completion))
 	end
-	playertracker['MonsterVariants_completed'] = obtained
-	playertracker['MonsterVariants_total'] = total	
+	tab_logs['MonsterVariants_completed'] = obtained
+	tab_logs['MonsterVariants_total'] = total	
 	return output_list
 end
 
@@ -102,8 +102,8 @@ function mons_util.log_monsterinstincts()
 
 		end
 	end
-	playertracker['MonsterInsincts_completed'] = obtained
-	playertracker['MonsterInsincts_total'] = total	
+	tab_logs['MonsterInsincts_completed'] = obtained
+	tab_logs['MonsterInsincts_total'] = total	
 	return output_list
 end
 
